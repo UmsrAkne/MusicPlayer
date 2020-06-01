@@ -5,8 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="446" Width="800">
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TreeView Name="directoryTree"
+                  Grid.Column="0" >
+        </TreeView>
+
+        <ListView Name="musicListView"
+                  Grid.Column="1" >
+
+            <ListView.View>
+                <GridView>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StatusBar Name="musicStatusBar"
+                   VerticalAlignment="Bottom"
+                   Grid.ColumnSpan="2" >
+
+            <Label Content="info"/>
+        </StatusBar>
     </Grid>
+
+
 </Window>
