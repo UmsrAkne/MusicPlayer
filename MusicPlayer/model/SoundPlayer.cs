@@ -66,7 +66,8 @@ namespace MusicPlayer.model {
 
         public double Duration {
             get {
-                return wmp.currentMedia.duration;
+                if (wmp.currentMedia != null) return wmp.currentMedia.duration;
+                else return 0;
             }
         }
 
