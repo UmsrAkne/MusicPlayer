@@ -42,5 +42,11 @@ namespace MusicPlayer.model {
                 wmp.controls.currentPosition = value;
             }
         }
+
+        public double Duration {
+            get {
+                return wmp.currentMedia.duration;
+            }
+        }
     }
 }
