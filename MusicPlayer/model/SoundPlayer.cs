@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -10,7 +12,21 @@ using System.Windows.Navigation;
 using WMPLib;
 
 namespace MusicPlayer.model {
+
+    delegate void MediaEndedEventHandler(object sender);
+
     class SoundPlayer {
+
+        public SoundPlayer() {
+            wmp.PlayStateChange += (int NewState) => {
+
+                //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
+                //  ここで使用する８番は再生終了時のステータスとなっている。
+                if (NewState == 8) {
+                    mediaEndedEvent(this);
+                }
+            };
+        }
 
         private FileInfo soundFileInfo;
         public FileInfo SoundFileInfo {
@@ -22,6 +38,7 @@ namespace MusicPlayer.model {
         }
 
         private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+        public event MediaEndedEventHandler mediaEndedEvent;
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
