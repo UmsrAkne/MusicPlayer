@@ -33,5 +33,14 @@ namespace MusicPlayer.model {
         public void resume() {
             wmp.controls.play();
         }
+
+        public double Position {
+            get {
+                return wmp.controls.currentPosition;
+            }
+            set {
+                wmp.controls.currentPosition = value;
+            }
+        }
     }
 }
