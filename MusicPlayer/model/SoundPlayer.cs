@@ -6,6 +6,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using WMPLib;
 
 namespace MusicPlayer.model {
@@ -24,14 +25,17 @@ namespace MusicPlayer.model {
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
+            Playing = true;
         }
 
         public void pause() {
             wmp.controls.pause();
+            Playing = false;
         }
 
         public void resume() {
             wmp.controls.play();
+            Playing = true;
         }
 
         public double Position {
@@ -48,5 +52,10 @@ namespace MusicPlayer.model {
                 return wmp.currentMedia.duration;
             }
         }
+
+        public Boolean Playing {
+            get;
+            private set;
+        } = false;
     }
 }
