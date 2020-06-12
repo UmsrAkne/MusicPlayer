@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,8 +19,41 @@ namespace MusicPlayer.model {
 
         public DoubleSoundPlayer() {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
-            players.Add(new SoundPlayer());
-            players.Add(new SoundPlayer());
+            SoundPlayer soundPlayerA = new SoundPlayer();
+            soundPlayerA.SecondsOfBeforeEndNotice = 5;
+            SoundPlayer soundPlayerB = new SoundPlayer();
+            soundPlayerB.SecondsOfBeforeEndNotice = 5;
+
+            players.Add(soundPlayerA);
+            players.Add(soundPlayerB);
+
+            soundPlayerA.mediaBeforeEndEvent += DoubleSoundPlayer_mediaBeforeEndEvent;
+            soundPlayerB.mediaBeforeEndEvent += DoubleSoundPlayer_mediaBeforeEndEvent;
+
+            soundPlayerA.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
+            soundPlayerB.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
+        }
+
+        private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
+            SwitchCurrentPlayerIndex();
+            PlayingIndex += 1;
+        }
+
+        private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
+            // イベントを送出したプレイヤーでない方のプレイヤーに対して操作を行う
+            // なので、センダーではない方のプレイヤーを代入する
+            SoundPlayer player = null;
+            if((SoundPlayer)sender != players[(int)PlayerIndex.First]) {
+                player = players[(int)PlayerIndex.First];
+            }
+            else {
+                player = players[(int)PlayerIndex.Second];
+            }
+
+            if(Files.Count > PlayingIndex + 1) {
+                player.SoundFileInfo = Files[PlayingIndex + 1];
+                player.play();
+            }
         }
 
         public void play() {
