@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MusicPlayer.model {
     class DoubleSoundPlayer {
@@ -19,6 +21,19 @@ namespace MusicPlayer.model {
             players.Add(new SoundPlayer());
             players.Add(new SoundPlayer());
         }
+
+        public void play() {
+            CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
+            CurrentPlayer.play();
+        }
+
+        public List<FileInfo> Files {
+            get; set;
+        }
+
+        public int PlayingIndex {
+            get; set;
+        } = 0;
 
         private void SwitchCurrentPlayerIndex() {
             if (currentPlayerIndex == PlayerIndex.First) currentPlayerIndex = PlayerIndex.Second;
