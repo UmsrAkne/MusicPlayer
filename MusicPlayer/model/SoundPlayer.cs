@@ -60,6 +60,7 @@ namespace MusicPlayer.model {
         public void play() {
             wmp.URL = soundFileInfo.FullName;
             Playing = true;
+            hasNotifiedBeforeEnd = false;
         }
 
         public void pause() {
