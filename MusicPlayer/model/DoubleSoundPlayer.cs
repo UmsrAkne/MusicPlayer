@@ -79,5 +79,15 @@ namespace MusicPlayer.model {
                 return players[(int)currentPlayerIndex];
             }
         }
+
+        /// <summary>
+        /// 現在カレントプレイヤーではない側のプレイヤーを取得します
+        /// </summary>
+        private SoundPlayer SubPlayer {
+            get {
+                if (CurrentPlayer != players[(int)PlayerIndex.First]) return players[(int)PlayerIndex.First];
+                else return players[(int)PlayerIndex.Second];
+            }
+        }
     }
 }
