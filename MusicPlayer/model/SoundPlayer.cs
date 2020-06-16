@@ -21,6 +21,7 @@ namespace MusicPlayer.model {
     class SoundPlayer {
 
         public SoundPlayer() {
+            wmp.settings.volume = 100;
             wmp.PlayStateChange += (int NewState) => {
 
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
