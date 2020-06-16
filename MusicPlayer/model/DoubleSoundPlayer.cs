@@ -35,7 +35,6 @@ namespace MusicPlayer.model {
         }
 
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
-            SwitchCurrentPlayerIndex();
             PlayingIndex += 1;
         }
 
@@ -69,9 +68,8 @@ namespace MusicPlayer.model {
             get; set;
         } = 0;
 
-        private void SwitchCurrentPlayerIndex() {
-            if (currentPlayerIndex == PlayerIndex.First) currentPlayerIndex = PlayerIndex.Second;
-            if (currentPlayerIndex == PlayerIndex.Second) currentPlayerIndex = PlayerIndex.First;
+        private void SwitchPlayer() {
+            players.Reverse();
         }
 
         private SoundPlayer CurrentPlayer {
