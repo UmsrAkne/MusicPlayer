@@ -5,12 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
     class DoubleSoundPlayer {
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
+        private Timer timer = new Timer(450);
+        private bool mediaSwitching = false;
         private int switchingDuration = 0;
 
         enum PlayerIndex :int {
@@ -31,27 +34,42 @@ namespace MusicPlayer.model {
 
             soundPlayerA.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
             soundPlayerB.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
+
+            timer.Elapsed += (source, e) => {
+                if (mediaSwitching) {
+                    int volumeChangeAmount = 100 / (switchingDuration * 2);
+                    if (players[(int)PlayerIndex.First].Volume - volumeChangeAmount >= 0) {
+                        players[(int)PlayerIndex.First].Volume -= volumeChangeAmount;
+                    }
+                    if (players[(int)PlayerIndex.Second].Volume + volumeChangeAmount <= 100) {
+                        players[(int)PlayerIndex.Second].Volume += volumeChangeAmount;
+                    }
+                }
+            };
+
+            timer.Start();
         }
 
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
+            ((SoundPlayer)sender).Volume = 0;
+            getOtherPlayer((SoundPlayer)sender).Volume = 100;
             PlayingIndex += 1;
+            SwitchPlayer();
+            mediaSwitching = false;
         }
 
         private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
             // イベントを送出したプレイヤーでない方のプレイヤーに対して操作を行う
             // なので、センダーではない方のプレイヤーを代入する
-            SoundPlayer player = null;
-            if((SoundPlayer)sender != players[(int)PlayerIndex.First]) {
-                player = players[(int)PlayerIndex.First];
-            }
-            else {
-                player = players[(int)PlayerIndex.Second];
-            }
+            SoundPlayer player = getOtherPlayer((SoundPlayer)sender);
 
             if(Files.Count > PlayingIndex + 1) {
                 player.SoundFileInfo = Files[PlayingIndex + 1];
                 player.play();
+                player.Volume = 0;
             }
+
+            mediaSwitching = true;
         }
 
         public void play() {
