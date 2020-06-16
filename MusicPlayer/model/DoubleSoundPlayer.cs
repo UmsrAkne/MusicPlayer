@@ -5,12 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
     class DoubleSoundPlayer {
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
+        private Timer timer = new Timer(450);
+        private bool mediaSwitching = false;
+        private int switchingDuration = 0;
 
         enum PlayerIndex :int {
             First = 0,
@@ -20,9 +24,7 @@ namespace MusicPlayer.model {
         public DoubleSoundPlayer() {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
             SoundPlayer soundPlayerA = new SoundPlayer();
-            soundPlayerA.SecondsOfBeforeEndNotice = 5;
             SoundPlayer soundPlayerB = new SoundPlayer();
-            soundPlayerB.SecondsOfBeforeEndNotice = 5;
 
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
@@ -32,28 +34,42 @@ namespace MusicPlayer.model {
 
             soundPlayerA.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
             soundPlayerB.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
+
+            timer.Elapsed += (source, e) => {
+                if (mediaSwitching) {
+                    int volumeChangeAmount = 100 / (switchingDuration * 2);
+                    if (players[(int)PlayerIndex.First].Volume - volumeChangeAmount >= 0) {
+                        players[(int)PlayerIndex.First].Volume -= volumeChangeAmount;
+                    }
+                    if (players[(int)PlayerIndex.Second].Volume + volumeChangeAmount <= 100) {
+                        players[(int)PlayerIndex.Second].Volume += volumeChangeAmount;
+                    }
+                }
+            };
+
+            timer.Start();
         }
 
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
-            SwitchCurrentPlayerIndex();
+            ((SoundPlayer)sender).Volume = 0;
+            getOtherPlayer((SoundPlayer)sender).Volume = 100;
             PlayingIndex += 1;
+            SwitchPlayer();
+            mediaSwitching = false;
         }
 
         private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
             // イベントを送出したプレイヤーでない方のプレイヤーに対して操作を行う
             // なので、センダーではない方のプレイヤーを代入する
-            SoundPlayer player = null;
-            if((SoundPlayer)sender != players[(int)PlayerIndex.First]) {
-                player = players[(int)PlayerIndex.First];
-            }
-            else {
-                player = players[(int)PlayerIndex.Second];
-            }
+            SoundPlayer player = getOtherPlayer((SoundPlayer)sender);
 
             if(Files.Count > PlayingIndex + 1) {
                 player.SoundFileInfo = Files[PlayingIndex + 1];
                 player.play();
+                player.Volume = 0;
             }
+
+            mediaSwitching = true;
         }
 
         public void play() {
@@ -69,9 +85,21 @@ namespace MusicPlayer.model {
             get; set;
         } = 0;
 
-        private void SwitchCurrentPlayerIndex() {
-            if (currentPlayerIndex == PlayerIndex.First) currentPlayerIndex = PlayerIndex.Second;
-            if (currentPlayerIndex == PlayerIndex.Second) currentPlayerIndex = PlayerIndex.First;
+        private void SwitchPlayer() {
+            players.Reverse();
+        }
+
+        /// <summary>
+        /// playersに入っているplayerのうち、引数に指定された方ではない側のプレイヤーを取得します。
+        /// </summary>
+        /// <param name="soundPlayer"></param>
+        private SoundPlayer getOtherPlayer(SoundPlayer soundPlayer) {
+           if(soundPlayer != players[(int)PlayerIndex.First] && soundPlayer != players[(int)PlayerIndex.Second]) {
+                throw new ArgumentException("入力された SoundPlayer は、playersに格納されている SoundPlayer ではありません");
+            }
+
+            if (players[(int)PlayerIndex.First] != soundPlayer) return players[(int)PlayerIndex.First];
+            else return players[(int)PlayerIndex.Second];
         }
 
         private SoundPlayer CurrentPlayer {
@@ -81,12 +109,16 @@ namespace MusicPlayer.model {
         }
 
         /// <summary>
-        /// 現在カレントプレイヤーではない側のプレイヤーを取得します
+        /// ２つのメディアファイルのフェードイン・アウト切り替えに要する時間を秒で指定します。
         /// </summary>
-        private SoundPlayer SubPlayer {
+        public int SwitchingDuration {
             get {
-                if (CurrentPlayer != players[(int)PlayerIndex.First]) return players[(int)PlayerIndex.First];
-                else return players[(int)PlayerIndex.Second];
+                return switchingDuration;
+            }
+            set {
+                switchingDuration = value;
+                players[(int)PlayerIndex.First].SecondsOfBeforeEndNotice = value;
+                players[(int)PlayerIndex.Second].SecondsOfBeforeEndNotice = value;
             }
         }
     }
