@@ -21,9 +21,7 @@ namespace MusicPlayer.model {
         public DoubleSoundPlayer() {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
             SoundPlayer soundPlayerA = new SoundPlayer();
-            soundPlayerA.SecondsOfBeforeEndNotice = 5;
             SoundPlayer soundPlayerB = new SoundPlayer();
-            soundPlayerB.SecondsOfBeforeEndNotice = 5;
 
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
