@@ -11,6 +11,7 @@ namespace MusicPlayer.model {
     class DoubleSoundPlayer {
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
+        private int switchingDuration = 0;
 
         enum PlayerIndex :int {
             First = 0,
@@ -85,6 +86,20 @@ namespace MusicPlayer.model {
             get {
                 if (CurrentPlayer != players[(int)PlayerIndex.First]) return players[(int)PlayerIndex.First];
                 else return players[(int)PlayerIndex.Second];
+            }
+        }
+
+        /// <summary>
+        /// ２つのメディアファイルのフェードイン・アウト切り替えに要する時間を秒で指定します。
+        /// </summary>
+        public int SwitchingDuration {
+            get {
+                return switchingDuration;
+            }
+            set {
+                switchingDuration = value;
+                players[(int)PlayerIndex.First].SecondsOfBeforeEndNotice = value;
+                players[(int)PlayerIndex.Second].SecondsOfBeforeEndNotice = value;
             }
         }
     }
