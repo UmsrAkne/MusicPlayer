@@ -73,6 +73,19 @@ namespace MusicPlayer.model {
             players.Reverse();
         }
 
+        /// <summary>
+        /// playersに入っているplayerのうち、引数に指定された方ではない側のプレイヤーを取得します。
+        /// </summary>
+        /// <param name="soundPlayer"></param>
+        private SoundPlayer getOtherPlayer(SoundPlayer soundPlayer) {
+           if(soundPlayer != players[(int)PlayerIndex.First] && soundPlayer != players[(int)PlayerIndex.Second]) {
+                throw new ArgumentException("入力された SoundPlayer は、playersに格納されている SoundPlayer ではありません");
+            }
+
+            if (players[(int)PlayerIndex.First] != soundPlayer) return players[(int)PlayerIndex.First];
+            else return players[(int)PlayerIndex.Second];
+        }
+
         private SoundPlayer CurrentPlayer {
             get {
                 return players[(int)currentPlayerIndex];
