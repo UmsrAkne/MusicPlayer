@@ -109,16 +109,6 @@ namespace MusicPlayer.model {
         }
 
         /// <summary>
-        /// 現在カレントプレイヤーではない側のプレイヤーを取得します
-        /// </summary>
-        private SoundPlayer SubPlayer {
-            get {
-                if (CurrentPlayer != players[(int)PlayerIndex.First]) return players[(int)PlayerIndex.First];
-                else return players[(int)PlayerIndex.Second];
-            }
-        }
-
-        /// <summary>
         /// ２つのメディアファイルのフェードイン・アウト切り替えに要する時間を秒で指定します。
         /// </summary>
         public int SwitchingDuration {
