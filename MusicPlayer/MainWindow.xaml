@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="446" Width="800">
 
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
