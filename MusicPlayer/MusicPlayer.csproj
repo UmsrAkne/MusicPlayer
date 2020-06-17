@@ -69,6 +69,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="model\DoubleSoundPlayer.cs" />
     <Compile Include="model\SoundPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
