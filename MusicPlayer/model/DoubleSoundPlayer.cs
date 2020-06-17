@@ -52,6 +52,7 @@ namespace MusicPlayer.model {
 
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
             ((SoundPlayer)sender).Volume = 0;
+            ((SoundPlayer)sender).stop();
             getOtherPlayer((SoundPlayer)sender).Volume = 100;
             PlayingIndex += 1;
             SwitchPlayer();

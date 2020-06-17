@@ -74,6 +74,11 @@ namespace MusicPlayer.model {
             Playing = true;
         }
 
+        public void stop() {
+            wmp.controls.stop();
+            Playing = false;
+        }
+
         public int Volume {
             get {
                 return wmp.settings.volume;
