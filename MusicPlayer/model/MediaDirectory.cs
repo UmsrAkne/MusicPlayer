@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Prism.Commands;
+using Prism.Mvvm;
 
 namespace MusicPlayer.model {
-    class MediaDirectory {
+    class MediaDirectory : BindableBase{
 
         public String Name {
             get {
@@ -17,7 +18,16 @@ namespace MusicPlayer.model {
             }
         }
 
-        public List<MediaDirectory> ChildDirectory { get; set; }
+        private List<MediaDirectory> childDirectory;
+        public List<MediaDirectory> ChildDirectory {
+            get {
+                return childDirectory;
+            }
+            set {
+                SetProperty(ref childDirectory, value);
+                    childDirectory = value; 
+            }
+        }
         public FileInfo FileInfo { get; set; }
 
         public MediaDirectory() {
