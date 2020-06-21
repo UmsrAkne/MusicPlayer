@@ -22,9 +22,16 @@
         <TreeView Name="directoryTree"
                   ItemsSource="{Binding Directory}"
                   Grid.Column="0" >
+
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="m:MediaDirectory"  ItemsSource="{Binding ChildDirectory}">
-                    <TextBlock Text="{Binding Name}" />
+                    <ContentControl Content="{Binding Name}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding GetChildsCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ContentControl>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
