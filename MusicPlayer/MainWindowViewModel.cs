@@ -22,5 +22,13 @@ namespace MusicPlayer {
             }
         }
 
+        public MainWindowViewModel() {
+            var baseDirectory = new MediaDirectory();
+            baseDirectory.FileInfo = new FileInfo(@"C:\Users");
+
+            var dir = new List<MediaDirectory>();
+            dir.Add(baseDirectory);
+            Directory = dir;
+        }
     }
 }
