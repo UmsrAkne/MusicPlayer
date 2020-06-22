@@ -22,6 +22,17 @@ namespace MusicPlayer {
             }
         }
 
+        private List<FileInfo> mediaFiles;
+        public List<FileInfo> MediaFiles {
+            get {
+                return mediaFiles;
+            }
+            private set {
+                SetProperty(ref mediaFiles, value);
+                mediaFiles = value;
+            }
+        }
+
         public MainWindowViewModel() {
             var baseDirectory = new MediaDirectory();
             baseDirectory.FileInfo = new FileInfo(@"C:\Users");
