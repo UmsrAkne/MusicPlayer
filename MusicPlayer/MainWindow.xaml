@@ -59,8 +59,8 @@
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Length}"/>
+                    <GridViewColumn Header="ファイル名" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="ファイルサイズ" DisplayMemberBinding="{Binding Length}"/>
                 </GridView>
             </ListView.View>
         </ListView>
