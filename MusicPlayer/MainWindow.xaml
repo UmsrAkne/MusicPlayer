@@ -13,6 +13,14 @@
         <local:MainWindowViewModel />
     </Window.DataContext>
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CustomDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -22,6 +30,14 @@
         <TreeView Name="directoryTree"
                   ItemsSource="{Binding Directory}"
                   Grid.Column="0" >
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
+                                           CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
+                                           />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="m:MediaDirectory"  ItemsSource="{Binding ChildDirectory}">
@@ -37,11 +53,14 @@
         </TreeView>
 
         <ListView Name="musicListView"
-                  Grid.Column="1" >
+                  Grid.Column="1"
+                  ItemsSource="{Binding MediaFiles}"
+                  >
 
             <ListView.View>
                 <GridView>
-
+                    <GridViewColumn Header="ファイル名" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="ファイルサイズ" DisplayMemberBinding="{Binding Length}"/>
                 </GridView>
             </ListView.View>
         </ListView>
