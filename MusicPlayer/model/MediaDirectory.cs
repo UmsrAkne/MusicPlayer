@@ -38,13 +38,15 @@ namespace MusicPlayer.model {
         }
 
         private void getChild() {
-            ChildDirectory = new List<MediaDirectory>();
+            var mediaDirectories = new List<MediaDirectory>();
             string[] childFileNames = System.IO.Directory.GetDirectories(FileInfo.FullName);
             foreach (string n in childFileNames) {
                 var md = new MediaDirectory();
                 md.FileInfo = new FileInfo(n);
-                ChildDirectory.Add(md);
+                mediaDirectories.Add(md);
             }
+
+            ChildDirectory = mediaDirectories;
         }
 
         public DelegateCommand GetChildsCommand { get; private set; }
