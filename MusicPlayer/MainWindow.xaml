@@ -22,13 +22,31 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    >
+            <Button Content="play"
+                    Padding="3"
+                    Margin="2"
+                    />
+            <Button Content="stop"
+                    Padding="3"
+                    Margin="2"
+                    />
+        </StackPanel>
+
         <TreeView Name="directoryTree"
                   ItemsSource="{Binding Directory}"
+                  Grid.Row="1"
                   Grid.Column="0" >
 
             <i:Interaction.Triggers>
@@ -54,6 +72,7 @@
 
         <ListView Name="musicListView"
                   Grid.Column="1"
+                  Grid.Row="1"
                   ItemsSource="{Binding MediaFiles}"
                   >
 
@@ -67,6 +86,7 @@
 
         <StatusBar Name="musicStatusBar"
                    VerticalAlignment="Bottom"
+                   Grid.Row="1"
                    Grid.ColumnSpan="2" >
 
             <Label Content="info"/>
