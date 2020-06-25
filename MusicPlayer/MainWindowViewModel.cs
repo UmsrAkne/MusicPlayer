@@ -12,6 +12,7 @@ namespace MusicPlayer {
     class MainWindowViewModel : BindableBase{
 
         private List<MediaDirectory> directory = new List<MediaDirectory>();
+        private DoubleSoundPlayer doubleSoundPlayer = new DoubleSoundPlayer();
 
         public List<MediaDirectory> Directory {
             get {
@@ -40,9 +41,12 @@ namespace MusicPlayer {
             private set { mediaFilesSettingCommand = value; }
         }
 
+        public DelegateCommand PlayCommand { get; private set; }
+
         public MainWindowViewModel() {
             var baseDirectory = new MediaDirectory();
             baseDirectory.FileInfo = new FileInfo(@"C:\Users");
+            doubleSoundPlayer.SwitchingDuration = 10;
 
             var dir = new List<MediaDirectory>();
             dir.Add(baseDirectory);
@@ -58,6 +62,14 @@ namespace MusicPlayer {
                     }
                 },
                 (Object param) => { return true; }
+            );
+
+            PlayCommand = new DelegateCommand(
+                () => {
+                    doubleSoundPlayer.Files = MediaFiles;
+                    doubleSoundPlayer.play();
+                },
+                () => { return true; }
             );
         }
     }

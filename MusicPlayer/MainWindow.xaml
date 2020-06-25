@@ -35,6 +35,7 @@
                     Grid.Row="0"
                     >
             <Button Content="play"
+                    Command="{Binding PlayCommand}"
                     Padding="3"
                     Margin="2"
                     />
