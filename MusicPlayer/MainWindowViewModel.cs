@@ -42,6 +42,7 @@ namespace MusicPlayer {
         }
 
         public DelegateCommand PlayCommand { get; private set; }
+        public DelegateCommand StopCommand { get; private set; }
 
         public MainWindowViewModel() {
             var baseDirectory = new MediaDirectory();
@@ -68,6 +69,13 @@ namespace MusicPlayer {
                 () => {
                     doubleSoundPlayer.Files = MediaFiles;
                     doubleSoundPlayer.play();
+                },
+                () => { return true; }
+            );
+
+            StopCommand = new DelegateCommand(
+                () => {
+                    doubleSoundPlayer.stop();
                 },
                 () => { return true; }
             );
