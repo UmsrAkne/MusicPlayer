@@ -81,8 +81,13 @@ namespace MusicPlayer.model {
         public void stop() {
             PlayingIndex = 0;
             CurrentPlayer.stop();
+            getOtherPlayer(CurrentPlayer).stop();
+
             CurrentPlayer.Volume = 100;
+            getOtherPlayer(CurrentPlayer).Volume = 100;
+
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
+            mediaSwitching = false;
         }
 
         public List<FileInfo> Files {
