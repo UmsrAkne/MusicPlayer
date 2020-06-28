@@ -56,9 +56,14 @@ namespace MusicPlayer {
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {
                     MediaDirectory info = (MediaDirectory)param;
+
                     string[] fileNames = System.IO.Directory.GetFiles(info.FileInfo.FullName);
+                    IEnumerable<String> selectedList = from name in fileNames
+                                                       where name.EndsWith(".mp3")
+                                                       select name;
+
                     MediaFiles = new List<FileInfo>();
-                    foreach(string n in fileNames) {
+                    foreach(string n in selectedList) {
                         MediaFiles.Add(new FileInfo(n));
                     }
                 },
