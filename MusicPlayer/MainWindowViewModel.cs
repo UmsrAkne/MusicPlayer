@@ -75,8 +75,8 @@ namespace MusicPlayer {
                     doubleSoundPlayer.Files = MediaFiles;
                     doubleSoundPlayer.play();
                 },
-                () => { return true; }
-            );
+                () => { return MediaFiles != null && MediaFiles.Count > 0; }
+            ).ObservesProperty(() => MediaFiles );
 
             StopCommand = new DelegateCommand(
                 () => {
