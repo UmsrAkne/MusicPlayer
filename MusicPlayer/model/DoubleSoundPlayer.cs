@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,10 +14,12 @@ namespace MusicPlayer.model {
         private Timer timer = new Timer(450);
         private bool mediaSwitching = false;
         private int switchingDuration = 0;
+        private int volume = 100;
 
         enum PlayerIndex :int {
             First = 0,
             Second = 1
+
         }
 
         public DoubleSoundPlayer() {
@@ -38,11 +39,11 @@ namespace MusicPlayer.model {
 
             timer.Elapsed += (source, e) => {
                 if (mediaSwitching) {
-                    int volumeChangeAmount = 100 / (switchingDuration * 2);
+                    int volumeChangeAmount = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration * 2)));
                     if (players[(int)PlayerIndex.First].Volume - volumeChangeAmount >= 0) {
                         players[(int)PlayerIndex.First].Volume -= volumeChangeAmount;
                     }
-                    if (players[(int)PlayerIndex.Second].Volume + volumeChangeAmount <= 100) {
+                    if (players[(int)PlayerIndex.Second].Volume + volumeChangeAmount <= Volume) {
                         players[(int)PlayerIndex.Second].Volume += volumeChangeAmount;
                     }
                 }
@@ -54,7 +55,7 @@ namespace MusicPlayer.model {
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
             ((SoundPlayer)sender).Volume = 0;
             ((SoundPlayer)sender).stop();
-            getOtherPlayer((SoundPlayer)sender).Volume = 100;
+            getOtherPlayer((SoundPlayer)sender).Volume = this.Volume;
             PlayingIndex += 1;
             SwitchPlayer();
             mediaSwitching = false;
@@ -84,8 +85,8 @@ namespace MusicPlayer.model {
             CurrentPlayer.stop();
             getOtherPlayer(CurrentPlayer).stop();
 
-            CurrentPlayer.Volume = 100;
-            getOtherPlayer(CurrentPlayer).Volume = 100;
+            CurrentPlayer.Volume = this.Volume;
+            getOtherPlayer(CurrentPlayer).Volume = this.Volume;
 
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             mediaSwitching = false;
@@ -139,6 +140,18 @@ namespace MusicPlayer.model {
         public Boolean Playing {
             get {
                 return players[(int)PlayerIndex.First].Playing || players[(int)PlayerIndex.Second].Playing;
+            }
+        }
+
+        public int Volume {
+            get { return volume; }
+            set {
+                volume = value;
+                if (value >= 100) volume = 100;
+                if (value <= 0) volume = 0;
+
+                players[(int)PlayerIndex.First].Volume = volume;
+                players[(int)PlayerIndex.Second].Volume = volume;
             }
         }
     }
