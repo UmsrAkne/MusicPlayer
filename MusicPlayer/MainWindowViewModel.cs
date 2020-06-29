@@ -45,6 +45,16 @@ namespace MusicPlayer {
             }
         }
 
+        public int Volume {
+            get {
+                return doubleSoundPlayer.Volume;
+            }
+            set {
+                RaisePropertyChanged(nameof(Volume));
+                doubleSoundPlayer.Volume = value;
+            }
+        }
+
         private DelegateCommand<Object> mediaFilesSettingCommand;
         public DelegateCommand<Object> MediaFilesSettingCommand {
             get { return mediaFilesSettingCommand; }
