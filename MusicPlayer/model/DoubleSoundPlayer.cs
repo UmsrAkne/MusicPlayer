@@ -35,6 +35,7 @@ namespace MusicPlayer.model {
             soundPlayerA.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
             soundPlayerB.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
 
+
             timer.Elapsed += (source, e) => {
                 if (mediaSwitching) {
                     int volumeChangeAmount = 100 / (switchingDuration * 2);
@@ -132,6 +133,12 @@ namespace MusicPlayer.model {
                 switchingDuration = value;
                 players[(int)PlayerIndex.First].SecondsOfBeforeEndNotice = value;
                 players[(int)PlayerIndex.Second].SecondsOfBeforeEndNotice = value;
+            }
+        }
+
+        public Boolean Playing {
+            get {
+                return players[(int)PlayerIndex.First].Playing || players[(int)PlayerIndex.Second].Playing;
             }
         }
     }

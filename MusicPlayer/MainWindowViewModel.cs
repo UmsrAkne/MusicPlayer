@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,15 @@ namespace MusicPlayer {
             private set {
                 SetProperty(ref mediaFiles, value);
                 mediaFiles = value;
+            }
+        }
+
+        public bool Playing {
+            get {
+                return doubleSoundPlayer.Playing;
+            }
+            private set {
+                RaisePropertyChanged(nameof(Playing));
             }
         }
 
@@ -74,6 +84,7 @@ namespace MusicPlayer {
                 () => {
                     doubleSoundPlayer.Files = MediaFiles;
                     doubleSoundPlayer.play();
+                    Playing = true;
                 },
                 () => { return MediaFiles != null && MediaFiles.Count > 0; }
             ).ObservesProperty(() => MediaFiles );
@@ -81,9 +92,10 @@ namespace MusicPlayer {
             StopCommand = new DelegateCommand(
                 () => {
                     doubleSoundPlayer.stop();
+                    Playing = false;
                 },
-                () => { return true; }
-            );
+                () => { return doubleSoundPlayer.Playing; }
+            ).ObservesProperty(() => Playing );
         }
     }
 }
