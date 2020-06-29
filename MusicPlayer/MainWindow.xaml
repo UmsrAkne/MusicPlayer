@@ -44,6 +44,25 @@
                     Padding="3"
                     Margin="2"
                     />
+
+            <TextBlock Text="mute"
+                       Margin="3"
+                       />
+
+            <Slider Name="VolumeControlSlider"
+                    Value="{Binding Volume}"
+                    AutoToolTipPlacement="TopLeft"
+                    SmallChange="2"
+                    Width="250"
+                    Maximum="100"
+                    Minimum="0"
+                    Margin="3"
+                    />
+
+            <TextBlock Text="max"
+                       Margin="3"
+                       />
+
         </StackPanel>
 
         <TreeView Name="directoryTree"
