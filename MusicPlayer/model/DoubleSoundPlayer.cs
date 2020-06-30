@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
-    class DoubleSoundPlayer {
+    class DoubleSoundPlayer : BindableBase{
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
