@@ -31,38 +31,42 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal"
-                    Grid.Row="0"
-                    >
-            <Button Content="play"
-                    Command="{Binding PlayCommand}"
-                    Padding="3"
-                    Margin="2"
-                    />
-            <Button Content="stop"
-                    Command="{Binding StopCommand}"
-                    Padding="3"
-                    Margin="2"
-                    />
+        <StackPanel>
+            <TextBlock Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock Text="mute"
-                       Margin="3"
-                       />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="0"
+                        >
+                <Button Content="play"
+                        Command="{Binding PlayCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
+                <Button Content="stop"
+                        Command="{Binding StopCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
 
-            <Slider Name="VolumeControlSlider"
-                    Value="{Binding Volume}"
-                    AutoToolTipPlacement="TopLeft"
-                    SmallChange="2"
-                    Width="250"
-                    Maximum="100"
-                    Minimum="0"
-                    Margin="3"
-                    />
+                <TextBlock Text="mute"
+                           Margin="3"
+                           />
 
-            <TextBlock Text="max"
-                       Margin="3"
-                       />
+                <Slider Name="VolumeControlSlider"
+                        Value="{Binding Volume}"
+                        AutoToolTipPlacement="TopLeft"
+                        SmallChange="2"
+                        Width="250"
+                        Maximum="100"
+                        Minimum="0"
+                        Margin="3"
+                        />
 
+                <TextBlock Text="max"
+                           Margin="3"
+                           />
+
+            </StackPanel>
         </StackPanel>
 
         <TreeView Name="directoryTree"

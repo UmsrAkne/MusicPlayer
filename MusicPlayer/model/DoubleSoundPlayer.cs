@@ -59,6 +59,7 @@ namespace MusicPlayer.model {
             ((SoundPlayer)sender).stop();
             getOtherPlayer((SoundPlayer)sender).Volume = this.Volume;
             PlayingIndex += 1;
+            RaisePropertyChanged(nameof(PlayingFileName));
             SwitchPlayer();
             mediaSwitching = false;
         }
@@ -78,6 +79,7 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
+            RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             CurrentPlayer.play();
         }
@@ -101,6 +103,13 @@ namespace MusicPlayer.model {
         public int PlayingIndex {
             get; set;
         } = 0;
+
+        public String PlayingFileName {
+            get {
+                if (Files == null || Files.Count <= PlayingIndex) return "";
+                return Files[PlayingIndex].Name;
+            }
+        }
 
         private void SwitchPlayer() {
             players.Reverse();
