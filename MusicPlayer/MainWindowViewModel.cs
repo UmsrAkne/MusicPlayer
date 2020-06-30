@@ -15,6 +15,10 @@ namespace MusicPlayer {
         private List<MediaDirectory> directory = new List<MediaDirectory>();
         private DoubleSoundPlayer doubleSoundPlayer = new DoubleSoundPlayer();
 
+        public DoubleSoundPlayer DoubleSoundPlayer {
+            get { return doubleSoundPlayer; }
+        }
+
         public List<MediaDirectory> Directory {
             get {
                 return directory;
