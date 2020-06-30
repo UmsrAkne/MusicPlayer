@@ -32,7 +32,9 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel>
-            <TextBlock Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}"
+                       Margin="2"
+                       />
 
             <StackPanel Orientation="Horizontal"
                         Grid.Row="0"
