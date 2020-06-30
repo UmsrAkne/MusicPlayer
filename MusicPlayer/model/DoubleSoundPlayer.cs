@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
-    class DoubleSoundPlayer {
+    class DoubleSoundPlayer : BindableBase{
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
@@ -59,6 +61,7 @@ namespace MusicPlayer.model {
             PlayingIndex += 1;
             SwitchPlayer();
             mediaSwitching = false;
+            RaisePropertyChanged(nameof(PlayingFileName));
         }
 
         private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
@@ -73,9 +76,11 @@ namespace MusicPlayer.model {
             }
 
             mediaSwitching = true;
+            RaisePropertyChanged(nameof(PlayingFileName));
         }
 
         public void play() {
+            RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             CurrentPlayer.play();
         }
@@ -99,6 +104,16 @@ namespace MusicPlayer.model {
         public int PlayingIndex {
             get; set;
         } = 0;
+
+        public String PlayingFileName {
+            get {
+                if (Files == null || Files.Count <= PlayingIndex) return "";
+                else if (mediaSwitching && Files.Count > PlayingIndex + 1) {
+                    return Files[PlayingIndex].Name + " > " + Files[PlayingIndex + 1].Name;
+                }
+                return Files[PlayingIndex].Name;
+            }
+        }
 
         private void SwitchPlayer() {
             players.Reverse();

@@ -31,38 +31,44 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal"
-                    Grid.Row="0"
-                    >
-            <Button Content="play"
-                    Command="{Binding PlayCommand}"
-                    Padding="3"
-                    Margin="2"
-                    />
-            <Button Content="stop"
-                    Command="{Binding StopCommand}"
-                    Padding="3"
-                    Margin="2"
-                    />
-
-            <TextBlock Text="mute"
-                       Margin="3"
+        <StackPanel>
+            <TextBlock Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}"
+                       Margin="2"
                        />
 
-            <Slider Name="VolumeControlSlider"
-                    Value="{Binding Volume}"
-                    AutoToolTipPlacement="TopLeft"
-                    SmallChange="2"
-                    Width="250"
-                    Maximum="100"
-                    Minimum="0"
-                    Margin="3"
-                    />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="0"
+                        >
+                <Button Content="play"
+                        Command="{Binding PlayCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
+                <Button Content="stop"
+                        Command="{Binding StopCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
 
-            <TextBlock Text="max"
-                       Margin="3"
-                       />
+                <TextBlock Text="mute"
+                           Margin="3"
+                           />
 
+                <Slider Name="VolumeControlSlider"
+                        Value="{Binding Volume}"
+                        AutoToolTipPlacement="TopLeft"
+                        SmallChange="2"
+                        Width="250"
+                        Maximum="100"
+                        Minimum="0"
+                        Margin="3"
+                        />
+
+                <TextBlock Text="max"
+                           Margin="3"
+                           />
+
+            </StackPanel>
         </StackPanel>
 
         <TreeView Name="directoryTree"
@@ -73,6 +79,9 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedItemChanged">
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
+                                           CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
+                                           />
+                    <i:InvokeCommandAction Command="{Binding SelectedDirectorySettingCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
                 </i:EventTrigger>
@@ -110,7 +119,7 @@
                    Grid.Row="1"
                    Grid.ColumnSpan="2" >
 
-            <Label Content="info"/>
+            <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"/>
         </StatusBar>
     </Grid>
 
