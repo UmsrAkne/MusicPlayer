@@ -61,6 +61,9 @@ namespace MusicPlayer {
             private set { mediaFilesSettingCommand = value; }
         }
 
+        public DelegateCommand<Object> SelectedDirectorySettingCommand { get; private set; }
+        public String SelectedDirectoryName { get; private set; }
+
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
 
@@ -86,6 +89,14 @@ namespace MusicPlayer {
                     foreach(string n in selectedList) {
                         MediaFiles.Add(new FileInfo(n));
                     }
+                },
+                (Object param) => { return true; }
+            );
+
+            SelectedDirectorySettingCommand = new DelegateCommand<object>(
+                (Object param) => {
+                    SelectedDirectoryName = ((MediaDirectory)param).FileInfo.FullName;
+                    RaisePropertyChanged(nameof(SelectedDirectoryName));
                 },
                 (Object param) => { return true; }
             );

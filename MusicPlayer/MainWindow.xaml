@@ -75,6 +75,9 @@
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
+                    <i:InvokeCommandAction Command="{Binding SelectedDirectorySettingCommand}"
+                                           CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
+                                           />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
@@ -110,7 +113,7 @@
                    Grid.Row="1"
                    Grid.ColumnSpan="2" >
 
-            <Label Content="info"/>
+            <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"/>
         </StatusBar>
     </Grid>
 
