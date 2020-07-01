@@ -94,6 +94,9 @@ namespace MusicPlayer.model {
                 return wmp.controls.currentPosition;
             }
             set {
+                if(value >= Duration - SecondsOfBeforeEndNotice) {
+                    hasNotifiedBeforeEnd = false;
+                }
                 wmp.controls.currentPosition = value;
             }
         }
