@@ -32,8 +32,8 @@ namespace MusicPlayer.model {
             };
 
             timer.Elapsed += (sender, e) => {
-                if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
-                    if (!hasNotifiedBeforeEnd) {
+                if (!hasNotifiedBeforeEnd) {
+                    if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
                         mediaBeforeEndEvent(this);
                         hasNotifiedBeforeEnd = true;
                     }
