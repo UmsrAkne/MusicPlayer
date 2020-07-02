@@ -15,10 +15,10 @@ using WMPLib;
 
 namespace MusicPlayer.model {
 
-    delegate void MediaEndedEventHandler(object sender);
-    delegate void MediaBeforeEndEventHandler(object sender);
+    public delegate void MediaEndedEventHandler(object sender);
+    public delegate void MediaBeforeEndEventHandler(object sender);
 
-    class SoundPlayer {
+    public class SoundPlayer {
 
         public SoundPlayer() {
             wmp.settings.volume = 100;
