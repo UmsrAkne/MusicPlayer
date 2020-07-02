@@ -17,11 +17,17 @@ namespace MusicPlayer.model {
 
     delegate void MediaEndedEventHandler(object sender);
     delegate void MediaBeforeEndEventHandler(object sender);
+    delegate void PlayStartedEventHandler(object sender);
 
     class SoundPlayer {
 
         public SoundPlayer() {
             wmp.settings.volume = 100;
+
+            wmp.PlayStateChange += (int NewState) => {
+                if (NewState == (int)WMPPlayState.wmppsPlaying) playStartedEvent(this);
+            };
+
             wmp.PlayStateChange += (int NewState) => {
 
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
@@ -55,6 +61,7 @@ namespace MusicPlayer.model {
         private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
         public event MediaEndedEventHandler mediaEndedEvent;
         public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
+        public event PlayStartedEventHandler playStartedEvent;
         private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
 
