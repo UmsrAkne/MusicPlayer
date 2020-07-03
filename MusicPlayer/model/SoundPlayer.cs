@@ -25,9 +25,12 @@ namespace MusicPlayer.model {
             wmp.settings.volume = 100;
 
             wmp.PlayStateChange += (int NewState) => {
+                    Duration = wmp.currentMedia.duration;
                 if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
                 else hasNotifiedBeforeEnd = false;
-                if (NewState == (int)WMPPlayState.wmppsPlaying) playStartedEvent?.Invoke(this);
+                if (NewState == (int)WMPPlayState.wmppsPlaying) {
+                    playStartedEvent?.Invoke(this);
+                }
             };
 
             wmp.PlayStateChange += (int NewState) => {
@@ -109,12 +112,7 @@ namespace MusicPlayer.model {
             }
         }
 
-        public double Duration {
-            get {
-                if (wmp.currentMedia != null) return wmp.currentMedia.duration;
-                else return 0;
-            }
-        }
+        public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
             get;
