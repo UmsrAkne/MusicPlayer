@@ -25,10 +25,15 @@ namespace MusicPlayer.model {
             wmp.settings.volume = 100;
 
             wmp.PlayStateChange += (int NewState) => {
-                    Duration = wmp.currentMedia.duration;
-                if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
-                else hasNotifiedBeforeEnd = false;
                 if (NewState == (int)WMPPlayState.wmppsPlaying) {
+                    playTimeCounter.Reset();
+                    playTimeCounter.Start();
+
+                    Duration = wmp.currentMedia.duration;
+                    Debug.WriteLine(GetHashCode() + " " + Duration);
+                    if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
+                    else hasNotifiedBeforeEnd = false;
+                    Debug.WriteLine(GetHashCode() + " " + hasNotifiedBeforeEnd);
                     playStartedEvent?.Invoke(this);
                 }
             };
@@ -38,12 +43,14 @@ namespace MusicPlayer.model {
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
                 //  ここで使用する８番は再生終了時のステータスとなっている。
                 if (NewState == 8) {
+                    playTimeCounter.Stop();
                     mediaEndedEvent(this);
                 }
             };
 
             timer.Elapsed += (sender, e) => {
                 if (!hasNotifiedBeforeEnd) {
+                    System.Diagnostics.Debug.WriteLine(Duration + " " + Position);
                     if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
                         mediaBeforeEndEvent(this);
                         hasNotifiedBeforeEnd = true;
@@ -69,6 +76,7 @@ namespace MusicPlayer.model {
         public event PlayStartedEventHandler playStartedEvent;
         private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
+        private Stopwatch playTimeCounter = new Stopwatch();
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
@@ -86,6 +94,8 @@ namespace MusicPlayer.model {
         }
 
         public void stop() {
+            playTimeCounter.Stop();
+            playTimeCounter.Reset();
             wmp.controls.stop();
             Playing = false;
         }
@@ -102,7 +112,7 @@ namespace MusicPlayer.model {
 
         public double Position {
             get {
-                return wmp.controls.currentPosition;
+                return (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
             }
             set {
                 if(value >= Duration - SecondsOfBeforeEndNotice) {
