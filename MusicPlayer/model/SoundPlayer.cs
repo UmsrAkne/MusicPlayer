@@ -25,7 +25,9 @@ namespace MusicPlayer.model {
             wmp.settings.volume = 100;
 
             wmp.PlayStateChange += (int NewState) => {
-                if (NewState == (int)WMPPlayState.wmppsPlaying) playStartedEvent(this);
+                if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
+                else hasNotifiedBeforeEnd = false;
+                if (NewState == (int)WMPPlayState.wmppsPlaying) playStartedEvent?.Invoke(this);
             };
 
             wmp.PlayStateChange += (int NewState) => {
@@ -68,7 +70,6 @@ namespace MusicPlayer.model {
         public void play() {
             wmp.URL = soundFileInfo.FullName;
             Playing = true;
-            hasNotifiedBeforeEnd = false;
         }
 
         public void pause() {

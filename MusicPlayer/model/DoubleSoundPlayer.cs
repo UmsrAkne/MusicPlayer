@@ -57,8 +57,15 @@ namespace MusicPlayer.model {
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
             ((SoundPlayer)sender).Volume = 0;
             ((SoundPlayer)sender).stop();
-            getOtherPlayer((SoundPlayer)sender).Volume = this.Volume;
             PlayingIndex += 1;
+            SoundPlayer otherPlayer = getOtherPlayer((SoundPlayer)sender);
+
+            getOtherPlayer((SoundPlayer)sender).Volume = this.Volume;
+            if (!otherPlayer.Playing && Files.Count > PlayingIndex) {
+                otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                otherPlayer.play();
+            }
+
             SwitchPlayer();
             mediaSwitching = false;
             RaisePropertyChanged(nameof(PlayingFileName));
@@ -70,6 +77,7 @@ namespace MusicPlayer.model {
             SoundPlayer player = getOtherPlayer((SoundPlayer)sender);
 
             if(Files.Count > PlayingIndex + 1) {
+                player.playStartedEvent += Player_playStartedEvent;
                 player.SoundFileInfo = Files[PlayingIndex + 1];
                 player.play();
                 player.Volume = 0;
@@ -77,6 +85,17 @@ namespace MusicPlayer.model {
 
             mediaSwitching = true;
             RaisePropertyChanged(nameof(PlayingFileName));
+
+        }
+
+        private void Player_playStartedEvent(object sender) {
+            SoundPlayer player = (SoundPlayer)sender;
+            if(player.Duration <= SwitchingDuration * 2) {
+                mediaSwitching = false;
+                player.stop();
+            }
+
+            player.playStartedEvent -= Player_playStartedEvent;
         }
 
         public void play() {
