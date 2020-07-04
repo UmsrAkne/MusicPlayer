@@ -28,6 +28,7 @@ namespace MusicPlayer.model {
                 if (NewState == (int)WMPPlayState.wmppsPlaying) {
                     playTimeCounter.Reset();
                     playTimeCounter.Start();
+                    additionTimeCount = 0;
 
                     Duration = wmp.currentMedia.duration;
                     if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
@@ -74,6 +75,7 @@ namespace MusicPlayer.model {
         private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
         private Stopwatch playTimeCounter = new Stopwatch();
+        private double additionTimeCount = 0;
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
@@ -93,6 +95,7 @@ namespace MusicPlayer.model {
         public void stop() {
             playTimeCounter.Stop();
             playTimeCounter.Reset();
+            additionTimeCount = 0;
             wmp.controls.stop();
             Playing = false;
         }
@@ -109,12 +112,17 @@ namespace MusicPlayer.model {
 
         public double Position {
             get {
-                return (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
+                return additionTimeCount + (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
             }
             set {
                 if(value >= Duration - SecondsOfBeforeEndNotice) {
                     hasNotifiedBeforeEnd = false;
                 }
+
+                if (playTimeCounter.IsRunning) playTimeCounter.Restart();
+                else playTimeCounter.Reset();
+                additionTimeCount = value;
+
                 wmp.controls.currentPosition = value;
             }
         }
