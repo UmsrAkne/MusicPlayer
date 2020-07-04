@@ -17,23 +17,39 @@ namespace MusicPlayer.model {
 
     delegate void MediaEndedEventHandler(object sender);
     delegate void MediaBeforeEndEventHandler(object sender);
+    delegate void PlayStartedEventHandler(object sender);
 
     class SoundPlayer {
 
         public SoundPlayer() {
             wmp.settings.volume = 100;
+
+            wmp.PlayStateChange += (int NewState) => {
+                if (NewState == (int)WMPPlayState.wmppsPlaying) {
+                    playTimeCounter.Reset();
+                    playTimeCounter.Start();
+                    additionTimeCount = 0;
+
+                    Duration = wmp.currentMedia.duration;
+                    if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
+                    else hasNotifiedBeforeEnd = false;
+                    playStartedEvent?.Invoke(this);
+                }
+            };
+
             wmp.PlayStateChange += (int NewState) => {
 
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
                 //  ここで使用する８番は再生終了時のステータスとなっている。
                 if (NewState == 8) {
+                    playTimeCounter.Stop();
                     mediaEndedEvent(this);
                 }
             };
 
             timer.Elapsed += (sender, e) => {
-                if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
-                    if (!hasNotifiedBeforeEnd) {
+                if (!hasNotifiedBeforeEnd) {
+                    if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
                         mediaBeforeEndEvent(this);
                         hasNotifiedBeforeEnd = true;
                     }
@@ -55,13 +71,15 @@ namespace MusicPlayer.model {
         private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
         public event MediaEndedEventHandler mediaEndedEvent;
         public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
+        public event PlayStartedEventHandler playStartedEvent;
         private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
+        private Stopwatch playTimeCounter = new Stopwatch();
+        private double additionTimeCount = 0;
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
             Playing = true;
-            hasNotifiedBeforeEnd = false;
         }
 
         public void pause() {
@@ -75,6 +93,9 @@ namespace MusicPlayer.model {
         }
 
         public void stop() {
+            playTimeCounter.Stop();
+            playTimeCounter.Reset();
+            additionTimeCount = 0;
             wmp.controls.stop();
             Playing = false;
         }
@@ -91,19 +112,22 @@ namespace MusicPlayer.model {
 
         public double Position {
             get {
-                return wmp.controls.currentPosition;
+                return additionTimeCount + (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
             }
             set {
+                if(value >= Duration - SecondsOfBeforeEndNotice) {
+                    hasNotifiedBeforeEnd = false;
+                }
+
+                if (playTimeCounter.IsRunning) playTimeCounter.Restart();
+                else playTimeCounter.Reset();
+                additionTimeCount = value;
+
                 wmp.controls.currentPosition = value;
             }
         }
 
-        public double Duration {
-            get {
-                if (wmp.currentMedia != null) return wmp.currentMedia.duration;
-                else return 0;
-            }
-        }
+        public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
             get;
