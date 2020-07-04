@@ -30,10 +30,8 @@ namespace MusicPlayer.model {
                     playTimeCounter.Start();
 
                     Duration = wmp.currentMedia.duration;
-                    Debug.WriteLine(GetHashCode() + " " + Duration);
                     if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
                     else hasNotifiedBeforeEnd = false;
-                    Debug.WriteLine(GetHashCode() + " " + hasNotifiedBeforeEnd);
                     playStartedEvent?.Invoke(this);
                 }
             };
@@ -50,7 +48,6 @@ namespace MusicPlayer.model {
 
             timer.Elapsed += (sender, e) => {
                 if (!hasNotifiedBeforeEnd) {
-                    System.Diagnostics.Debug.WriteLine(Duration + " " + Position);
                     if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
                         mediaBeforeEndEvent(this);
                         hasNotifiedBeforeEnd = true;
