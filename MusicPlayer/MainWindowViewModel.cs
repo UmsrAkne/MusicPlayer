@@ -84,15 +84,25 @@ namespace MusicPlayer {
                 (Object param) => {
                     MediaDirectory info = (MediaDirectory)param;
 
-                    string[] fileNames = System.IO.Directory.GetFiles(info.FileInfo.FullName);
-                    IEnumerable<String> selectedList = from name in fileNames
-                                                       where name.EndsWith(".mp3")
-                                                       select name;
-
                     MediaFiles = new List<FileInfo>();
-                    foreach(string n in selectedList) {
-                        MediaFiles.Add(new FileInfo(n));
+
+                    if (info.IsM3U) {
+                        var fileList = info.makeFileListFromM3U();
+                        foreach(FileInfo f in fileList) {
+                            mediaFiles.Add(f);
+                        }
                     }
+                    else {
+                        string[] fileNames = System.IO.Directory.GetFiles(info.FileInfo.FullName);
+                        IEnumerable<String> selectedList = from name in fileNames
+                                                           where name.EndsWith(".mp3")
+                                                           select name;
+
+                        foreach(string n in selectedList) {
+                            MediaFiles.Add(new FileInfo(n));
+                        }
+                    }
+
                 },
                 (Object param) => { return true; }
             );
