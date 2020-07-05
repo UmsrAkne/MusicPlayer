@@ -39,12 +39,19 @@ namespace MusicPlayer.model {
 
         private void getChild() {
             var mediaDirectories = new List<MediaDirectory>();
-            string[] childFileNames = System.IO.Directory.GetDirectories(FileInfo.FullName);
-            foreach (string n in childFileNames) {
-                var md = new MediaDirectory();
-                md.FileInfo = new FileInfo(n);
-                mediaDirectories.Add(md);
+            string[] childFileNames = Directory.GetDirectories(FileInfo.FullName);
+            string[] m3uFileNames = Directory.GetFiles(FileInfo.FullName, "*.m3u");
+
+           void addFiles(string[] fileOrDirectoryNames) {
+                foreach(string n in fileOrDirectoryNames) {
+                    var md = new MediaDirectory();
+                    md.FileInfo = new FileInfo(n);
+                    mediaDirectories.Add(md);
+                }
             }
+
+            addFiles(childFileNames);
+            addFiles(m3uFileNames);
 
             ChildDirectory = mediaDirectories;
         }
