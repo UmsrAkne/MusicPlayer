@@ -11,6 +11,12 @@ using Prism.Mvvm;
 namespace MusicPlayer.model {
     class MediaDirectory : BindableBase{
 
+        public bool IsM3U {
+            get {
+                return FileInfo.Extension == ".m3u";
+            }
+        }
+
         public String Name {
             get {
                 if (FileInfo == null) return "";
@@ -54,6 +60,20 @@ namespace MusicPlayer.model {
             addFiles(m3uFileNames);
 
             ChildDirectory = mediaDirectories;
+        }
+
+        /// <summary>
+        /// m3uファイルに記載されたファイルのリストを生成して取得します。
+        /// </summary>
+        /// <returns></returns>
+        public List<FileInfo> makeFileListFromM3U() {
+            var fileList = new List<FileInfo>();
+            string[] fileNames = File.ReadAllLines(FileInfo.FullName);
+            foreach(var n in fileNames) {
+                fileList.Add(new FileInfo(n));
+            }
+
+            return fileList;
         }
 
         public DelegateCommand GetChildsCommand { get; private set; }
