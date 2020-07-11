@@ -59,6 +59,27 @@ namespace MusicPlayer {
             }
         }
 
+        private string baseDirectoryPath = "";
+        public string BaseDirectoryPath {
+            get => baseDirectoryPath;
+            set {
+                if (!System.IO.Directory.Exists(value)) {
+                    return;
+                }
+
+                SetProperty(ref baseDirectoryPath, value);
+                baseDirectoryPath = value;
+
+                var md = new MediaDirectory();
+                md.FileInfo = new FileInfo(value);
+                md.GetChildsCommand.Execute();
+
+                var dir = new List<MediaDirectory>();
+                dir.Add(md);
+                Directory = dir;
+            }
+        }
+
         private DelegateCommand<Object> mediaFilesSettingCommand;
         public DelegateCommand<Object> MediaFilesSettingCommand {
             get { return mediaFilesSettingCommand; }
@@ -72,13 +93,8 @@ namespace MusicPlayer {
         public DelegateCommand StopCommand { get; private set; }
 
         public MainWindowViewModel() {
-            var baseDirectory = new MediaDirectory();
-            baseDirectory.FileInfo = new FileInfo(@"C:\Users");
-            doubleSoundPlayer.SwitchingDuration = 10;
 
-            var dir = new List<MediaDirectory>();
-            dir.Add(baseDirectory);
-            Directory = dir;
+            BaseDirectoryPath = (@"C:\");
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {

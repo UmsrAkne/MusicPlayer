@@ -68,7 +68,14 @@
                            Margin="3"
                            />
 
+
             </StackPanel>
+
+            <TextBox x:Name="baseDirectoryPathTextBox" 
+                     Text="{Binding BaseDirectoryPath, Mode=TwoWay}"
+                     FontSize="14"
+                     />
+
         </StackPanel>
 
         <TreeView Name="directoryTree"
