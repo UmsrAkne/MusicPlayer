@@ -72,6 +72,7 @@ namespace MusicPlayer {
 
                 var md = new MediaDirectory();
                 md.FileInfo = new FileInfo(value);
+                md.GetChildsCommand.Execute();
 
                 var dir = new List<MediaDirectory>();
                 dir.Add(md);
@@ -93,7 +94,7 @@ namespace MusicPlayer {
 
         public MainWindowViewModel() {
 
-            BaseDirectoryPath = (@"C:\Users");
+            BaseDirectoryPath = (@"C:\");
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {

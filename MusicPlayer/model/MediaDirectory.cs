@@ -19,8 +19,17 @@ namespace MusicPlayer.model {
 
         public String Name {
             get {
-                if (FileInfo == null) return "";
-                else return FileInfo.Name;
+                if (FileInfo == null) {
+                    return "";
+                }
+
+                var rootDirectory = new DriveInfo(FileInfo.FullName);
+                if (rootDirectory.RootDirectory.FullName == FileInfo.FullName) {
+                    return rootDirectory.Name;
+                }
+                else {
+                    return FileInfo.Name;
+                }
             }
         }
 
