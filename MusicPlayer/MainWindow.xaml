@@ -71,10 +71,17 @@
 
             </StackPanel>
 
+            <TextBlock x:Name="playTimeTextBox"
+                       Text="{Binding DoubleSoundPlayer.PlayTime, UpdateSourceTrigger=PropertyChanged}"
+                       FontSize="14"
+                       Margin="5,0,0,0"
+                       />
+
             <TextBox x:Name="baseDirectoryPathTextBox" 
                      Text="{Binding BaseDirectoryPath, Mode=TwoWay}"
                      FontSize="14"
                      />
+
 
         </StackPanel>
 
