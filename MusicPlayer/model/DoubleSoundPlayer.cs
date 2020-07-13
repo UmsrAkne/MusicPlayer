@@ -40,6 +40,8 @@ namespace MusicPlayer.model {
 
 
             timer.Elapsed += (source, e) => {
+                RaisePropertyChanged(nameof(PlayTime));
+
                 if (mediaSwitching) {
                     int volumeChangeAmount = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration * 2)));
                     if (players[(int)PlayerIndex.First].Volume - volumeChangeAmount >= 0) {
@@ -114,6 +116,16 @@ namespace MusicPlayer.model {
 
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             mediaSwitching = false;
+
+        }
+
+        public String PlayTime {
+            get {
+                var player = players[(int)PlayerIndex.First];
+                var currentElapsedTime = new TimeSpan(0, 0, (int)player.Position);
+                var currentDuration = new TimeSpan(0, 0, (int)player.Duration);
+                return currentElapsedTime.ToString(@"hh\:mm\:ss") + " / " + currentDuration.ToString(@"hh\:mm\:ss");
+            }
         }
 
         public List<FileInfo> Files {
