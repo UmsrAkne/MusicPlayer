@@ -107,6 +107,34 @@
             </TreeView.ItemTemplate>
         </TreeView>
 
+        <Grid Grid.Row="0"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <Button x:Name="randomSortButton"
+                    Content="ランダムソート"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    Command="{Binding RandomSortCommand}"
+                    />
+
+            <Button x:Name="nameOrderSortButton"
+                    Content="ファイル名順でソート"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    />
+
+        </Grid>
         <ListView Name="musicListView"
                   Grid.Column="1"
                   Grid.Row="1"

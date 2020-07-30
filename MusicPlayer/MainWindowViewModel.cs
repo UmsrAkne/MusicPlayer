@@ -147,6 +147,21 @@ namespace MusicPlayer {
                 },
                 () => { return doubleSoundPlayer.Playing; }
             ).ObservesProperty(() => Playing );
+
+        }
+
+        private DelegateCommand randomSortCommand;
+        public DelegateCommand RandomSortCommand {
+            get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(
+                () => {
+                    if(MediaFiles.Count == 0) {
+                        return;
+                    }
+
+                    Random r = new Random();
+                    MediaFiles = MediaFiles.OrderBy(m => r.Next(MediaFiles.Count)).ToList();
+                }
+            ));
         }
     }
 }
