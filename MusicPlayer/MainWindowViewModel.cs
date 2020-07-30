@@ -163,5 +163,14 @@ namespace MusicPlayer {
                 }
             ));
         }
+
+        private DelegateCommand nameOrderSortCommand;
+        public DelegateCommand NameOrderSortCommand {
+            get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(
+                () => {
+                    MediaFiles = MediaFiles.OrderBy(m => m.Name).ToList();
+                }
+            ));
+        }
     }
 }

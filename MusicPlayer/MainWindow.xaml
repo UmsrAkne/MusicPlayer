@@ -132,6 +132,7 @@
                     Content="ファイル名順でソート"
                     Grid.Column="1"
                     Grid.Row="2"
+                    Command="{Binding NameOrderSortCommand}"
                     />
 
         </Grid>
