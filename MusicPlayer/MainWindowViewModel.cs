@@ -105,8 +105,17 @@ namespace MusicPlayer {
                     param.Add(nameof(PlayerSetting), playerSetting);
                     dialogService.ShowDialog(nameof(SettingWindow), param,
                         (IDialogResult result) => {
-                            PlayerSetting pSettings = result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting));
-                            doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
+                            if (result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting)) == null) {
+                                // バツを押して閉じた時とかに値がNullになっている
+                                return;
+                            }
+                            else {
+                                PlayerSetting pSettings = result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting));
+                                doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
+                                Properties.Settings.Default.SwitchinDuration = pSettings.SwitchingDuration;
+                                Properties.Settings.Default.DefaultBaseDirectoryPath = pSettings.DefaultBaseDirectoryPath;
+                                Properties.Settings.Default.Save();
+                            }
                         }
                     );
                 }
@@ -115,11 +124,14 @@ namespace MusicPlayer {
 
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
-            BaseDirectoryPath = (@"C:\");
+            var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
+                Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
+            BaseDirectoryPath = path;
 
             playerSetting = new PlayerSetting();
-            playerSetting.DefaultBaseDirectoryPath = BaseDirectoryPath;
-            playerSetting.SwitchingDuration = DoubleSoundPlayer.SwitchingDuration;
+            playerSetting.DefaultBaseDirectoryPath = path;
+            playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;
+            DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {
