@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Prism.Services.Dialogs;
 using Prism.Commands;
 using System.IO;
+using MusicPlayer.model;
 
 namespace MusicPlayer {
     class SettingWindowViewModel : BindableBase, IDialogAware {
@@ -15,15 +16,18 @@ namespace MusicPlayer {
         public event Action<IDialogResult> RequestClose;
 
         private DialogParameters dialogParameters = new DialogParameters();
+        private PlayerSetting setting = new PlayerSetting();
+        public PlayerSetting Setting {
+            get => setting;
+        }
 
-        private DelegateCommand yesCommand;
-        public DelegateCommand YesCommand {
-            get => yesCommand ?? (yesCommand = new DelegateCommand(
+        private DelegateCommand settingFinishCommand;
+        public DelegateCommand SettingFinishCommand {
+            get => settingFinishCommand ?? (settingFinishCommand = new DelegateCommand(
                 () => {
-                    // yesボタンを押したときの実行内容
-                    //var ret = new DialogResult(ButtonResult.Yes, dialogParameters);
-                    //dialogParameters.Add("key1", "str");
-                    //this.RequestClose?.Invoke( ret );
+                    var ret = new DialogResult(ButtonResult.Yes, dialogParameters);
+                    dialogParameters.Add(nameof(Setting), setting);
+                    this.RequestClose?.Invoke( ret );
                 }
             ));
         }

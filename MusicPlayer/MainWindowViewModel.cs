@@ -101,6 +101,7 @@ namespace MusicPlayer {
                 () => {
                     dialogService.ShowDialog(nameof(SettingWindow), new DialogParameters(),
                         (IDialogResult result) => {
+                            // System.Console.WriteLine(result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting)));
                         }
                     );
                 }
