@@ -95,6 +95,18 @@ namespace MusicPlayer {
 
         private IDialogService dialogService;
 
+        private DelegateCommand showSettingDialogCommand;
+        public DelegateCommand ShowSettingDialogCommand {
+            get => showSettingDialogCommand ?? (showSettingDialogCommand = new DelegateCommand(
+                () => {
+                    dialogService.ShowDialog(nameof(SettingWindow), new DialogParameters(),
+                        (IDialogResult result) => {
+                        }
+                    );
+                }
+            ));
+        }
+
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
             BaseDirectoryPath = (@"C:\");
