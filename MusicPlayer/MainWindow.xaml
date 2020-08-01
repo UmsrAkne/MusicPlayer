@@ -7,11 +7,9 @@
         xmlns:local="clr-namespace:MusicPlayer"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
         Title="MainWindow" Height="446" Width="800">
-
-    <Window.DataContext>
-        <local:MainWindowViewModel />
-    </Window.DataContext>
 
     <Window.Resources>
         <ResourceDictionary>
