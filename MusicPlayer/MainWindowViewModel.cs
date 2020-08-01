@@ -1,6 +1,7 @@
 ﻿using MusicPlayer.model;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,8 +93,10 @@ namespace MusicPlayer {
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
 
-        public MainWindowViewModel() {
+        private IDialogService dialogService;
 
+        public MainWindowViewModel(IDialogService _dialogService) {
+            dialogService = _dialogService;
             BaseDirectoryPath = (@"C:\");
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
