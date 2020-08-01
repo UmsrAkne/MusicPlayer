@@ -1,6 +1,7 @@
 ﻿using MusicPlayer.model;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,9 +93,45 @@ namespace MusicPlayer {
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
 
-        public MainWindowViewModel() {
+        private IDialogService dialogService;
 
-            BaseDirectoryPath = (@"C:\");
+        private PlayerSetting playerSetting;
+
+        private DelegateCommand showSettingDialogCommand;
+        public DelegateCommand ShowSettingDialogCommand {
+            get => showSettingDialogCommand ?? (showSettingDialogCommand = new DelegateCommand(
+                () => {
+                    var param = new DialogParameters();
+                    param.Add(nameof(PlayerSetting), playerSetting);
+                    dialogService.ShowDialog(nameof(SettingWindow), param,
+                        (IDialogResult result) => {
+                            if (result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting)) == null) {
+                                // バツを押して閉じた時とかに値がNullになっている
+                                return;
+                            }
+                            else {
+                                PlayerSetting pSettings = result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting));
+                                doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
+                                Properties.Settings.Default.SwitchinDuration = pSettings.SwitchingDuration;
+                                Properties.Settings.Default.DefaultBaseDirectoryPath = pSettings.DefaultBaseDirectoryPath;
+                                Properties.Settings.Default.Save();
+                            }
+                        }
+                    );
+                }
+            ));
+        }
+
+        public MainWindowViewModel(IDialogService _dialogService) {
+            dialogService = _dialogService;
+            var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
+                Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
+            BaseDirectoryPath = path;
+
+            playerSetting = new PlayerSetting();
+            playerSetting.DefaultBaseDirectoryPath = path;
+            playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;
+            DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {

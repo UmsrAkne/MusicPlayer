@@ -7,11 +7,10 @@
         xmlns:local="clr-namespace:MusicPlayer"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="446" Width="800">
-
-    <Window.DataContext>
-        <local:MainWindowViewModel />
-    </Window.DataContext>
 
     <Window.Resources>
         <ResourceDictionary>
@@ -160,10 +159,33 @@
         <StatusBar Name="musicStatusBar"
                    VerticalAlignment="Bottom"
                    Grid.Row="1"
-                   Grid.ColumnSpan="2" >
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2" 
+                   Margin="2"
+                   >
 
-            <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal">
+
+                <Label Content="url >" />
+                <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"
+                   Grid.Column="0"
+                   >
+            </Label>
+
+            </StackPanel>
+
         </StatusBar>
+
+        <Button Content="設定"
+                Command="{Binding ShowSettingDialogCommand}"
+                HorizontalAlignment="Right"
+                Height="auto"
+                VerticalAlignment="Bottom"
+                Margin="0,0,5,5"
+                Grid.Row="1"
+                Grid.Column="1"
+                DockPanel.Dock="Right"
+                />
     </Grid>
 
 
