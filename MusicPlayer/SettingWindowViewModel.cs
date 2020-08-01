@@ -19,6 +19,10 @@ namespace MusicPlayer {
         private PlayerSetting setting = new PlayerSetting();
         public PlayerSetting Setting {
             get => setting;
+            set {
+                setting = value;
+                RaisePropertyChanged();
+            }
         }
 
         private DelegateCommand settingFinishCommand;
@@ -26,7 +30,7 @@ namespace MusicPlayer {
             get => settingFinishCommand ?? (settingFinishCommand = new DelegateCommand(
                 () => {
                     var ret = new DialogResult(ButtonResult.Yes, dialogParameters);
-                    dialogParameters.Add(nameof(Setting), setting);
+                    dialogParameters.Add(nameof(Setting), Setting);
                     this.RequestClose?.Invoke( ret );
                 }
             ));
@@ -40,6 +44,7 @@ namespace MusicPlayer {
         }
 
         public void OnDialogOpened(IDialogParameters parameters) {
+            Setting = parameters.GetValue<PlayerSetting>(nameof(PlayerSetting));
         }
 
         public virtual bool CanCloseDialog() {

@@ -95,13 +95,18 @@ namespace MusicPlayer {
 
         private IDialogService dialogService;
 
+        private PlayerSetting playerSetting;
+
         private DelegateCommand showSettingDialogCommand;
         public DelegateCommand ShowSettingDialogCommand {
             get => showSettingDialogCommand ?? (showSettingDialogCommand = new DelegateCommand(
                 () => {
-                    dialogService.ShowDialog(nameof(SettingWindow), new DialogParameters(),
+                    var param = new DialogParameters();
+                    param.Add(nameof(PlayerSetting), playerSetting);
+                    dialogService.ShowDialog(nameof(SettingWindow), param,
                         (IDialogResult result) => {
-                            // System.Console.WriteLine(result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting)));
+                            PlayerSetting pSettings = result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting));
+                            doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
                         }
                     );
                 }
@@ -111,6 +116,10 @@ namespace MusicPlayer {
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
             BaseDirectoryPath = (@"C:\");
+
+            playerSetting = new PlayerSetting();
+            playerSetting.DefaultBaseDirectoryPath = BaseDirectoryPath;
+            playerSetting.SwitchingDuration = DoubleSoundPlayer.SwitchingDuration;
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {

@@ -35,10 +35,10 @@
                     Grid.ColumnSpan="2"
                     >
             
-        <TextBox Text="0"
+        <TextBox Text="{Binding Setting.SwitchingDuration}"
                  />
 
-        <TextBox Text="path"
+        <TextBox Text="{Binding Setting.DefaultBaseDirectoryPath}"
                  />
 
         </StackPanel>
