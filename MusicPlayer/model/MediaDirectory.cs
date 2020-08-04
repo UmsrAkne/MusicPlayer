@@ -79,7 +79,12 @@ namespace MusicPlayer.model {
             var fileList = new List<FileInfo>();
             string[] fileNames = File.ReadAllLines(FileInfo.FullName);
             foreach(var n in fileNames) {
-                fileList.Add(new FileInfo(n));
+                if(n.Trim().Length > 0) {
+                    FileInfo f = new FileInfo(n);
+                    if (f.Exists) {
+                        fileList.Add(new FileInfo(n));
+                    }
+                }
             }
 
             return fileList;
