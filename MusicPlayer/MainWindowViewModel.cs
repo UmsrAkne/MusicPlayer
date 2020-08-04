@@ -30,7 +30,7 @@ namespace MusicPlayer {
             }
         }
 
-        private List<FileInfo> mediaFiles;
+        private List<FileInfo> mediaFiles = new List<FileInfo>();
         public List<FileInfo> MediaFiles {
             get {
                 return mediaFiles;
@@ -191,23 +191,24 @@ namespace MusicPlayer {
         public DelegateCommand RandomSortCommand {
             get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(
                 () => {
-                    if(MediaFiles.Count == 0) {
-                        return;
-                    }
-
                     Random r = new Random();
                     MediaFiles = MediaFiles.OrderBy(m => r.Next(MediaFiles.Count)).ToList();
-                }
-            ));
+                },
+                () => MediaFiles.Count > 0
+            )).ObservesProperty(() => MediaFiles);
         }
 
         private DelegateCommand nameOrderSortCommand;
         public DelegateCommand NameOrderSortCommand {
             get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(
                 () => {
-                    MediaFiles = MediaFiles.OrderBy(m => m.Name).ToList();
-                }
-            ));
+                    if (MediaFiles != null && MediaFiles.Count > 0) {
+                        MediaFiles = MediaFiles.OrderBy(m => m.Name).ToList();
+                    }
+
+                },
+                () => MediaFiles.Count > 0
+            )).ObservesProperty(() => MediaFiles);
         }
     }
 }
