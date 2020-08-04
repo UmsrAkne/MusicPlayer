@@ -146,6 +146,7 @@
                   Grid.Column="1"
                   Grid.Row="1"
                   ItemsSource="{Binding MediaFiles}"
+                  SelectedItem="{Binding DoubleSoundPlayer.SelectedItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                   >
 
             <ListView.View>

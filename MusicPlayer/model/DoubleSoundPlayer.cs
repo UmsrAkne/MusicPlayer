@@ -71,6 +71,7 @@ namespace MusicPlayer.model {
             SwitchPlayer();
             mediaSwitching = false;
             RaisePropertyChanged(nameof(PlayingFileName));
+            SelectedItem = Files[PlayingIndex];
         }
 
         private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
@@ -101,6 +102,7 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
+            SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             CurrentPlayer.play();
@@ -135,6 +137,15 @@ namespace MusicPlayer.model {
         public int PlayingIndex {
             get; set;
         } = 0;
+
+        private FileInfo selectedItem;
+        public FileInfo SelectedItem {
+            get => selectedItem;
+            set {
+                selectedItem = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public String PlayingFileName {
             get {
