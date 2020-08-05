@@ -112,7 +112,13 @@ namespace MusicPlayer.model {
         private DelegateCommand<object> playFromIndexCommand;
         public DelegateCommand<object> PlayFromIndexCommand {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
-                (fi) => {}
+                (fi) => {
+                    FileInfo f = (FileInfo)((ListViewItem)fi).Content;
+                    SelectedItem = f;
+                    CurrentPlayer.SoundFileInfo = f;
+                    PlayingIndex = Files.IndexOf(f);
+                    CurrentPlayer.play();
+                }
             ));
         }
 

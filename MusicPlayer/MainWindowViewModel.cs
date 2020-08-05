@@ -156,6 +156,7 @@ namespace MusicPlayer {
                         }
                     }
 
+                    doubleSoundPlayer.Files = mediaFiles;
                 },
                 (Object param) => { return true; }
             );

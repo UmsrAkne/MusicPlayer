@@ -269,7 +269,9 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Window},
-                                    Path=DataContext.DoubleSoundPlayer.PlayFromIndexCommand}"/>
+                                    Path=DataContext.DoubleSoundPlayer.PlayFromIndexCommand}"
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                                       />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         
