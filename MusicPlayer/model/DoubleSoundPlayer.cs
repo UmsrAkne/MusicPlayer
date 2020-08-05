@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -106,6 +107,19 @@ namespace MusicPlayer.model {
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
             CurrentPlayer.play();
+        }
+
+        private DelegateCommand<object> playFromIndexCommand;
+        public DelegateCommand<object> PlayFromIndexCommand {
+            get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
+                (fi) => {
+                    FileInfo f = (FileInfo)((ListViewItem)fi).Content;
+                    SelectedItem = f;
+                    CurrentPlayer.SoundFileInfo = f;
+                    PlayingIndex = Files.IndexOf(f);
+                    CurrentPlayer.play();
+                }
+            ));
         }
 
         public void stop() {
