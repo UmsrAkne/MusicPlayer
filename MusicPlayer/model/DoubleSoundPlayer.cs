@@ -44,12 +44,13 @@ namespace MusicPlayer.model {
                 RaisePropertyChanged(nameof(PlayTime));
 
                 if (mediaSwitching) {
-                    int volumeChangeAmount = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration * 2)));
-                    if (players[(int)PlayerIndex.First].Volume - volumeChangeAmount >= 0) {
-                        players[(int)PlayerIndex.First].Volume -= volumeChangeAmount;
+                    int volumeUp = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration)));
+                    int volumeDown = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration) / 2));
+                    if (players[(int)PlayerIndex.First].Volume - volumeDown >= 0) {
+                        players[(int)PlayerIndex.First].Volume -= volumeDown;
                     }
-                    if (players[(int)PlayerIndex.Second].Volume + volumeChangeAmount <= Volume) {
-                        players[(int)PlayerIndex.Second].Volume += volumeChangeAmount;
+                    if (players[(int)PlayerIndex.Second].Volume + volumeUp <= Volume) {
+                        players[(int)PlayerIndex.Second].Volume += volumeUp;
                     }
                 }
             };
