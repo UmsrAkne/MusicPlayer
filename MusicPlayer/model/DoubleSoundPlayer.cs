@@ -119,6 +119,7 @@ namespace MusicPlayer.model {
                     CurrentPlayer.SoundFileInfo = f;
                     PlayingIndex = Files.IndexOf(f);
                     CurrentPlayer.play();
+                    RaisePropertyChanged(nameof(PlayingFileName));
                 }
             ));
         }
