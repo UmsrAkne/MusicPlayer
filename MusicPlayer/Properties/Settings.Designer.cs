@@ -46,5 +46,41 @@ namespace MusicPlayer.Properties {
                 this["SwitchinDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int Volume {
+            get {
+                return ((int)(this["Volume"]));
+            }
+            set {
+                this["Volume"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public int WindowWidth {
+            get {
+                return ((int)(this["WindowWidth"]));
+            }
+            set {
+                this["WindowWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        public int WindowHeight {
+            get {
+                return ((int)(this["WindowHeight"]));
+            }
+            set {
+                this["WindowHeight"] = value;
+            }
+        }
     }
 }

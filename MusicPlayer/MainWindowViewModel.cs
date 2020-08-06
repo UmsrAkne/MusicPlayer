@@ -57,6 +57,26 @@ namespace MusicPlayer {
             set {
                 RaisePropertyChanged(nameof(Volume));
                 doubleSoundPlayer.Volume = value;
+                Properties.Settings.Default.Volume = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public int WindowWidth {
+            get => Properties.Settings.Default.WindowWidth;
+            set {
+                RaisePropertyChanged();
+                Properties.Settings.Default.WindowWidth = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public int WindowHeight {
+            get => Properties.Settings.Default.WindowHeight;
+            set {
+                RaisePropertyChanged();
+                Properties.Settings.Default.WindowHeight = value;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -132,6 +152,7 @@ namespace MusicPlayer {
             playerSetting.DefaultBaseDirectoryPath = path;
             playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;
             DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
+            DoubleSoundPlayer.Volume = Properties.Settings.Default.Volume;
 
             mediaFilesSettingCommand = new DelegateCommand<Object>(
                 (Object param) => {

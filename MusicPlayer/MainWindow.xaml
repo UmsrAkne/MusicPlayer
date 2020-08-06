@@ -10,7 +10,9 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=True}"
-        Title="MainWindow" Height="446" Width="800">
+        Title="MainWindow" 
+        Height="{Binding WindowHeight, Mode=TwoWay}"
+        Width="{Binding WindowWidth, Mode=TwoWay}">
 
     <Window.Resources>
         <ResourceDictionary>
