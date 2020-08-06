@@ -62,6 +62,24 @@ namespace MusicPlayer {
             }
         }
 
+        public int WindowWidth {
+            get => Properties.Settings.Default.WindowWidth;
+            set {
+                RaisePropertyChanged();
+                Properties.Settings.Default.WindowWidth = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public int WindowHeight {
+            get => Properties.Settings.Default.WindowHeight;
+            set {
+                RaisePropertyChanged();
+                Properties.Settings.Default.WindowHeight = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
         private string baseDirectoryPath = "";
         public string BaseDirectoryPath {
             get => baseDirectoryPath;
