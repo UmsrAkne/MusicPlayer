@@ -59,6 +59,7 @@ namespace MusicPlayer.model {
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
+            wmp.controls.currentPosition = FrontCut;
             Playing = true;
         }
 
@@ -119,7 +120,29 @@ namespace MusicPlayer.model {
         /// 終了直前のポイントとは、"Duration - SecondsOfBeforeEndNotice" の値が示す時点です。
         /// </summary>
         public bool PassedBeforeEndPoint {
-            get => (Position >= Duration - SecondsOfBeforeEndNotice);
+            get => (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
+        }
+
+        /// <summary>
+        /// このメディアの実際の Duration から BackCut を引いた時点を通過したかどうかを取得します。
+        /// このプロパティが true を返す場合、実質的にメディアの再生が終了していることを意味します。
+        /// </summary>
+        public bool PssedBackCutPoint {
+            get => (Position >= Duration - BackCut);
+        }
+
+        /// <summary>
+        /// 曲の先頭部分を指定秒数カットします。
+        /// </summary>
+        public int FrontCut {
+            get; set;
+        }
+
+        /// <summary>
+        /// 曲の終端部分を指定秒数カットします。
+        /// </summary>
+        public int BackCut {
+            get; set;
         }
     }
 }
