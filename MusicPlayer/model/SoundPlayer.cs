@@ -8,7 +8,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using WMPLib;
@@ -46,17 +45,6 @@ namespace MusicPlayer.model {
                     mediaEndedEvent(this);
                 }
             };
-
-            timer.Elapsed += (sender, e) => {
-                if (!hasNotifiedBeforeEnd) {
-                    if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
-                        mediaBeforeEndEvent(this);
-                        hasNotifiedBeforeEnd = true;
-                    }
-                }
-            };
-
-            timer.Start();
         }
 
         private FileInfo soundFileInfo;
@@ -72,7 +60,6 @@ namespace MusicPlayer.model {
         public event MediaEndedEventHandler mediaEndedEvent;
         public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
         public event PlayStartedEventHandler playStartedEvent;
-        private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
         private Stopwatch playTimeCounter = new Stopwatch();
         private double additionTimeCount = 0;
