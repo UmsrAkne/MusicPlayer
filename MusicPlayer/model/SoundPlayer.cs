@@ -37,7 +37,7 @@ namespace MusicPlayer.model {
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
                 //  ここで使用する８番は再生終了時のステータスとなっている。
                 if (NewState == 8) {
-                    mediaEndedEvent(this);
+                    mediaEndedEvent?.Invoke(this);
                 }
             };
         }
@@ -108,11 +108,18 @@ namespace MusicPlayer.model {
         } = false;
 
         /// <summary>
-        /// SoundPlayerオブジェクトは現在流れている曲の終了N秒前になるとイベントを送出する。
-        /// このとき、上記の N の値はこのプロパティにセットした値となる。
+        /// PassedBeforeEndPoint 実行時、メディアが終了直前と判定されるポイントを指定します。
         /// </summary>
         public int SecondsOfBeforeEndNotice {
             get; set;
+        }
+
+        /// <summary>
+        /// このメディアが終了直前のポイントを通り過ぎたかどうかを取得します。
+        /// 終了直前のポイントとは、"Duration - SecondsOfBeforeEndNotice" の値が示す時点です。
+        /// </summary>
+        public bool PassedBeforeEndPoint {
+            get => (Position >= Duration - SecondsOfBeforeEndNotice);
         }
     }
 }
