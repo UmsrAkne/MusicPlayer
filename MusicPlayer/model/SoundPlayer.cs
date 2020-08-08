@@ -25,10 +25,6 @@ namespace MusicPlayer.model {
 
             wmp.PlayStateChange += (int NewState) => {
                 if (NewState == (int)WMPPlayState.wmppsPlaying) {
-                    playTimeCounter.Reset();
-                    playTimeCounter.Start();
-                    additionTimeCount = 0;
-
                     Duration = wmp.currentMedia.duration;
                     if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
                     else hasNotifiedBeforeEnd = false;
@@ -41,7 +37,6 @@ namespace MusicPlayer.model {
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
                 //  ここで使用する８番は再生終了時のステータスとなっている。
                 if (NewState == 8) {
-                    playTimeCounter.Stop();
                     mediaEndedEvent(this);
                 }
             };
@@ -61,8 +56,6 @@ namespace MusicPlayer.model {
         public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
         public event PlayStartedEventHandler playStartedEvent;
         private Boolean hasNotifiedBeforeEnd = false;
-        private Stopwatch playTimeCounter = new Stopwatch();
-        private double additionTimeCount = 0;
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
@@ -80,9 +73,6 @@ namespace MusicPlayer.model {
         }
 
         public void stop() {
-            playTimeCounter.Stop();
-            playTimeCounter.Reset();
-            additionTimeCount = 0;
             wmp.controls.stop();
             Playing = false;
         }
@@ -99,16 +89,12 @@ namespace MusicPlayer.model {
 
         public double Position {
             get {
-                return additionTimeCount + (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
+                return wmp.controls.currentPosition;
             }
             set {
                 if(value >= Duration - SecondsOfBeforeEndNotice) {
                     hasNotifiedBeforeEnd = false;
                 }
-
-                if (playTimeCounter.IsRunning) playTimeCounter.Restart();
-                else playTimeCounter.Reset();
-                additionTimeCount = value;
 
                 wmp.controls.currentPosition = value;
             }
