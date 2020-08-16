@@ -60,22 +60,18 @@ namespace MusicPlayer.model {
         public void play() {
             wmp.URL = soundFileInfo.FullName;
             wmp.controls.currentPosition = FrontCut;
-            Playing = true;
         }
 
         public void pause() {
             wmp.controls.pause();
-            Playing = false;
         }
 
         public void resume() {
             wmp.controls.play();
-            Playing = true;
         }
 
         public void stop() {
             wmp.controls.stop();
-            Playing = false;
         }
 
         public int Volume {
@@ -104,9 +100,10 @@ namespace MusicPlayer.model {
         public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
-            get;
-            private set;
-        } = false;
+            get => (wmp.playState == WMPPlayState.wmppsPlaying);
+            private set{
+            }
+        }
 
         /// <summary>
         /// PassedBeforeEndPoint 実行時、メディアが終了直前と判定されるポイントを指定します。
