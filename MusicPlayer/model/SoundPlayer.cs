@@ -120,7 +120,12 @@ namespace MusicPlayer.model {
         /// 終了直前のポイントとは、"Duration - SecondsOfBeforeEndNotice" の値が示す時点です。
         /// </summary>
         public bool PassedBeforeEndPoint {
-            get => (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
+            get {
+                if (Duration == 0) {
+                    return false;
+                }
+                return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
+            }
         }
 
         /// <summary>
