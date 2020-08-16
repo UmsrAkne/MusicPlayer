@@ -33,29 +33,36 @@ namespace MusicPlayer.model {
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
 
-            soundPlayerA.mediaBeforeEndEvent += DoubleSoundPlayer_mediaBeforeEndEvent;
-            soundPlayerB.mediaBeforeEndEvent += DoubleSoundPlayer_mediaBeforeEndEvent;
-
-            soundPlayerA.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
-            soundPlayerB.mediaEndedEvent += DoubleSoundPlayer_mediaEndedEvent;
-
-
             timer.Elapsed += (source, e) => {
                 RaisePropertyChanged(nameof(PlayTime));
+                SoundPlayer player = eitherBeforePlayEnd;
+                if(player != null) {
+                    SoundPlayer otherPlayer = getOtherPlayer(player);
 
-                if (mediaSwitching) {
-                    int volumeUp = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration)));
-                    int volumeDown = Convert.ToInt32(Math.Ceiling((double)this.Volume / (switchingDuration) / 2));
-                    if (players[(int)PlayerIndex.First].Volume - volumeDown >= 0) {
-                        players[(int)PlayerIndex.First].Volume -= volumeDown;
+                    if (!otherPlayer.Playing) {
+                        PlayingIndex++;
+                        otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                        otherPlayer.play();
                     }
-                    if (players[(int)PlayerIndex.Second].Volume + volumeUp <= Volume) {
-                        players[(int)PlayerIndex.Second].Volume += volumeUp;
-                    }
+
                 }
             };
 
             timer.Start();
+        }
+
+        /// <summary>
+        /// ２つのプレイヤーのうち、どちらか片方だけが終了直前のとき、そのプレイヤーを返します。
+        /// 両方のプレイヤーが終了直前、または終了直前ではない場合、null を返します。
+        /// </summary>
+        private SoundPlayer eitherBeforePlayEnd {
+            get {
+                if(players[0].PassedBeforeEndPoint == players[1].PassedBeforeEndPoint){
+                    return null;
+                }
+
+                return players[0].PassedBeforeEndPoint ? players[0] : players[1];
+            }
         }
 
         private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
