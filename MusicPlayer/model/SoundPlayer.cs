@@ -53,7 +53,6 @@ namespace MusicPlayer.model {
 
         private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
         public event MediaEndedEventHandler mediaEndedEvent;
-        public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
         public event PlayStartedEventHandler playStartedEvent;
         private Boolean hasNotifiedBeforeEnd = false;
 

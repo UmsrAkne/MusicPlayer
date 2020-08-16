@@ -65,51 +65,6 @@ namespace MusicPlayer.model {
             }
         }
 
-        private void DoubleSoundPlayer_mediaEndedEvent(object sender) {
-            ((SoundPlayer)sender).Volume = 0;
-            ((SoundPlayer)sender).stop();
-            PlayingIndex += 1;
-            SoundPlayer otherPlayer = getOtherPlayer((SoundPlayer)sender);
-
-            getOtherPlayer((SoundPlayer)sender).Volume = this.Volume;
-            if (!otherPlayer.Playing && Files.Count > PlayingIndex) {
-                otherPlayer.SoundFileInfo = Files[PlayingIndex];
-                otherPlayer.play();
-            }
-
-            SwitchPlayer();
-            mediaSwitching = false;
-            RaisePropertyChanged(nameof(PlayingFileName));
-            SelectedItem = Files[PlayingIndex];
-        }
-
-        private void DoubleSoundPlayer_mediaBeforeEndEvent(object sender) {
-            // イベントを送出したプレイヤーでない方のプレイヤーに対して操作を行う
-            // なので、センダーではない方のプレイヤーを代入する
-            SoundPlayer player = getOtherPlayer((SoundPlayer)sender);
-
-            if(Files.Count > PlayingIndex + 1) {
-                player.playStartedEvent += Player_playStartedEvent;
-                player.SoundFileInfo = Files[PlayingIndex + 1];
-                player.play();
-                player.Volume = 0;
-            }
-
-            mediaSwitching = true;
-            RaisePropertyChanged(nameof(PlayingFileName));
-
-        }
-
-        private void Player_playStartedEvent(object sender) {
-            SoundPlayer player = (SoundPlayer)sender;
-            if(player.Duration <= SwitchingDuration * 2) {
-                mediaSwitching = false;
-                player.stop();
-            }
-
-            player.playStartedEvent -= Player_playStartedEvent;
-        }
-
         public void play() {
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
@@ -178,10 +133,6 @@ namespace MusicPlayer.model {
                 }
                 return Files[PlayingIndex].Name;
             }
-        }
-
-        private void SwitchPlayer() {
-            players.Reverse();
         }
 
         /// <summary>
