@@ -8,7 +8,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using WMPLib;
@@ -26,10 +25,6 @@ namespace MusicPlayer.model {
 
             wmp.PlayStateChange += (int NewState) => {
                 if (NewState == (int)WMPPlayState.wmppsPlaying) {
-                    playTimeCounter.Reset();
-                    playTimeCounter.Start();
-                    additionTimeCount = 0;
-
                     Duration = wmp.currentMedia.duration;
                     if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
                     else hasNotifiedBeforeEnd = false;
@@ -42,21 +37,9 @@ namespace MusicPlayer.model {
                 //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
                 //  ここで使用する８番は再生終了時のステータスとなっている。
                 if (NewState == 8) {
-                    playTimeCounter.Stop();
-                    mediaEndedEvent(this);
+                    mediaEndedEvent?.Invoke(this);
                 }
             };
-
-            timer.Elapsed += (sender, e) => {
-                if (!hasNotifiedBeforeEnd) {
-                    if(Duration > 0 && Position >= Duration - SecondsOfBeforeEndNotice) {
-                        mediaBeforeEndEvent(this);
-                        hasNotifiedBeforeEnd = true;
-                    }
-                }
-            };
-
-            timer.Start();
         }
 
         private FileInfo soundFileInfo;
@@ -70,34 +53,24 @@ namespace MusicPlayer.model {
 
         private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
         public event MediaEndedEventHandler mediaEndedEvent;
-        public event MediaBeforeEndEventHandler mediaBeforeEndEvent;
         public event PlayStartedEventHandler playStartedEvent;
-        private Timer timer = new Timer(1000);
         private Boolean hasNotifiedBeforeEnd = false;
-        private Stopwatch playTimeCounter = new Stopwatch();
-        private double additionTimeCount = 0;
 
         public void play() {
             wmp.URL = soundFileInfo.FullName;
-            Playing = true;
+            wmp.controls.currentPosition = FrontCut;
         }
 
         public void pause() {
             wmp.controls.pause();
-            Playing = false;
         }
 
         public void resume() {
             wmp.controls.play();
-            Playing = true;
         }
 
         public void stop() {
-            playTimeCounter.Stop();
-            playTimeCounter.Reset();
-            additionTimeCount = 0;
             wmp.controls.stop();
-            Playing = false;
         }
 
         public int Volume {
@@ -105,23 +78,26 @@ namespace MusicPlayer.model {
                 return wmp.settings.volume;
             }
             set {
-                if (value > 100 || value < 0) throw new ArgumentException("ボリュームの値は 0 - 100 の値を入力してください");
-                wmp.settings.volume = value;
+                if(value > 100) {
+                    wmp.settings.volume = 100;
+                }
+                else if(value < 0) {
+                    wmp.settings.volume = 0;
+                }
+                else {
+                    wmp.settings.volume = value;
+                }
             }
         }
 
         public double Position {
             get {
-                return additionTimeCount + (playTimeCounter.Elapsed.Minutes * 60) + playTimeCounter.Elapsed.Seconds;
+                return wmp.controls.currentPosition;
             }
             set {
                 if(value >= Duration - SecondsOfBeforeEndNotice) {
                     hasNotifiedBeforeEnd = false;
                 }
-
-                if (playTimeCounter.IsRunning) playTimeCounter.Restart();
-                else playTimeCounter.Reset();
-                additionTimeCount = value;
 
                 wmp.controls.currentPosition = value;
             }
@@ -130,15 +106,50 @@ namespace MusicPlayer.model {
         public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
-            get;
-            private set;
-        } = false;
+            get => (wmp.playState == WMPPlayState.wmppsPlaying);
+            private set{
+            }
+        }
 
         /// <summary>
-        /// SoundPlayerオブジェクトは現在流れている曲の終了N秒前になるとイベントを送出する。
-        /// このとき、上記の N の値はこのプロパティにセットした値となる。
+        /// PassedBeforeEndPoint 実行時、メディアが終了直前と判定されるポイントを指定します。
         /// </summary>
         public int SecondsOfBeforeEndNotice {
+            get; set;
+        }
+
+        /// <summary>
+        /// このメディアが終了直前のポイントを通り過ぎたかどうかを取得します。
+        /// 終了直前のポイントとは、"Duration - SecondsOfBeforeEndNotice" の値が示す時点です。
+        /// </summary>
+        public bool PassedBeforeEndPoint {
+            get {
+                if (Duration == 0) {
+                    return false;
+                }
+                return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
+            }
+        }
+
+        /// <summary>
+        /// このメディアの実際の Duration から BackCut を引いた時点を通過したかどうかを取得します。
+        /// このプロパティが true を返す場合、実質的にメディアの再生が終了していることを意味します。
+        /// </summary>
+        public bool PssedBackCutPoint {
+            get => (Position >= Duration - BackCut);
+        }
+
+        /// <summary>
+        /// 曲の先頭部分を指定秒数カットします。
+        /// </summary>
+        public int FrontCut {
+            get; set;
+        }
+
+        /// <summary>
+        /// 曲の終端部分を指定秒数カットします。
+        /// </summary>
+        public int BackCut {
             get; set;
         }
     }
