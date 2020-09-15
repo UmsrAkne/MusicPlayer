@@ -78,8 +78,15 @@ namespace MusicPlayer.model {
                 return wmp.settings.volume;
             }
             set {
-                if (value > 100 || value < 0) throw new ArgumentException("ボリュームの値は 0 - 100 の値を入力してください");
-                wmp.settings.volume = value;
+                if(value > 100) {
+                    wmp.settings.volume = 100;
+                }
+                else if(value < 0) {
+                    wmp.settings.volume = 0;
+                }
+                else {
+                    wmp.settings.volume = value;
+                }
             }
         }
 
