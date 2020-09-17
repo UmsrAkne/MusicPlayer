@@ -12,15 +12,35 @@ namespace MusicPlayer.model {
 
         public WMPWrapper() {
             wmp = new WindowsMediaPlayer();
+            wmp.PlayStateChange += (int NewState) => {
+                if(NewState == (int)WMPPlayState.wmppsPlaying) {
+                    mediaStarted?.Invoke(this, new EventArgs());
+                    Loading = false;
+                }
+
+                if(NewState == (int)WMPPlayState.wmppsMediaEnded) {
+                    mediaEnded?.Invoke(this, new EventArgs());
+                }
+            };
         }
 
         public bool Playing => wmp.playState == WMPPlayState.wmppsPlaying;
 
-        public bool Loading => throw new NotImplementedException();
+        /// <summary>
+        /// URLをセットした時点で true になり、
+        /// wmp のステータスが WMPPlayState.wmppsPlaying に変化した時点で false になります。
+        /// </summary>
+        public bool Loading {
+            get;
+            private set;
+        } 
 
         public string URL {
             get => wmp.URL;
-            set => wmp.URL = value;
+            set {
+                wmp.URL = value;
+                Loading = true;
+            }
         }
 
         public int Volume {
@@ -39,15 +59,16 @@ namespace MusicPlayer.model {
         public event EventHandler mediaStarted;
 
         public void pause() {
-            throw new NotImplementedException();
+            wmp.controls.pause();
         }
 
         public void play() {
-            throw new NotImplementedException();
+            wmp.URL = URL;
+            wmp.controls.play();
         }
 
         public void stop() {
-            throw new NotImplementedException();
+            wmp.controls.stop();
         }
     }
 }
