@@ -14,7 +14,7 @@ namespace MusicPlayer {
     class MainWindowViewModel : BindableBase{
 
         private List<MediaDirectory> directory = new List<MediaDirectory>();
-        private DoubleSoundPlayer doubleSoundPlayer = new DoubleSoundPlayer();
+        private DoubleSoundPlayer doubleSoundPlayer;
 
         public DoubleSoundPlayer DoubleSoundPlayer {
             get { return doubleSoundPlayer; }
@@ -147,6 +147,11 @@ namespace MusicPlayer {
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
             BaseDirectoryPath = path;
+
+            doubleSoundPlayer = new DoubleSoundPlayer(
+                new SoundPlayer(new WMPWrapper()),
+                new SoundPlayer(new WMPWrapper())
+            );
 
             playerSetting = new PlayerSetting();
             playerSetting.DefaultBaseDirectoryPath = path;

@@ -25,10 +25,10 @@ namespace MusicPlayer.model {
 
         }
 
-        public DoubleSoundPlayer() {
+        public DoubleSoundPlayer(SoundPlayer playerA, SoundPlayer playerB) {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
-            SoundPlayer soundPlayerA = new SoundPlayer(new WMPWrapper());
-            SoundPlayer soundPlayerB = new SoundPlayer(new WMPWrapper());
+            SoundPlayer soundPlayerA = playerA;
+            SoundPlayer soundPlayerB = playerB;
 
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
