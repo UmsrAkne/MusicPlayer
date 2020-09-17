@@ -20,7 +20,8 @@ namespace MusicPlayer.model {
 
     class SoundPlayer {
 
-        public SoundPlayer() {
+        public SoundPlayer(IPlayer player) {
+
             wmp.settings.volume = 100;
 
             wmp.PlayStateChange += (int NewState) => {
