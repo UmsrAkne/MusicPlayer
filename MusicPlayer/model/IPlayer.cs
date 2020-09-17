@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.model {
-    interface IPlayer {
+    public interface IPlayer {
 
         event EventHandler mediaEnded;
         event EventHandler mediaStarted;

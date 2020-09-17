@@ -11,7 +11,7 @@ using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
-    class DoubleSoundPlayer : BindableBase{
+    public class DoubleSoundPlayer : BindableBase{
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
