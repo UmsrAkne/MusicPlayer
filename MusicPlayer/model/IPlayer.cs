@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MusicPlayer.model {
+    interface IPlayer {
+
+        event EventHandler mediaEnded;
+        event EventHandler mediaStarted;
+
+        void play();
+        void stop();
+        void pause();
+        bool Playing { get; }
+        bool Loading { get; }
+        String URL { get; set; }
+        int Volume { get; set; }
+        double Position { get; set; }
+        double Duration { get;}
+    }
+}
