@@ -54,7 +54,15 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
-            wmp.URL = URL;
+            wmp.PlayStateChange -= wmpPlayStateChangeEventHandler;
+            string url = URL; // 一時退避
+            wmp.close();
+
+            wmp = new WindowsMediaPlayer();
+            wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
+            URL = url;
+            wmp.settings.volume = Volume;
+            System.Diagnostics.Debug.WriteLine("play!");
             wmp.controls.play();
         }
 
