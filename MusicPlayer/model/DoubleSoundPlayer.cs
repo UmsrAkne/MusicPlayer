@@ -11,7 +11,7 @@ using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
-    class DoubleSoundPlayer : BindableBase{
+    public class DoubleSoundPlayer : BindableBase{
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
@@ -19,51 +19,90 @@ namespace MusicPlayer.model {
         private int switchingDuration = 0;
         private int volume = 100;
 
+        private bool autoStoped = false;
+
         enum PlayerIndex :int {
             First = 0,
             Second = 1
 
         }
 
-        public DoubleSoundPlayer() {
+        public DoubleSoundPlayer(SoundPlayer playerA, SoundPlayer playerB) {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
-            SoundPlayer soundPlayerA = new SoundPlayer();
-            SoundPlayer soundPlayerB = new SoundPlayer();
+            SoundPlayer soundPlayerA = playerA;
+            SoundPlayer soundPlayerB = playerB;
+
+            soundPlayerA.mediaEndedEvent += nextPlay;
+            soundPlayerB.mediaEndedEvent += nextPlay;
 
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
 
             timer.Elapsed += (source, e) => {
-                RaisePropertyChanged(nameof(PlayTime));
-                SoundPlayer player = eitherBeforePlayEnd;
-                if(player != null) {
-
-                    // ボリュームの操作等の曲の切り替え中の動作をここに記述する
-                    SoundPlayer otherPlayer = getOtherPlayer(player);
-
-                    int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
-                    int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
-
-                    if(otherPlayer.Volume + volumeUpAmount < Volume) {
-                        otherPlayer.Volume += volumeUpAmount;
-                    }
-                    else {
-                        otherPlayer.Volume = Volume;
-                    }
-
-                    player.Volume -= Volume / switchingDuration / 2;
-
-                    if (!otherPlayer.Playing) {
-                        PlayingIndex++;
-                        otherPlayer.SoundFileInfo = Files[PlayingIndex];
-                        otherPlayer.play();
-                        otherPlayer.Volume = 0;
-                    }
-
-                }
+                timerEventHandler();
             };
 
             timer.Start();
+        }
+
+        private void timerEventHandler() {
+            RaisePropertyChanged(nameof(PlayTime));
+            SoundPlayer player = eitherBeforePlayEnd;
+            if (player != null) {
+
+                // ボリュームの操作等の曲の切り替え中の動作をここに記述する
+                SoundPlayer otherPlayer = getOtherPlayer(player);
+
+                if (autoStoped) {
+                    // 何度もファイルの読み込みを行わないようにするため、一度自動停止したらここでリターンする。
+                    // このフラグが立つタイミングは、ファイル再生の途中となるので、
+                    // ファイル再生終了に対するイベントハンドラ内でフラグを初期化する
+                    return;
+                }
+
+                if (!otherPlayer.Playing) {
+                    if(Files.Count < PlayingIndex + 1) {
+                        return;
+                    }
+
+                    PlayingIndex++;
+                    otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                    otherPlayer.play();
+                    otherPlayer.Volume = 0;
+                    otherPlayer.playStartedEvent += stopMedia;
+                }
+
+                int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
+                int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
+
+                if (otherPlayer.Volume + volumeUpAmount < Volume) {
+                    otherPlayer.Volume += volumeUpAmount;
+                }
+                else {
+                    otherPlayer.Volume = Volume;
+                }
+
+                player.Volume -= Volume / switchingDuration / 2;
+
+            }
+        }
+
+        private void stopMedia(object sender) {
+            SoundPlayer p = sender as SoundPlayer;
+            if(p.Duration <= p.SecondsOfBeforeEndNotice * 2) {
+                p.stop();
+                PlayingIndex--;
+                autoStoped = true;
+            }
+
+            p.playStartedEvent -= stopMedia;
+        }
+
+        /// <summary>
+        /// テスト時に PrivateObject 経由でタイマーを止めるために使用
+        /// </summary>
+        private void stopTimer() {
+            timer.Stop();
         }
 
         /// <summary>
@@ -77,6 +116,21 @@ namespace MusicPlayer.model {
                 }
 
                 return players[0].PassedBeforeEndPoint ? players[0] : players[1];
+            }
+        }
+
+        private void nextPlay(object sender) {
+            autoStoped = false;
+            SoundPlayer p = sender as SoundPlayer;
+            var anotherPlayer = getOtherPlayer(p);
+
+            // 逆側のプレイヤーが再生している状態の場合は、このハンドラ内で play() を呼び出すことは無い
+            if (!anotherPlayer.Playing) {
+                if(Files.Count > PlayingIndex + 1) {
+                    PlayingIndex++;
+                    p.SoundFileInfo = Files[PlayingIndex];
+                    p.play();
+                }
             }
         }
 

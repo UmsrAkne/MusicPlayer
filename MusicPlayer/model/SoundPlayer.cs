@@ -14,32 +14,28 @@ using WMPLib;
 
 namespace MusicPlayer.model {
 
-    delegate void MediaEndedEventHandler(object sender);
-    delegate void MediaBeforeEndEventHandler(object sender);
-    delegate void PlayStartedEventHandler(object sender);
+    public delegate void MediaEndedEventHandler(object sender);
+    public delegate void MediaBeforeEndEventHandler(object sender);
+    public delegate void PlayStartedEventHandler(object sender);
 
-    class SoundPlayer {
+    public class SoundPlayer {
 
-        public SoundPlayer() {
-            wmp.settings.volume = 100;
+        public SoundPlayer(IPlayer player) {
 
-            wmp.PlayStateChange += (int NewState) => {
-                if (NewState == (int)WMPPlayState.wmppsPlaying) {
-                    Duration = wmp.currentMedia.duration;
-                    if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
-                    else hasNotifiedBeforeEnd = false;
-                    playStartedEvent?.Invoke(this);
-                }
+            this.player = player;
+            this.player.Volume = 100;
+
+            this.player.mediaEnded += (sender,e) => {
+                mediaEndedEvent?.Invoke(this);
             };
 
-            wmp.PlayStateChange += (int NewState) => {
-
-                //  statusの番号については、MSのドキュメント "PlayStateChange Event of the AxWindowsMediaPlayer Object" を参照
-                //  ここで使用する８番は再生終了時のステータスとなっている。
-                if (NewState == 8) {
-                    mediaEndedEvent?.Invoke(this);
-                }
+            this.player.mediaStarted += (sender, e) => {
+                Duration = this.player.Duration;
+                if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
+                else hasNotifiedBeforeEnd = false;
+                playStartedEvent?.Invoke(this);
             };
+
         }
 
         private FileInfo soundFileInfo;
@@ -51,62 +47,63 @@ namespace MusicPlayer.model {
             }
         }
 
-        private WindowsMediaPlayer wmp = new WindowsMediaPlayer();
+        private IPlayer player;
         public event MediaEndedEventHandler mediaEndedEvent;
         public event PlayStartedEventHandler playStartedEvent;
         private Boolean hasNotifiedBeforeEnd = false;
 
         public void play() {
-            wmp.URL = soundFileInfo.FullName;
-            wmp.controls.currentPosition = FrontCut;
+            player.URL = soundFileInfo.FullName;
+            player.play();
+            player.Position = FrontCut;
         }
 
         public void pause() {
-            wmp.controls.pause();
         }
 
         public void resume() {
-            wmp.controls.play();
+            player.play();
         }
 
         public void stop() {
-            wmp.controls.stop();
+            player.stop();
         }
 
         public int Volume {
             get {
-                return wmp.settings.volume;
+                return player.Volume;
             }
             set {
                 if(value > 100) {
-                    wmp.settings.volume = 100;
+                    player.Volume = 100;
                 }
                 else if(value < 0) {
-                    wmp.settings.volume = 0;
+                    player.Volume = 0;
                 }
                 else {
-                    wmp.settings.volume = value;
+                    player.Volume = value;
                 }
             }
         }
 
         public double Position {
             get {
-                return wmp.controls.currentPosition;
+                return player.Position;
             }
             set {
                 if(value >= Duration - SecondsOfBeforeEndNotice) {
                     hasNotifiedBeforeEnd = false;
                 }
-
-                wmp.controls.currentPosition = value;
+                player.Position = value;
             }
         }
+
+        public bool Loading => player.Loading;
 
         public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
-            get => (wmp.playState == WMPPlayState.wmppsPlaying);
+            get => player.Playing;
             private set{
             }
         }
@@ -124,7 +121,7 @@ namespace MusicPlayer.model {
         /// </summary>
         public bool PassedBeforeEndPoint {
             get {
-                if (Duration == 0) {
+                if (Duration == 0 || SecondsOfBeforeEndNotice * 2 > Duration || !Playing) {
                     return false;
                 }
                 return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
