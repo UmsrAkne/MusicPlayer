@@ -37,36 +37,39 @@ namespace MusicPlayer.model {
             players.Add(soundPlayerB);
 
             timer.Elapsed += (source, e) => {
-                RaisePropertyChanged(nameof(PlayTime));
-                SoundPlayer player = eitherBeforePlayEnd;
-                if(player != null) {
-
-                    // ボリュームの操作等の曲の切り替え中の動作をここに記述する
-                    SoundPlayer otherPlayer = getOtherPlayer(player);
-
-                    int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
-                    int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
-
-                    if(otherPlayer.Volume + volumeUpAmount < Volume) {
-                        otherPlayer.Volume += volumeUpAmount;
-                    }
-                    else {
-                        otherPlayer.Volume = Volume;
-                    }
-
-                    player.Volume -= Volume / switchingDuration / 2;
-
-                    if (!otherPlayer.Playing) {
-                        PlayingIndex++;
-                        otherPlayer.SoundFileInfo = Files[PlayingIndex];
-                        otherPlayer.play();
-                        otherPlayer.Volume = 0;
-                    }
-
-                }
+                timerEventHandler();
             };
 
             timer.Start();
+        }
+
+        private void timerEventHandler() {
+            RaisePropertyChanged(nameof(PlayTime));
+            SoundPlayer player = eitherBeforePlayEnd;
+            if (player != null) {
+
+                // ボリュームの操作等の曲の切り替え中の動作をここに記述する
+                SoundPlayer otherPlayer = getOtherPlayer(player);
+
+                int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
+                int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
+
+                if (otherPlayer.Volume + volumeUpAmount < Volume) {
+                    otherPlayer.Volume += volumeUpAmount;
+                }
+                else {
+                    otherPlayer.Volume = Volume;
+                }
+
+                player.Volume -= Volume / switchingDuration / 2;
+
+                if (!otherPlayer.Playing) {
+                    PlayingIndex++;
+                    otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                    otherPlayer.play();
+                    otherPlayer.Volume = 0;
+                }
+            }
         }
 
         /// <summary>
