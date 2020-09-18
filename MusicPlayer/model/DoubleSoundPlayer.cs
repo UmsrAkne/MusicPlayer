@@ -19,6 +19,8 @@ namespace MusicPlayer.model {
         private int switchingDuration = 0;
         private int volume = 100;
 
+        private bool autoStoped = false;
+
         enum PlayerIndex :int {
             First = 0,
             Second = 1
@@ -51,6 +53,22 @@ namespace MusicPlayer.model {
                 // ボリュームの操作等の曲の切り替え中の動作をここに記述する
                 SoundPlayer otherPlayer = getOtherPlayer(player);
 
+                if (autoStoped) {
+                    // 何度もファイルの読み込みを行わないようにするため、一度自動停止したらここでリターンする。
+                    // このフラグが立つタイミングは、ファイル再生の途中となるので、
+                    // ファイル再生終了に対するイベントハンドラ内でフラグを初期化する
+                    return;
+                }
+
+                if (!otherPlayer.Playing) {
+
+                    PlayingIndex++;
+                    otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                    otherPlayer.play();
+                    otherPlayer.Volume = 0;
+                    otherPlayer.playStartedEvent += stopMedia;
+                }
+
                 int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
                 int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
 
@@ -63,13 +81,25 @@ namespace MusicPlayer.model {
 
                 player.Volume -= Volume / switchingDuration / 2;
 
-                if (!otherPlayer.Playing) {
-                    PlayingIndex++;
-                    otherPlayer.SoundFileInfo = Files[PlayingIndex];
-                    otherPlayer.play();
-                    otherPlayer.Volume = 0;
-                }
             }
+        }
+
+        private void stopMedia(object sender) {
+            SoundPlayer p = sender as SoundPlayer;
+            if(p.Duration <= p.SecondsOfBeforeEndNotice * 2) {
+                p.stop();
+                PlayingIndex--;
+                autoStoped = true;
+            }
+
+            p.playStartedEvent -= stopMedia;
+        }
+
+        /// <summary>
+        /// テスト時に PrivateObject 経由でタイマーを止めるために使用
+        /// </summary>
+        private void stopTimer() {
+            timer.Stop();
         }
 
         /// <summary>
@@ -87,10 +117,16 @@ namespace MusicPlayer.model {
         }
 
         private void nextPlay(object sender) {
-            PlayingIndex++;
+            autoStoped = false;
             SoundPlayer p = sender as SoundPlayer;
-            p.SoundFileInfo = Files[PlayingIndex];
-            p.play();
+            var anotherPlayer = getOtherPlayer(p);
+
+            // 逆側のプレイヤーが再生している状態の場合は、このハンドラ内で play() を呼び出すことは無い
+            if (!anotherPlayer.Playing) {
+                PlayingIndex++;
+                p.SoundFileInfo = Files[PlayingIndex];
+                p.play();
+            }
         }
 
         public void play() {

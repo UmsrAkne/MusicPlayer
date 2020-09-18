@@ -54,6 +54,7 @@ namespace MusicPlayer.model {
 
         public void play() {
             player.URL = soundFileInfo.FullName;
+            player.play();
             player.Position = FrontCut;
         }
 
@@ -97,6 +98,8 @@ namespace MusicPlayer.model {
             }
         }
 
+        public bool Loading => player.Loading;
+
         public double Duration { get; private set; } = 0;
 
         public Boolean Playing {
@@ -118,7 +121,7 @@ namespace MusicPlayer.model {
         /// </summary>
         public bool PassedBeforeEndPoint {
             get {
-                if (Duration == 0) {
+                if (Duration == 0 || SecondsOfBeforeEndNotice * 2 > Duration || !Playing) {
                     return false;
                 }
                 return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);

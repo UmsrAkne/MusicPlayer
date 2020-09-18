@@ -62,7 +62,6 @@ namespace MusicPlayer.model {
             wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
             URL = url;
             wmp.settings.volume = Volume;
-            System.Diagnostics.Debug.WriteLine("play!");
             wmp.controls.play();
         }
 
