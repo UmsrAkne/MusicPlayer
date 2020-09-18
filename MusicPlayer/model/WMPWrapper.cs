@@ -12,16 +12,7 @@ namespace MusicPlayer.model {
 
         public WMPWrapper() {
             wmp = new WindowsMediaPlayer();
-            wmp.PlayStateChange += (int NewState) => {
-                if(NewState == (int)WMPPlayState.wmppsPlaying) {
-                    mediaStarted?.Invoke(this, new EventArgs());
-                    Loading = false;
-                }
-
-                if(NewState == (int)WMPPlayState.wmppsMediaEnded) {
-                    mediaEnded?.Invoke(this, new EventArgs());
-                }
-            };
+            wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
         }
 
         public bool Playing => wmp.playState == WMPPlayState.wmppsPlaying;
@@ -69,6 +60,17 @@ namespace MusicPlayer.model {
 
         public void stop() {
             wmp.controls.stop();
+        }
+
+        private void wmpPlayStateChangeEventHandler(int NewState) {
+            if(NewState == (int)WMPPlayState.wmppsPlaying) {
+                mediaStarted?.Invoke(this, new EventArgs());
+                Loading = false;
+            }
+
+            if(NewState == (int)WMPPlayState.wmppsMediaEnded) {
+                mediaEnded?.Invoke(this, new EventArgs());
+            }
         }
     }
 }
