@@ -61,6 +61,9 @@ namespace MusicPlayer.model {
                 }
 
                 if (!otherPlayer.Playing) {
+                    if(Files.Count < PlayingIndex + 1) {
+                        return;
+                    }
 
                     PlayingIndex++;
                     otherPlayer.SoundFileInfo = Files[PlayingIndex];
@@ -123,9 +126,11 @@ namespace MusicPlayer.model {
 
             // 逆側のプレイヤーが再生している状態の場合は、このハンドラ内で play() を呼び出すことは無い
             if (!anotherPlayer.Playing) {
-                PlayingIndex++;
-                p.SoundFileInfo = Files[PlayingIndex];
-                p.play();
+                if(Files.Count > PlayingIndex + 1) {
+                    PlayingIndex++;
+                    p.SoundFileInfo = Files[PlayingIndex];
+                    p.play();
+                }
             }
         }
 
