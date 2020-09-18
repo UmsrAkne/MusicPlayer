@@ -30,6 +30,9 @@ namespace MusicPlayer.model {
             SoundPlayer soundPlayerA = playerA;
             SoundPlayer soundPlayerB = playerB;
 
+            soundPlayerA.mediaEndedEvent += nextPlay;
+            soundPlayerB.mediaEndedEvent += nextPlay;
+
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
 
@@ -78,6 +81,13 @@ namespace MusicPlayer.model {
 
                 return players[0].PassedBeforeEndPoint ? players[0] : players[1];
             }
+        }
+
+        private void nextPlay(object sender) {
+            PlayingIndex++;
+            SoundPlayer p = sender as SoundPlayer;
+            p.SoundFileInfo = Files[PlayingIndex];
+            p.play();
         }
 
         public void play() {
