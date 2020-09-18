@@ -53,7 +53,7 @@ namespace MusicPlayer.model {
             set => wmp.controls.currentPosition = value;
         }
 
-        public double Duration { get; }
+        public double Duration { get => wmp.currentMedia.duration; }
 
         public event EventHandler mediaEnded;
         public event EventHandler mediaStarted;
