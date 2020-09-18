@@ -24,6 +24,7 @@ namespace MusicPlayerTests3.model {
                 // 何故か URL をセットした時点で再生が開始されるため(?)、このようなコードがここに入る。
                 playing = true;
                 loading = true;
+                Position = 0;
             }
         }
 
@@ -61,12 +62,12 @@ namespace MusicPlayerTests3.model {
                 return;
             }
 
-            Position += 0.3;
+            Position += 0.2;
 
             if(Duration < Position) {
-                mediaEnded(this, new EventArgs());
                 Position = Duration;
                 playing = false;
+                mediaEnded(this, new EventArgs());
             }
         }
     }
