@@ -15,7 +15,6 @@ using WMPLib;
 namespace MusicPlayer.model {
 
     public delegate void MediaEndedEventHandler(object sender);
-    public delegate void MediaBeforeEndEventHandler(object sender);
     public delegate void PlayStartedEventHandler(object sender);
 
     public class SoundPlayer {
@@ -31,8 +30,6 @@ namespace MusicPlayer.model {
 
             this.player.mediaStarted += (sender, e) => {
                 Duration = this.player.Duration;
-                if (Duration < SecondsOfBeforeEndNotice * 2) hasNotifiedBeforeEnd = true;
-                else hasNotifiedBeforeEnd = false;
                 playStartedEvent?.Invoke(this);
             };
 
@@ -50,7 +47,6 @@ namespace MusicPlayer.model {
         private IPlayer player;
         public event MediaEndedEventHandler mediaEndedEvent;
         public event PlayStartedEventHandler playStartedEvent;
-        private Boolean hasNotifiedBeforeEnd = false;
 
         public void play() {
             player.URL = soundFileInfo.FullName;
@@ -91,9 +87,6 @@ namespace MusicPlayer.model {
                 return player.Position;
             }
             set {
-                if(value >= Duration - SecondsOfBeforeEndNotice) {
-                    hasNotifiedBeforeEnd = false;
-                }
                 player.Position = value;
             }
         }
