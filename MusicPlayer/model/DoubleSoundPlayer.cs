@@ -178,10 +178,21 @@ namespace MusicPlayer.model {
 
         public String PlayTime {
             get {
-                var player = players[(int)PlayerIndex.First];
-                var currentElapsedTime = new TimeSpan(0, 0, (int)player.Position);
-                var currentDuration = new TimeSpan(0, 0, (int)player.Duration);
-                return currentElapsedTime.ToString(@"hh\:mm\:ss") + " / " + currentDuration.ToString(@"hh\:mm\:ss");
+                var p1 = players[(int)PlayerIndex.First];
+                var p2 = players[(int)PlayerIndex.Second];
+
+                TimeSpan currentPosition;
+                TimeSpan currentDuration;
+                if(p1.Playing == p2.Playing) {
+                    currentPosition = new TimeSpan(0, 0, (int)Math.Max(p1.Position, p2.Position));
+                    currentDuration = (p1.Position >= p2.Position) ? new TimeSpan(0, 0, (int)p1.Duration) : new TimeSpan(0, 0, (int)p2.Duration);
+                }
+                else {
+                    currentPosition = (p1.Playing) ? new TimeSpan(0, 0, (int)p1.Position) : new TimeSpan(0, 0, (int)p2.Position);
+                    currentDuration = (p1.Playing) ? new TimeSpan(0, 0, (int)p1.Duration) : new TimeSpan(0, 0, (int)p2.Duration);
+                }
+
+                return currentPosition.ToString(@"hh\:mm\:ss") + " / " + currentDuration.ToString(@"hh\:mm\:ss");
             }
         }
 
