@@ -63,7 +63,6 @@ namespace MusicPlayer.model.Tests {
 
 
             f(1);
-
             Assert.IsFalse(wmpA.Loading,"forwardを一回実行したのでロードは終了している");
 
             bool mediaEndedEventDispatched = false;
@@ -77,14 +76,12 @@ namespace MusicPlayer.model.Tests {
             Assert.IsTrue(wmpA.Loading);
             Assert.IsFalse(sp2.Playing);
 
-
             f(1);
             Assert.IsFalse(wmpA.Loading, "このタイミングではロードが完了している");
 
             f(1);
             wmpA.NextMediaDuration = 25;
             wmpB.NextMediaDuration = 25;
-            
             
             f(50);
             Assert.AreEqual(sp1.SoundFileInfo.Name, "testFile3");
@@ -94,21 +91,35 @@ namespace MusicPlayer.model.Tests {
             Assert.IsTrue(wmpA.Playing);
             Assert.IsTrue(wmpB.Playing);
 
+            Assert.AreEqual(Math.Floor(sp1.Position), 15); // 約１５秒目
+            Assert.AreEqual(sp2.SoundFileInfo.Name, "testFile4");
+
             // 更に時間を進めて wmpA の曲が終了する
             f(50);
             Assert.IsFalse(wmpA.Playing);
             Assert.IsTrue(wmpB.Playing);
 
-            f(50);
+            // 更に進め、次は時間が短い曲
+            // 短い曲の場合は、再生中の方のプレイヤーがそのまま使用される。
             wmpA.NextMediaDuration = 10;
             wmpB.NextMediaDuration = 10;
+            f(50);
 
+            // 現在再生されているのは sp2(wmoB)の方。再生ファイル名は以下の通り
             f(60);
+            Assert.IsTrue(wmpB.Playing);
+            Assert.IsFalse(wmpA.Playing);
+            Assert.AreEqual(sp2.SoundFileInfo.Name, "testFile5");
+            Assert.AreEqual(sp2.Duration, 10);
 
-            Assert.IsTrue(wmpA.Playing);
-            Assert.IsFalse(wmpB.Playing);
-
+            // 再生を行うプレイヤーは据え置きで次のファイルが再生される。
+            // Duration は短く設定されているので、フェードは行われない。
             f(60);
+            Assert.IsTrue(wmpB.Playing);
+            Assert.IsFalse(wmpA.Playing);
+            Assert.AreEqual(sp2.SoundFileInfo.Name, "testFile6");
+            Assert.AreEqual(sp2.Duration, 10);
+            System.Diagnostics.Debug.WriteLine($"{wmpB.Position}");
         }
     }
 }
