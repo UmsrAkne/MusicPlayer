@@ -94,6 +94,11 @@ namespace MusicPlayer.model {
                 PlayingIndex--;
                 autoStoped = true;
             }
+            else {
+                // 再生継続の場合は曲名の更新通知を飛ばす
+                mediaSwitching = true;
+                RaisePropertyChanged(nameof(PlayingFileName));
+            }
 
             p.playStartedEvent -= stopMedia;
         }
@@ -132,6 +137,9 @@ namespace MusicPlayer.model {
                     p.play();
                 }
             }
+
+            mediaSwitching = false;
+            RaisePropertyChanged(nameof(PlayingFileName));
         }
 
         public void play() {
@@ -197,8 +205,8 @@ namespace MusicPlayer.model {
         public String PlayingFileName {
             get {
                 if (Files == null || Files.Count <= PlayingIndex) return "";
-                else if (mediaSwitching && Files.Count > PlayingIndex + 1) {
-                    return Files[PlayingIndex].Name + " > " + Files[PlayingIndex + 1].Name;
+                else if (mediaSwitching && Files.Count > PlayingIndex) {
+                    return Files[PlayingIndex -1].Name + " > " + Files[PlayingIndex].Name;
                 }
                 return Files[PlayingIndex].Name;
             }
