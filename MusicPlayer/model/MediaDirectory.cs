@@ -103,5 +103,11 @@ namespace MusicPlayer.model {
             get => isExpanded;
             set => SetProperty(ref isExpanded, value);
         }
+
+        private bool isSelected = false;
+        public bool IsSelected {
+            get => isSelected;
+            set => SetProperty(ref isSelected, value);
+        }
     }
 }

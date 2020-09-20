@@ -150,12 +150,6 @@ namespace MusicPlayer {
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
             BaseDirectoryPath = path;
 
-            List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
-            System.Diagnostics.Debug.WriteLine(lastVisitedDirectoryPath);
-            if(mdList.Count != 0) {
-                Directory = mdList;
-            }
-
             doubleSoundPlayer = new DoubleSoundPlayer(
                 new SoundPlayer(new WMPWrapper()),
                 new SoundPlayer(new WMPWrapper())
@@ -219,6 +213,11 @@ namespace MusicPlayer {
                 },
                 () => { return doubleSoundPlayer.Playing; }
             ).ObservesProperty(() => Playing );
+
+            List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
+            if(mdList.Count != 0) {
+                Directory = mdList;
+            }
 
         }
 
@@ -287,6 +286,8 @@ namespace MusicPlayer {
             }
 
             md.IsExpanded = true;
+            md.IsSelected = true;
+            MediaFilesSettingCommand.Execute(md);
 
             return mdList;
         }
