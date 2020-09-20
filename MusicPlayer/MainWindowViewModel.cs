@@ -144,9 +144,17 @@ namespace MusicPlayer {
 
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
+
+            string lastVisitedDirectoryPath = Properties.Settings.Default.lastVisitedDirectoryPath;
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
             BaseDirectoryPath = path;
+
+            List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
+            System.Diagnostics.Debug.WriteLine(lastVisitedDirectoryPath);
+            if(mdList.Count != 0) {
+                Directory = mdList;
+            }
 
             doubleSoundPlayer = new DoubleSoundPlayer(
                 new SoundPlayer(new WMPWrapper()),

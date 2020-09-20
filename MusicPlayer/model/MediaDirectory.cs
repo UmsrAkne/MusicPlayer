@@ -73,6 +73,8 @@ namespace MusicPlayer.model {
             addFiles(m3uFileNames);
 
             ChildDirectory = mediaDirectories;
+            Properties.Settings.Default.lastVisitedDirectoryPath = FileInfo.FullName;
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
