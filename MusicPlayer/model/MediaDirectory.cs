@@ -53,22 +53,28 @@ namespace MusicPlayer.model {
         }
 
         private void getChild() {
-            var mediaDirectories = new List<MediaDirectory>();
+            if (!Directory.Exists(FileInfo.FullName)) {
+                return;
+            }
+
             string[] childFileNames = Directory.GetDirectories(FileInfo.FullName);
             string[] m3uFileNames = Directory.GetFiles(FileInfo.FullName, "*.m3u");
 
-           void addFiles(string[] fileOrDirectoryNames) {
-                foreach(string n in fileOrDirectoryNames) {
-                    var md = new MediaDirectory();
-                    md.FileInfo = new FileInfo(n);
-                    mediaDirectories.Add(md);
-                }
+            var mediaDirectories = new List<MediaDirectory>();
+            void addFiles(string[] fileOrDirectoryNames) {
+                 foreach(string n in fileOrDirectoryNames) {
+                     var md = new MediaDirectory();
+                     md.FileInfo = new FileInfo(n);
+                     mediaDirectories.Add(md);
+                 }
             }
 
             addFiles(childFileNames);
             addFiles(m3uFileNames);
 
             ChildDirectory = mediaDirectories;
+            Properties.Settings.Default.lastVisitedDirectoryPath = FileInfo.FullName;
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
@@ -91,5 +97,17 @@ namespace MusicPlayer.model {
         }
 
         public DelegateCommand GetChildsCommand { get; private set; }
+
+        private bool isExpanded = false;
+        public bool IsExpanded {
+            get => isExpanded;
+            set => SetProperty(ref isExpanded, value);
+        }
+
+        private bool isSelected = false;
+        public bool IsSelected {
+            get => isSelected;
+            set => SetProperty(ref isSelected, value);
+        }
     }
 }

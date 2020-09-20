@@ -149,6 +149,10 @@ namespace MusicPlayer.model {
             CurrentPlayer.play();
         }
 
+        public void updateSelectedFileName() {
+            RaisePropertyChanged(nameof(PlayingFileName));
+        }
+
         private DelegateCommand<object> playFromIndexCommand;
         public DelegateCommand<object> PlayFromIndexCommand {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(

@@ -82,5 +82,29 @@ namespace MusicPlayer.Properties {
                 this["WindowHeight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastVisitedDirectoryPath {
+            get {
+                return ((string)(this["lastVisitedDirectoryPath"]));
+            }
+            set {
+                this["lastVisitedDirectoryPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastPlayingFileName {
+            get {
+                return ((string)(this["lastPlayingFileName"]));
+            }
+            set {
+                this["lastPlayingFileName"] = value;
+            }
+        }
     }
 }

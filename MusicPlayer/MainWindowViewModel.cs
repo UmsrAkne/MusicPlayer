@@ -144,6 +144,8 @@ namespace MusicPlayer {
 
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
+
+            string lastVisitedDirectoryPath = Properties.Settings.Default.lastVisitedDirectoryPath;
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
             BaseDirectoryPath = path;
@@ -212,6 +214,11 @@ namespace MusicPlayer {
                 () => { return doubleSoundPlayer.Playing; }
             ).ObservesProperty(() => Playing );
 
+            List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
+            if(mdList.Count != 0) {
+                Directory = mdList;
+            }
+
         }
 
         private DelegateCommand randomSortCommand;
@@ -236,6 +243,58 @@ namespace MusicPlayer {
                 },
                 () => MediaFiles.Count > 0
             )).ObservesProperty(() => MediaFiles);
+        }
+
+        /// <summary>
+        /// 指定したパスに含まれるディレクトリが展開された状態のリストを生成します。
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private List<MediaDirectory> expandItemsTo(string path) {
+            if (!System.IO.Directory.Exists(path) || path == baseDirectoryPath) {
+                return new List<MediaDirectory>();
+            }
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            List<DirectoryInfo> directoryInfoList = new List<DirectoryInfo>();
+
+            while(directoryInfo != null){
+                directoryInfoList.Add(directoryInfo);
+                directoryInfo = directoryInfo.Parent;
+                if(directoryInfo.FullName == new DirectoryInfo(BaseDirectoryPath).Parent.FullName) {
+                    break;
+                }
+            }
+
+            // ルートに近いディレクトリほど奥に入っていて、ループ処理が逆順になってしまうため逆転させる。
+            directoryInfoList.Reverse();
+
+            MediaDirectory md = new MediaDirectory();
+            List<MediaDirectory> mdList = new List<MediaDirectory>();
+            mdList.Add(md);
+
+            for(var i = 0; i < directoryInfoList.Count; i++) {
+                md.FileInfo = new FileInfo(directoryInfoList[i].FullName);
+                md.GetChildsCommand.Execute();
+                md.IsExpanded = true;
+
+                if(directoryInfoList.Count <= i + 1) {
+                    break;
+                }
+
+                md = md.ChildDirectory.FirstOrDefault(m => m.FileInfo.FullName == directoryInfoList[i + 1].FullName);
+            }
+
+            md.IsExpanded = true;
+            md.IsSelected = true;
+            MediaFilesSettingCommand.Execute(md);
+            if(DoubleSoundPlayer.Files != null && DoubleSoundPlayer.Files.Count != 0) {
+                int sameFileNameIndex = DoubleSoundPlayer.Files.FindIndex(f => f.FullName == Properties.Settings.Default.lastPlayingFileName);
+                DoubleSoundPlayer.PlayingIndex = sameFileNameIndex;
+                DoubleSoundPlayer.updateSelectedFileName();
+            }
+
+            return mdList;
         }
     }
 }
