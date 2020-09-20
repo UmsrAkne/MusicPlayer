@@ -52,6 +52,13 @@ namespace MusicPlayer.model {
             player.URL = soundFileInfo.FullName;
             player.play();
             player.Position = FrontCut;
+
+            /** ここで情報を記録するので、再生中のメディアが終了N秒前に入ってこのメソッドが呼び出されると、
+             *  最後に再生していたメディアが更新される。
+             *  最後の方まで再生した曲は、視聴を終えたとみなす。
+             */
+            Properties.Settings.Default.lastPlayingFileName = SoundFileInfo.FullName;
+            Properties.Settings.Default.Save();
         }
 
         public void pause() {
