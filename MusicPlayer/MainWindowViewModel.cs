@@ -288,6 +288,11 @@ namespace MusicPlayer {
             md.IsExpanded = true;
             md.IsSelected = true;
             MediaFilesSettingCommand.Execute(md);
+            if(DoubleSoundPlayer.Files != null && DoubleSoundPlayer.Files.Count != 0) {
+                int sameFileNameIndex = DoubleSoundPlayer.Files.FindIndex(f => f.FullName == Properties.Settings.Default.lastPlayingFileName);
+                DoubleSoundPlayer.PlayingIndex = sameFileNameIndex;
+                DoubleSoundPlayer.updateSelectedFileName();
+            }
 
             return mdList;
         }
