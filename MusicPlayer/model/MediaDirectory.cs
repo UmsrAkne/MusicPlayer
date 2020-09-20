@@ -91,5 +91,11 @@ namespace MusicPlayer.model {
         }
 
         public DelegateCommand GetChildsCommand { get; private set; }
+
+        private bool isExpanded = false;
+        public bool IsExpanded {
+            get => isExpanded;
+            set => SetProperty(ref isExpanded, value);
+        }
     }
 }

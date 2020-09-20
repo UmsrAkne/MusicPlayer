@@ -91,6 +91,12 @@
                   Grid.Row="1"
                   Grid.Column="0" >
 
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedItemChanged">
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
