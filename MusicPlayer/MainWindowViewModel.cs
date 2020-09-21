@@ -41,27 +41,6 @@ namespace MusicPlayer {
             }
         }
 
-        public bool Playing {
-            get {
-                return doubleSoundPlayer.Playing;
-            }
-            private set {
-                RaisePropertyChanged(nameof(Playing));
-            }
-        }
-
-        public int Volume {
-            get {
-                return doubleSoundPlayer.Volume;
-            }
-            set {
-                RaisePropertyChanged(nameof(Volume));
-                doubleSoundPlayer.Volume = value;
-                Properties.Settings.Default.Volume = value;
-                Properties.Settings.Default.Save();
-            }
-        }
-
         public int WindowWidth {
             get => Properties.Settings.Default.WindowWidth;
             set {
@@ -111,7 +90,6 @@ namespace MusicPlayer {
         public String SelectedDirectoryName { get; private set; }
 
         public DelegateCommand PlayCommand { get; private set; }
-        public DelegateCommand StopCommand { get; private set; }
 
         private IDialogService dialogService;
 
@@ -201,18 +179,9 @@ namespace MusicPlayer {
                 () => {
                     doubleSoundPlayer.Files = MediaFiles;
                     doubleSoundPlayer.play();
-                    Playing = true;
                 },
                 () => { return MediaFiles != null && MediaFiles.Count > 0; }
             ).ObservesProperty(() => MediaFiles );
-
-            StopCommand = new DelegateCommand(
-                () => {
-                    doubleSoundPlayer.stop();
-                    Playing = false;
-                },
-                () => { return doubleSoundPlayer.Playing; }
-            ).ObservesProperty(() => Playing );
 
             List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
             if(mdList.Count != 0) {

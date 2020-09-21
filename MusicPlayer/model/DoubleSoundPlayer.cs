@@ -180,6 +180,13 @@ namespace MusicPlayer.model {
 
         }
 
+        private DelegateCommand stopCommand;
+        public DelegateCommand StopCommand {
+            get => stopCommand ?? (stopCommand = new DelegateCommand(
+                () => stop()
+            ));
+        }
+
         public String PlayTime {
             get {
                 var p1 = players[(int)PlayerIndex.First];
@@ -270,11 +277,16 @@ namespace MusicPlayer.model {
             get { return volume; }
             set {
                 volume = value;
+
                 if (value >= 100) volume = 100;
                 if (value <= 0) volume = 0;
 
                 players[(int)PlayerIndex.First].Volume = volume;
                 players[(int)PlayerIndex.Second].Volume = volume;
+
+                Properties.Settings.Default.Volume = volume;
+                Properties.Settings.Default.Save();
+                RaisePropertyChanged(nameof(Volume));
             }
         }
     }
