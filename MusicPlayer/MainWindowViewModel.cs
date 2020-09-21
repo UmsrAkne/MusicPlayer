@@ -290,6 +290,12 @@ namespace MusicPlayer {
             MediaFilesSettingCommand.Execute(md);
             if(DoubleSoundPlayer.Files != null && DoubleSoundPlayer.Files.Count != 0) {
                 int sameFileNameIndex = DoubleSoundPlayer.Files.FindIndex(f => f.FullName == Properties.Settings.Default.lastPlayingFileName);
+                if(sameFileNameIndex < 0) {
+                    // 最後に聴いたファイルが消えていた場合や、
+                    // 最後に訪れたディレクトリと、視聴していたファイルを内包するディレクトリが異なる場合にマイナスの可能性。
+                    sameFileNameIndex = 0;
+                }
+
                 DoubleSoundPlayer.PlayingIndex = sameFileNameIndex;
                 DoubleSoundPlayer.updateSelectedFileName();
             }
