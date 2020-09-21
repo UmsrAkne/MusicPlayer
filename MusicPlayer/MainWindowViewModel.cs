@@ -50,18 +50,6 @@ namespace MusicPlayer {
             }
         }
 
-        public int Volume {
-            get {
-                return doubleSoundPlayer.Volume;
-            }
-            set {
-                RaisePropertyChanged(nameof(Volume));
-                doubleSoundPlayer.Volume = value;
-                Properties.Settings.Default.Volume = value;
-                Properties.Settings.Default.Save();
-            }
-        }
-
         public int WindowWidth {
             get => Properties.Settings.Default.WindowWidth;
             set {

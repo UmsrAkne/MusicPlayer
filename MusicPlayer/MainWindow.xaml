@@ -56,7 +56,7 @@
                            />
 
                 <Slider Name="VolumeControlSlider"
-                        Value="{Binding Volume}"
+                        Value="{Binding DoubleSoundPlayer.Volume}"
                         AutoToolTipPlacement="TopLeft"
                         SmallChange="2"
                         Width="250"
