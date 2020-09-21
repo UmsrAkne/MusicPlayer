@@ -90,7 +90,6 @@ namespace MusicPlayer {
         public String SelectedDirectoryName { get; private set; }
 
         public DelegateCommand PlayCommand { get; private set; }
-        public DelegateCommand StopCommand { get; private set; }
 
         private IDialogService dialogService;
 
@@ -183,13 +182,6 @@ namespace MusicPlayer {
                 },
                 () => { return MediaFiles != null && MediaFiles.Count > 0; }
             ).ObservesProperty(() => MediaFiles );
-
-            StopCommand = new DelegateCommand(
-                () => {
-                    doubleSoundPlayer.stop();
-                },
-                () => { return doubleSoundPlayer.Playing; }
-            ).ObservesProperty(() => DoubleSoundPlayer.Playing );
 
             List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
             if(mdList.Count != 0) {

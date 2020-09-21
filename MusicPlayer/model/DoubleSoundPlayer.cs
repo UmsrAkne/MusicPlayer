@@ -180,6 +180,13 @@ namespace MusicPlayer.model {
 
         }
 
+        private DelegateCommand stopCommand;
+        public DelegateCommand StopCommand {
+            get => stopCommand ?? (stopCommand = new DelegateCommand(
+                () => stop()
+            ));
+        }
+
         public String PlayTime {
             get {
                 var p1 = players[(int)PlayerIndex.First];
