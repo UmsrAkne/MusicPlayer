@@ -140,6 +140,8 @@ namespace MusicPlayer {
                 new SoundPlayer(new WMPWrapper())
             );
 
+            doubleSoundPlayer.CurrentDirectorySource = TreeViewModel;
+
             playerSetting = new PlayerSetting();
             playerSetting.DefaultBaseDirectoryPath = path;
             playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;

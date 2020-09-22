@@ -2,19 +2,22 @@
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.viewModels
 {
-    class TreeViewModel :BindableBase
+    class TreeViewModel : BindableBase, ICurrentDirectorySource
     {
         private string baseDirectoryPath = @"C:\";
         public string BaseDirectoryPath {
             get => baseDirectoryPath;
             set => SetProperty(ref baseDirectoryPath, value);
         }
+
+        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(BaseDirectoryPath);
 
         private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
         public List<MediaDirectory> MediaDirectories {

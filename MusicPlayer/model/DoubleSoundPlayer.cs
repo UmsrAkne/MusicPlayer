@@ -289,5 +289,7 @@ namespace MusicPlayer.model {
                 RaisePropertyChanged(nameof(Volume));
             }
         }
+
+        public ICurrentDirectorySource CurrentDirectorySource { private get; set; }
     }
 }
