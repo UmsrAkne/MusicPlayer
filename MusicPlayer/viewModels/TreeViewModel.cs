@@ -14,7 +14,20 @@ namespace MusicPlayer.viewModels
         private string baseDirectoryPath = @"C:\";
         public string BaseDirectoryPath {
             get => baseDirectoryPath;
-            set => SetProperty(ref baseDirectoryPath, value);
+            set {
+                if (!Directory.Exists(value)) {
+                    return;
+                }
+
+                SetProperty(ref baseDirectoryPath, value);
+
+                // ディレクトリツリーの最上位の部分を生成する
+                var md = new MediaDirectory();
+                md.FileInfo = new FileInfo(value);
+                md.GetChildsCommand.Execute();
+
+                MediaDirectories = new List<MediaDirectory>(new MediaDirectory[] { md });
+            }
         }
 
         public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(BaseDirectoryPath);
