@@ -1,4 +1,5 @@
 ﻿using MusicPlayer.model;
+using MusicPlayer.viewModels;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -18,6 +19,10 @@ namespace MusicPlayer {
 
         public DoubleSoundPlayer DoubleSoundPlayer {
             get { return doubleSoundPlayer; }
+        }
+
+        public TreeViewModel TreeViewModel {
+            get;
         }
 
         public List<MediaDirectory> Directory {
@@ -127,6 +132,8 @@ namespace MusicPlayer {
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
             BaseDirectoryPath = path;
+
+            TreeViewModel = new TreeViewModel(path);
 
             doubleSoundPlayer = new DoubleSoundPlayer(
                 new SoundPlayer(new WMPWrapper()),
