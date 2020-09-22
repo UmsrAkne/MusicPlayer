@@ -79,7 +79,7 @@
                        />
 
             <TextBox x:Name="baseDirectoryPathTextBox" 
-                     Text="{Binding BaseDirectoryPath, Mode=TwoWay}"
+                     Text="{Binding TreeViewModel.BaseDirectoryPath, Mode=TwoWay}"
                      FontSize="14"
                      />
 
@@ -87,7 +87,7 @@
         </StackPanel>
 
         <TreeView Name="directoryTree"
-                  ItemsSource="{Binding Directory}"
+                  ItemsSource="{Binding TreeViewModel.MediaDirectories}"
                   Grid.Row="1"
                   Grid.Column="0" >
 

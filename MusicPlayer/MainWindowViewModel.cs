@@ -25,16 +25,6 @@ namespace MusicPlayer {
             get;
         }
 
-        public List<MediaDirectory> Directory {
-            get {
-                return directory;
-            }
-            private set {
-                SetProperty(ref directory, value);
-                directory = value;
-            }
-        }
-
         private List<FileInfo> mediaFiles = new List<FileInfo>();
         public List<FileInfo> MediaFiles {
             get {
@@ -61,27 +51,6 @@ namespace MusicPlayer {
                 RaisePropertyChanged();
                 Properties.Settings.Default.WindowHeight = value;
                 Properties.Settings.Default.Save();
-            }
-        }
-
-        private string baseDirectoryPath = "";
-        public string BaseDirectoryPath {
-            get => baseDirectoryPath;
-            set {
-                if (!System.IO.Directory.Exists(value)) {
-                    return;
-                }
-
-                SetProperty(ref baseDirectoryPath, value);
-                baseDirectoryPath = value;
-
-                var md = new MediaDirectory();
-                md.FileInfo = new FileInfo(value);
-                md.GetChildsCommand.Execute();
-
-                var dir = new List<MediaDirectory>();
-                dir.Add(md);
-                Directory = dir;
             }
         }
 
@@ -131,7 +100,6 @@ namespace MusicPlayer {
             string lastVisitedDirectoryPath = Properties.Settings.Default.lastVisitedDirectoryPath;
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
-            BaseDirectoryPath = path;
 
             TreeViewModel = new TreeViewModel(path);
 
@@ -192,11 +160,6 @@ namespace MusicPlayer {
                 () => { return MediaFiles != null && MediaFiles.Count > 0; }
             ).ObservesProperty(() => MediaFiles );
 
-            List<MediaDirectory> mdList = expandItemsTo(lastVisitedDirectoryPath);
-            if(mdList.Count != 0) {
-                Directory = mdList;
-            }
-
         }
 
         private DelegateCommand randomSortCommand;
@@ -223,62 +186,5 @@ namespace MusicPlayer {
             )).ObservesProperty(() => MediaFiles);
         }
 
-        /// <summary>
-        /// 指定したパスに含まれるディレクトリが展開された状態のリストを生成します。
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private List<MediaDirectory> expandItemsTo(string path) {
-            if (!System.IO.Directory.Exists(path) || path == baseDirectoryPath) {
-                return new List<MediaDirectory>();
-            }
-
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
-            List<DirectoryInfo> directoryInfoList = new List<DirectoryInfo>();
-
-            while(directoryInfo != null){
-                directoryInfoList.Add(directoryInfo);
-                directoryInfo = directoryInfo.Parent;
-                if(directoryInfo.FullName == new DirectoryInfo(BaseDirectoryPath).Parent.FullName) {
-                    break;
-                }
-            }
-
-            // ルートに近いディレクトリほど奥に入っていて、ループ処理が逆順になってしまうため逆転させる。
-            directoryInfoList.Reverse();
-
-            MediaDirectory md = new MediaDirectory();
-            List<MediaDirectory> mdList = new List<MediaDirectory>();
-            mdList.Add(md);
-
-            for(var i = 0; i < directoryInfoList.Count; i++) {
-                md.FileInfo = new FileInfo(directoryInfoList[i].FullName);
-                md.GetChildsCommand.Execute();
-                md.IsExpanded = true;
-
-                if(directoryInfoList.Count <= i + 1) {
-                    break;
-                }
-
-                md = md.ChildDirectory.FirstOrDefault(m => m.FileInfo.FullName == directoryInfoList[i + 1].FullName);
-            }
-
-            md.IsExpanded = true;
-            md.IsSelected = true;
-            MediaFilesSettingCommand.Execute(md);
-            if(DoubleSoundPlayer.Files != null && DoubleSoundPlayer.Files.Count != 0) {
-                int sameFileNameIndex = DoubleSoundPlayer.Files.FindIndex(f => f.FullName == Properties.Settings.Default.lastPlayingFileName);
-                if(sameFileNameIndex < 0) {
-                    // 最後に聴いたファイルが消えていた場合や、
-                    // 最後に訪れたディレクトリと、視聴していたファイルを内包するディレクトリが異なる場合にマイナスの可能性。
-                    sameFileNameIndex = 0;
-                }
-
-                DoubleSoundPlayer.PlayingIndex = sameFileNameIndex;
-                DoubleSoundPlayer.updateSelectedFileName();
-            }
-
-            return mdList;
-        }
     }
 }
