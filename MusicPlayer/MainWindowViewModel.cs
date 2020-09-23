@@ -83,8 +83,6 @@ namespace MusicPlayer {
             ));
         }
 
-        public String SelectedDirectoryName { get; private set; }
-
         public DelegateCommand PlayCommand { get; private set; }
 
         private IDialogService dialogService;

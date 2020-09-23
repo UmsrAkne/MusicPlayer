@@ -177,7 +177,7 @@
             <StackPanel Orientation="Horizontal">
 
                 <Label Content="url >" />
-                <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"
+                <Label Content="{Binding TreeViewModel.SelectedItem.FileInfo.FullName, UpdateSourceTrigger=PropertyChanged}"
                    Grid.Column="0"
                    >
             </Label>
