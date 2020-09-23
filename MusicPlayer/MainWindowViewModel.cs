@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 namespace MusicPlayer {
     class MainWindowViewModel : BindableBase{
 
-        private List<MediaDirectory> directory = new List<MediaDirectory>();
         private DoubleSoundPlayer doubleSoundPlayer;
 
         public DoubleSoundPlayer DoubleSoundPlayer {
