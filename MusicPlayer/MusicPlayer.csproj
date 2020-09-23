@@ -89,6 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="model\ICurrentDirectorySource.cs" />
     <Compile Include="model\IPlayer.cs" />
     <Compile Include="model\PlayerSetting.cs" />
     <Compile Include="model\WMPWrapper.cs" />
@@ -96,6 +97,7 @@
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingWindowViewModel.cs" />
+    <Compile Include="viewModels\TreeViewModel.cs" />
     <Page Include="CustomDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

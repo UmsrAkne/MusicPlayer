@@ -79,7 +79,7 @@
                        />
 
             <TextBox x:Name="baseDirectoryPathTextBox" 
-                     Text="{Binding BaseDirectoryPath, Mode=TwoWay}"
+                     Text="{Binding TreeViewModel.BaseDirectoryPath, Mode=TwoWay}"
                      FontSize="14"
                      />
 
@@ -87,7 +87,7 @@
         </StackPanel>
 
         <TreeView Name="directoryTree"
-                  ItemsSource="{Binding Directory}"
+                  ItemsSource="{Binding TreeViewModel.MediaDirectories}"
                   Grid.Row="1"
                   Grid.Column="0" >
 
@@ -103,7 +103,7 @@
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
-                    <i:InvokeCommandAction Command="{Binding SelectedDirectorySettingCommand}"
+                    <i:InvokeCommandAction Command="{Binding TreeViewModel.SelectDirectoryCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
                 </i:EventTrigger>
@@ -177,7 +177,7 @@
             <StackPanel Orientation="Horizontal">
 
                 <Label Content="url >" />
-                <Label Content="{Binding SelectedDirectoryName, UpdateSourceTrigger=PropertyChanged}"
+                <Label Content="{Binding TreeViewModel.SelectedItem.FileInfo.FullName, UpdateSourceTrigger=PropertyChanged}"
                    Grid.Column="0"
                    >
             </Label>
