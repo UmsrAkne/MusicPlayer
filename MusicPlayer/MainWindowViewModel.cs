@@ -56,8 +56,31 @@ namespace MusicPlayer {
 
         private DelegateCommand<Object> mediaFilesSettingCommand;
         public DelegateCommand<Object> MediaFilesSettingCommand {
-            get { return mediaFilesSettingCommand; }
-            private set { mediaFilesSettingCommand = value; }
+            get => mediaFilesSettingCommand ?? (mediaFilesSettingCommand = new DelegateCommand<object>(
+                (object param) => {
+                    MediaDirectory info = (MediaDirectory)param;
+                    MediaFiles = new List<FileInfo>();
+
+                    if (info.IsM3U) {
+                        var fileList = info.makeFileListFromM3U();
+                        foreach(FileInfo f in fileList) {
+                            mediaFiles.Add(f);
+                        }
+                    }
+                    else {
+                        string[] fileNames = System.IO.Directory.GetFiles(info.FileInfo.FullName);
+                        IEnumerable<String> selectedList = from name in fileNames
+                                                           where name.EndsWith(".mp3")
+                                                           select name;
+
+                        foreach(string n in selectedList) {
+                            MediaFiles.Add(new FileInfo(n));
+                        }
+                    }
+
+                    doubleSoundPlayer.Files = mediaFiles;
+                }
+            ));
         }
 
         public String SelectedDirectoryName { get; private set; }
@@ -100,13 +123,14 @@ namespace MusicPlayer {
             var path = (new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists) ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
 
-            TreeViewModel = new TreeViewModel(path);
-            TreeViewModel.expandItemsTo(lastVisitedDirectoryPath);
-
             doubleSoundPlayer = new DoubleSoundPlayer(
                 new SoundPlayer(new WMPWrapper()),
                 new SoundPlayer(new WMPWrapper())
             );
+
+            TreeViewModel = new TreeViewModel(path);
+            TreeViewModel.expandItemsTo(lastVisitedDirectoryPath);
+            MediaFilesSettingCommand.Execute(TreeViewModel.SelectedItem);
 
             doubleSoundPlayer.CurrentDirectorySource = TreeViewModel;
 
@@ -115,34 +139,6 @@ namespace MusicPlayer {
             playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;
             DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
             DoubleSoundPlayer.Volume = Properties.Settings.Default.Volume;
-
-            mediaFilesSettingCommand = new DelegateCommand<Object>(
-                (Object param) => {
-                    MediaDirectory info = (MediaDirectory)param;
-
-                    MediaFiles = new List<FileInfo>();
-
-                    if (info.IsM3U) {
-                        var fileList = info.makeFileListFromM3U();
-                        foreach(FileInfo f in fileList) {
-                            mediaFiles.Add(f);
-                        }
-                    }
-                    else {
-                        string[] fileNames = System.IO.Directory.GetFiles(info.FileInfo.FullName);
-                        IEnumerable<String> selectedList = from name in fileNames
-                                                           where name.EndsWith(".mp3")
-                                                           select name;
-
-                        foreach(string n in selectedList) {
-                            MediaFiles.Add(new FileInfo(n));
-                        }
-                    }
-
-                    doubleSoundPlayer.Files = mediaFiles;
-                },
-                (Object param) => { return true; }
-            );
 
             PlayCommand = new DelegateCommand(
                 () => {
