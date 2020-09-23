@@ -102,6 +102,7 @@ namespace MusicPlayer {
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
 
             TreeViewModel = new TreeViewModel(path);
+            TreeViewModel.expandItemsTo(lastVisitedDirectoryPath);
 
             doubleSoundPlayer = new DoubleSoundPlayer(
                 new SoundPlayer(new WMPWrapper()),

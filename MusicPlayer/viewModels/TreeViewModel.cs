@@ -1,4 +1,5 @@
 ﻿using MusicPlayer.model;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace MusicPlayer.viewModels
             }
         }
 
-        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(BaseDirectoryPath);
+        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(SelectedItem.FileInfo.FullName);
 
         private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
         public List<MediaDirectory> MediaDirectories {
@@ -38,8 +39,12 @@ namespace MusicPlayer.viewModels
             private set => SetProperty(ref mediaDirectories, value);
         }
 
-        public object SelectedItem {
-            get; set;
+        private MediaDirectory selectedItem;
+        public MediaDirectory SelectedItem {
+            get => selectedItem;
+            private set {
+                SetProperty(ref selectedItem, value);
+            }
         }
 
         /// <summary>
@@ -49,5 +54,62 @@ namespace MusicPlayer.viewModels
         public TreeViewModel (string baseDirectoryPath) {
             BaseDirectoryPath = (System.IO.Directory.Exists(baseDirectoryPath)) ? baseDirectoryPath : @"C\";
         }
+
+        private DelegateCommand<MediaDirectory> selectDirectoryCommand;
+        public DelegateCommand<MediaDirectory> SelectDirectoryCommand {
+            get => selectDirectoryCommand ?? (selectDirectoryCommand = new DelegateCommand<MediaDirectory>(
+                (MediaDirectory mediaDirectory) => {
+                    SelectedItem = mediaDirectory;
+                    Properties.Settings.Default.lastVisitedDirectoryPath = mediaDirectory.FileInfo.FullName;
+                    Properties.Settings.Default.Save();
+                }
+            ));
+        }
+
+        /// <summary>
+        /// BaseDirectory から、指定したパスに含まれるディレクトリまでが展開された状態のリストを生成し、
+        /// MediaDirectories にセットします。
+        /// </summary>
+        /// <param name="path">パスが存在しない、または BaseDirectory と同一の場合は、動作を終了します。</param>
+        public void expandItemsTo(string path) {
+            if (!Directory.Exists(path) || path == BaseDirectoryPath) {
+                return;
+            }
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            List<DirectoryInfo> directoryInfoList = new List<DirectoryInfo>();
+
+            while(directoryInfo != null){
+                directoryInfoList.Add(directoryInfo);
+                directoryInfo = directoryInfo.Parent;
+                if(directoryInfo.FullName == new DirectoryInfo(BaseDirectoryPath).Parent.FullName) {
+                    break;
+                }
+            }
+
+            // ルートに近いディレクトリほど奥に入っていて、ループ処理が逆順になってしまうため逆転させる。
+            directoryInfoList.Reverse();
+
+            MediaDirectory md = new MediaDirectory();
+            List<MediaDirectory> mdList = new List<MediaDirectory>();
+            mdList.Add(md);
+
+            for(var i = 0; i < directoryInfoList.Count; i++) {
+                md.FileInfo = new FileInfo(directoryInfoList[i].FullName);
+                md.GetChildsCommand.Execute();
+                md.IsExpanded = true;
+
+                if(directoryInfoList.Count <= i + 1) {
+                    break;
+                }
+
+                md = md.ChildDirectory.FirstOrDefault(m => m.FileInfo.FullName == directoryInfoList[i + 1].FullName);
+            }
+
+            md.IsExpanded = true;
+            md.IsSelected = true;
+            MediaDirectories = mdList;
+        }
+
     }
 }

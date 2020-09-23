@@ -103,7 +103,7 @@
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
-                    <i:InvokeCommandAction Command="{Binding SelectedDirectorySettingCommand}"
+                    <i:InvokeCommandAction Command="{Binding TreeViewModel.SelectDirectoryCommand}"
                                            CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}"
                                            />
                 </i:EventTrigger>
