@@ -60,7 +60,6 @@ namespace MusicPlayer {
             private set { mediaFilesSettingCommand = value; }
         }
 
-        public DelegateCommand<Object> SelectedDirectorySettingCommand { get; private set; }
         public String SelectedDirectoryName { get; private set; }
 
         public DelegateCommand PlayCommand { get; private set; }
@@ -141,14 +140,6 @@ namespace MusicPlayer {
                     }
 
                     doubleSoundPlayer.Files = mediaFiles;
-                },
-                (Object param) => { return true; }
-            );
-
-            SelectedDirectorySettingCommand = new DelegateCommand<object>(
-                (Object param) => {
-                    SelectedDirectoryName = ((MediaDirectory)param).FileInfo.FullName;
-                    RaisePropertyChanged(nameof(SelectedDirectoryName));
                 },
                 (Object param) => { return true; }
             );
