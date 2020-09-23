@@ -70,9 +70,14 @@ namespace MusicPlayer.viewModels
         /// BaseDirectory から、指定したパスに含まれるディレクトリまでが展開された状態のリストを生成し、
         /// MediaDirectories にセットします。
         /// </summary>
-        /// <param name="path">パスが存在しない、または BaseDirectory と同一の場合は、動作を終了します。</param>
+        /// <param name="path">パスが存在しない、または BaseDirectory と同一の場合は、BaseDirectoryだけを展開して動作を終了します。</param>
         public void expandItemsTo(string path) {
             if (!Directory.Exists(path) || path == BaseDirectoryPath) {
+                SelectedItem = new MediaDirectory();
+                SelectedItem.FileInfo = new FileInfo(BaseDirectoryPath);
+                SelectedItem.GetChildsCommand.Execute();
+                SelectedItem.IsExpanded = true;
+                MediaDirectories = new List<MediaDirectory>(new MediaDirectory[] { SelectedItem });
                 return;
             }
 
@@ -108,6 +113,7 @@ namespace MusicPlayer.viewModels
 
             md.IsExpanded = true;
             md.IsSelected = true;
+            SelectedItem = md;
             MediaDirectories = mdList;
         }
 
