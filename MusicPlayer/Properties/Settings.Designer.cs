@@ -106,5 +106,29 @@ namespace MusicPlayer.Properties {
                 this["lastPlayingFileName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrontCut {
+            get {
+                return ((int)(this["FrontCut"]));
+            }
+            set {
+                this["FrontCut"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BackCut {
+            get {
+                return ((int)(this["BackCut"]));
+            }
+            set {
+                this["BackCut"] = value;
+            }
+        }
     }
 }

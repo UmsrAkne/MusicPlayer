@@ -36,5 +36,18 @@ namespace MusicPlayer.model {
             }
         }
 
+        private int frontCut;
+        public int FrontCut {
+            get => frontCut;
+            set => SetProperty(ref frontCut, value);
+        }
+
+        private int backCut;
+        public int BackCut {
+            get => backCut;
+            set => SetProperty(ref backCut, value);
+        }
+
+
     }
 }

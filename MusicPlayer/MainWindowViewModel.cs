@@ -105,7 +105,12 @@ namespace MusicPlayer {
                                 doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
                                 Properties.Settings.Default.SwitchinDuration = pSettings.SwitchingDuration;
                                 Properties.Settings.Default.DefaultBaseDirectoryPath = pSettings.DefaultBaseDirectoryPath;
+                                Properties.Settings.Default.FrontCut = pSettings.FrontCut;
+                                Properties.Settings.Default.BackCut = pSettings.BackCut;
                                 Properties.Settings.Default.Save();
+
+                                DoubleSoundPlayer.FrontCut = pSettings.FrontCut;
+                                DoubleSoundPlayer.BackCut = pSettings.BackCut;
                             }
                         }
                     );
