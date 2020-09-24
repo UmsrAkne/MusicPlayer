@@ -67,6 +67,8 @@ namespace MusicPlayer.model {
 
                     PlayingIndex++;
                     otherPlayer.SoundFileInfo = Files[PlayingIndex];
+
+                    // ここで行う曲の新規再生（切り替え）は BackCut, FrontCut を加味した play() メソッドで行う。
                     otherPlayer.play();
                     otherPlayer.Volume = 0;
                     otherPlayer.playStartedEvent += stopMedia;
@@ -134,7 +136,7 @@ namespace MusicPlayer.model {
                 if(Files.Count > PlayingIndex + 1) {
                     PlayingIndex++;
                     p.SoundFileInfo = Files[PlayingIndex];
-                    p.play();
+                    p.newPlay();
                 }
             }
 
@@ -146,7 +148,7 @@ namespace MusicPlayer.model {
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
-            CurrentPlayer.play();
+            CurrentPlayer.newPlay();
         }
 
         public void updateSelectedFileName() {
@@ -161,7 +163,7 @@ namespace MusicPlayer.model {
                     SelectedItem = f;
                     CurrentPlayer.SoundFileInfo = f;
                     PlayingIndex = Files.IndexOf(f);
-                    CurrentPlayer.play();
+                    CurrentPlayer.newPlay();
                     RaisePropertyChanged(nameof(PlayingFileName));
                 }
             ));

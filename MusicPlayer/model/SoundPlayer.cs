@@ -48,10 +48,12 @@ namespace MusicPlayer.model {
         public event MediaEndedEventHandler mediaEndedEvent;
         public event PlayStartedEventHandler playStartedEvent;
 
-        public void play() {
+        /// <summary>
+        /// 新規で再生を開始する際に使用します。
+        /// </summary>
+        public void newPlay() {
             player.URL = soundFileInfo.FullName;
             player.play();
-            player.Position = FrontCut;
 
             /** ここで情報を記録するので、再生中のメディアが終了N秒前に入ってこのメソッドが呼び出されると、
              *  最後に再生していたメディアが更新される。
@@ -59,6 +61,14 @@ namespace MusicPlayer.model {
              */
             Properties.Settings.Default.lastPlayingFileName = SoundFileInfo.FullName;
             Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// FrontCut の値だけ、冒頭をカットして再生を開始します。
+        /// </summary>
+        public void play() {
+            newPlay();
+            player.Position = FrontCut;
         }
 
         public void pause() {
