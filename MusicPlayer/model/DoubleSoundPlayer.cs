@@ -293,5 +293,21 @@ namespace MusicPlayer.model {
         }
 
         public ICurrentDirectorySource CurrentDirectorySource { private get; set; }
+
+        public int FrontCut {
+            get => players[(int)PlayerIndex.First].FrontCut;    // get は別に [0] でも [1] でも可。setは両方同時に行うので。
+            set {
+                players[(int)PlayerIndex.First].FrontCut = value;
+                players[(int)PlayerIndex.Second].FrontCut = value;
+            }
+        }
+
+        public int BackCut {
+            get => players[(int)PlayerIndex.First].BackCut; 
+            set {
+                players[(int)PlayerIndex.First].BackCut = value;
+                players[(int)PlayerIndex.Second].BackCut = value;
+            }
+        }
     }
 }
