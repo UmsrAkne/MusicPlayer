@@ -13,6 +13,7 @@ namespace MusicPlayer.model {
         void play();
         void stop();
         void pause();
+        void resume();
         bool Playing { get; }
         bool Loading { get; }
         String URL { get; set; }

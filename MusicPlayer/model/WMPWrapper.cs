@@ -53,6 +53,10 @@ namespace MusicPlayer.model {
             wmp.controls.pause();
         }
 
+        public void resume() {
+            wmp.controls.play();
+        }
+
         public void play() {
             wmp.PlayStateChange -= wmpPlayStateChangeEventHandler;
             string url = URL; // 一時退避
