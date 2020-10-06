@@ -139,6 +139,9 @@ namespace MusicPlayer {
             playerSetting = new PlayerSetting();
             playerSetting.DefaultBaseDirectoryPath = path;
             playerSetting.SwitchingDuration = Properties.Settings.Default.SwitchinDuration;
+            playerSetting.BackCut = Properties.Settings.Default.BackCut;
+            playerSetting.FrontCut = Properties.Settings.Default.FrontCut;
+
             DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
             DoubleSoundPlayer.Volume = Properties.Settings.Default.Volume;
 
