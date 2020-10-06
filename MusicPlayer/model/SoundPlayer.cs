@@ -72,10 +72,11 @@ namespace MusicPlayer.model {
         }
 
         public void pause() {
+            player.pause();
         }
 
         public void resume() {
-            player.play();
+            player.resume();
         }
 
         public void stop() {
