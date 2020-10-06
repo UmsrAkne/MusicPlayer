@@ -45,8 +45,15 @@
                         Padding="3"
                         Margin="2"
                         />
+
                 <Button Content="stop"
                         Command="{Binding DoubleSoundPlayer.StopCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
+
+                <Button Content="pause/resume"
+                        Command="{Binding DoubleSoundPlayer.PauseOrResumeCommand}"
                         Padding="3"
                         Margin="2"
                         />

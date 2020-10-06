@@ -51,6 +51,10 @@ namespace MusicPlayerTests3.model {
             playing = false;
         }
 
+        public void resume() {
+            throw new NotImplementedException();
+        }
+
         public void forward() {
             if (loading) {
                 loading = false;

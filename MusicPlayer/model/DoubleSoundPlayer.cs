@@ -11,7 +11,7 @@ using System.Timers;
 using System.Windows.Controls;
 
 namespace MusicPlayer.model {
-    public class DoubleSoundPlayer : BindableBase{
+    public class DoubleSoundPlayer : BindableBase {
         private List<SoundPlayer> players;
         private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
@@ -19,9 +19,10 @@ namespace MusicPlayer.model {
         private int switchingDuration = 0;
         private int volume = 100;
 
+        private bool pausing = false;
         private bool autoStoped = false;
 
-        enum PlayerIndex :int {
+        enum PlayerIndex : int {
             First = 0,
             Second = 1
 
@@ -61,7 +62,7 @@ namespace MusicPlayer.model {
                 }
 
                 if (!otherPlayer.Playing) {
-                    if(Files.Count < PlayingIndex + 1) {
+                    if (Files.Count < PlayingIndex + 1) {
                         return;
                     }
 
@@ -91,7 +92,7 @@ namespace MusicPlayer.model {
 
         private void stopMedia(object sender) {
             SoundPlayer p = sender as SoundPlayer;
-            if(p.Duration <= p.SecondsOfBeforeEndNotice * 2) {
+            if (p.Duration <= p.SecondsOfBeforeEndNotice * 2) {
                 p.stop();
                 PlayingIndex--;
                 autoStoped = true;
@@ -118,7 +119,7 @@ namespace MusicPlayer.model {
         /// </summary>
         private SoundPlayer eitherBeforePlayEnd {
             get {
-                if(players[0].PassedBeforeEndPoint == players[1].PassedBeforeEndPoint){
+                if (players[0].PassedBeforeEndPoint == players[1].PassedBeforeEndPoint) {
                     return null;
                 }
 
@@ -133,7 +134,7 @@ namespace MusicPlayer.model {
 
             // 逆側のプレイヤーが再生している状態の場合は、このハンドラ内で play() を呼び出すことは無い
             if (!anotherPlayer.Playing) {
-                if(Files.Count > PlayingIndex + 1) {
+                if (Files.Count > PlayingIndex + 1) {
                     PlayingIndex++;
                     p.SoundFileInfo = Files[PlayingIndex];
                     p.newPlay();
@@ -188,6 +189,28 @@ namespace MusicPlayer.model {
                 () => stop()
             ));
         }
+
+        public DelegateCommand PauseOrResumeCommand{
+            #region
+            get => pauseOrResumeCommand ?? (pauseOrResumeCommand = new DelegateCommand(
+                () => {
+                    if (!pausing) {
+                        pausing = true;
+                        timer.Stop();
+                        players[(int)PlayerIndex.First].pause();
+                        players[(int)PlayerIndex.Second].pause();
+                    }
+                    else {
+                        pausing = false;
+                        timer.Start();
+                        players[(int)PlayerIndex.First].resume();
+                        players[(int)PlayerIndex.Second].resume();
+                    }
+                }
+            ));
+        }
+        private DelegateCommand pauseOrResumeCommand;
+        #endregion
 
         public String PlayTime {
             get {
