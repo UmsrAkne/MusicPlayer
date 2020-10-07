@@ -67,7 +67,7 @@ namespace MusicPlayer.model {
                     }
 
                     PlayingIndex++;
-                    otherPlayer.SoundFileInfo = Files[PlayingIndex];
+                    otherPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
 
                     // ここで行う曲の新規再生（切り替え）は BackCut, FrontCut を加味した play() メソッドで行う。
                     otherPlayer.play();
@@ -136,7 +136,7 @@ namespace MusicPlayer.model {
             if (!anotherPlayer.Playing) {
                 if (Files.Count > PlayingIndex + 1) {
                     PlayingIndex++;
-                    p.SoundFileInfo = Files[PlayingIndex];
+                    p.SoundFileInfo = Files[PlayingIndex].FileInfo;
                     p.newPlay();
                 }
             }
@@ -146,9 +146,9 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
-            SelectedItem = Files[PlayingIndex];
+            SelectedItem = Files[PlayingIndex].FileInfo;
             RaisePropertyChanged(nameof(PlayingFileName));
-            CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
+            CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             CurrentPlayer.newPlay();
         }
 
@@ -160,9 +160,9 @@ namespace MusicPlayer.model {
         public DelegateCommand<object> PlayFromIndexCommand {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
                 (fi) => {
-                    FileInfo f = (FileInfo)((ListViewItem)fi).Content;
-                    SelectedItem = f;
-                    CurrentPlayer.SoundFileInfo = f;
+                    IndexedFileInfo f = (IndexedFileInfo)((ListViewItem)fi).Content;
+                    SelectedItem = f.FileInfo;
+                    CurrentPlayer.SoundFileInfo = f.FileInfo;
                     PlayingIndex = Files.IndexOf(f);
                     CurrentPlayer.newPlay();
                     RaisePropertyChanged(nameof(PlayingFileName));
@@ -178,7 +178,7 @@ namespace MusicPlayer.model {
             CurrentPlayer.Volume = this.Volume;
             getOtherPlayer(CurrentPlayer).Volume = this.Volume;
 
-            CurrentPlayer.SoundFileInfo = Files[PlayingIndex];
+            CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             mediaSwitching = false;
 
         }
@@ -232,7 +232,7 @@ namespace MusicPlayer.model {
             }
         }
 
-        public List<FileInfo> Files {
+        public List<IndexedFileInfo> Files {
             get; set;
         }
 

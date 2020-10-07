@@ -24,14 +24,18 @@ namespace MusicPlayer {
             get;
         }
 
-        private List<FileInfo> mediaFiles = new List<FileInfo>();
-        public List<FileInfo> MediaFiles {
+        private List<IndexedFileInfo> mediaFiles = new List<IndexedFileInfo>();
+        public List<IndexedFileInfo> MediaFiles {
             get {
                 return mediaFiles;
             }
             private set {
+
+                for(int i = 0; i < value.Count; i++) {
+                    value[i].Index = i + 1; // 表示番号は１始まりとしたいので +1
+                }
+
                 SetProperty(ref mediaFiles, value);
-                mediaFiles = value;
             }
         }
 
@@ -58,12 +62,13 @@ namespace MusicPlayer {
             get => mediaFilesSettingCommand ?? (mediaFilesSettingCommand = new DelegateCommand<object>(
                 (object param) => {
                     MediaDirectory info = (MediaDirectory)param;
-                    MediaFiles = new List<FileInfo>();
+                    MediaFiles = new List<IndexedFileInfo>();
+                    List<IndexedFileInfo> mf = new List<IndexedFileInfo>();
 
                     if (info.IsM3U) {
                         var fileList = info.makeFileListFromM3U();
                         foreach(FileInfo f in fileList) {
-                            mediaFiles.Add(f);
+                            mf.Add(new IndexedFileInfo(f));
                         }
                     }
                     else {
@@ -73,11 +78,12 @@ namespace MusicPlayer {
                                                            select name;
 
                         foreach(string n in selectedList) {
-                            MediaFiles.Add(new FileInfo(n));
+                            mf.Add(new IndexedFileInfo(new FileInfo(n)));
                         }
                     }
 
                     doubleSoundPlayer.Files = mediaFiles;
+                    MediaFiles = mf;
                 }
             ));
         }
