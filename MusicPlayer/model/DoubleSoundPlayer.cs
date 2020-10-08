@@ -149,7 +149,7 @@ namespace MusicPlayer.model {
 
         public void play() {
             SelectedIndex = PlayingIndex;
-            SelectedItem = Files[PlayingIndex].FileInfo;
+            SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             CurrentPlayer.newPlay();
@@ -164,7 +164,7 @@ namespace MusicPlayer.model {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
                 (fi) => {
                     IndexedFileInfo f = (IndexedFileInfo)((ListViewItem)fi).Content;
-                    SelectedItem = f.FileInfo;
+                    SelectedItem = f;
                     CurrentPlayer.SoundFileInfo = f.FileInfo;
                     PlayingIndex = Files.IndexOf(f);
                     CurrentPlayer.newPlay();
@@ -249,8 +249,8 @@ namespace MusicPlayer.model {
             set => SetProperty(ref selectedIndex, value);
         }
 
-        private FileInfo selectedItem;
-        public FileInfo SelectedItem {
+        private IndexedFileInfo selectedItem;
+        public IndexedFileInfo SelectedItem {
             get => selectedItem;
             set {
                 selectedItem = value;
