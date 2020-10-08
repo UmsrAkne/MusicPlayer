@@ -67,6 +67,7 @@ namespace MusicPlayer.model {
                     }
 
                     PlayingIndex++;
+                    SelectedIndex = PlayingIndex;
                     otherPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
 
                     // ここで行う曲の新規再生（切り替え）は BackCut, FrontCut を加味した play() メソッドで行う。
@@ -136,6 +137,7 @@ namespace MusicPlayer.model {
             if (!anotherPlayer.Playing) {
                 if (Files.Count > PlayingIndex + 1) {
                     PlayingIndex++;
+                    SelectedIndex = PlayingIndex;
                     p.SoundFileInfo = Files[PlayingIndex].FileInfo;
                     p.newPlay();
                 }
@@ -146,7 +148,8 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
-            SelectedItem = Files[PlayingIndex].FileInfo;
+            SelectedIndex = PlayingIndex;
+            SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             CurrentPlayer.newPlay();
@@ -161,7 +164,7 @@ namespace MusicPlayer.model {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
                 (fi) => {
                     IndexedFileInfo f = (IndexedFileInfo)((ListViewItem)fi).Content;
-                    SelectedItem = f.FileInfo;
+                    SelectedItem = f;
                     CurrentPlayer.SoundFileInfo = f.FileInfo;
                     PlayingIndex = Files.IndexOf(f);
                     CurrentPlayer.newPlay();
@@ -240,8 +243,14 @@ namespace MusicPlayer.model {
             get; set;
         } = 0;
 
-        private FileInfo selectedItem;
-        public FileInfo SelectedItem {
+        private int selectedIndex = 0;
+        public int SelectedIndex {
+            get => selectedIndex;
+            set => SetProperty(ref selectedIndex, value);
+        }
+
+        private IndexedFileInfo selectedItem;
+        public IndexedFileInfo SelectedItem {
             get => selectedItem;
             set {
                 selectedItem = value;
