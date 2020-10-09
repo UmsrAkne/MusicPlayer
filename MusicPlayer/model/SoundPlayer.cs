@@ -160,5 +160,12 @@ namespace MusicPlayer.model {
         public int BackCut {
             get; set;
         }
+
+        /// <summary>
+        /// SoundFileInfo に対して、空の FileInfo を直接セットします。
+        /// </summary>
+        public void setEmptyFileInfo() {
+            soundFileInfo = new FileInfo("notExistEmptyFileInfo");
+        }
     }
 }

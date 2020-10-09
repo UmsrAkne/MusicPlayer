@@ -148,6 +148,7 @@ namespace MusicPlayer.model {
         }
 
         public void play() {
+            PlayingIndex = 0;
             SelectedIndex = PlayingIndex;
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
@@ -174,14 +175,15 @@ namespace MusicPlayer.model {
         }
 
         public void stop() {
-            PlayingIndex = 0;
+            PlayingIndex = int.MaxValue;
             CurrentPlayer.stop();
             getOtherPlayer(CurrentPlayer).stop();
 
             CurrentPlayer.Volume = this.Volume;
             getOtherPlayer(CurrentPlayer).Volume = this.Volume;
 
-            CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
+            CurrentPlayer.setEmptyFileInfo();
+            updateSelectedFileName();
             mediaSwitching = false;
 
         }
