@@ -181,7 +181,6 @@ namespace MusicPlayer.model {
             CurrentPlayer.Volume = this.Volume;
             getOtherPlayer(CurrentPlayer).Volume = this.Volume;
 
-            CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             mediaSwitching = false;
 
         }
