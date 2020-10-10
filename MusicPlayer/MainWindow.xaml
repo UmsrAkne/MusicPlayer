@@ -170,7 +170,7 @@
                 <GridView>
                     <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}"/>
                     <GridViewColumn Header="ファイル名" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="ファイルサイズ" DisplayMemberBinding="{Binding FileInfo.Length}"/>
+                    <GridViewColumn Header="ファイルサイズ" DisplayMemberBinding="{Binding SizeOfMB}"/>
                 </GridView>
             </ListView.View>
         </ListView>
