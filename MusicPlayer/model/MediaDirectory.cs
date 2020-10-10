@@ -12,9 +12,7 @@ namespace MusicPlayer.model {
     class MediaDirectory : BindableBase{
 
         public bool IsM3U {
-            get {
-                return FileInfo.Extension == ".m3u";
-            }
+            get => FileInfo.Extension == ".m3u" || FileInfo.Extension ==".m3u16";
         }
 
         public String Name {
