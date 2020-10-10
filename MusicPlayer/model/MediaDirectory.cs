@@ -82,14 +82,33 @@ namespace MusicPlayer.model {
         public List<FileInfo> makeFileListFromM3U() {
             var fileList = new List<FileInfo>();
             string[] fileNames = File.ReadAllLines(FileInfo.FullName);
-            foreach(var n in fileNames) {
-                if(n.Trim().Length > 0) {
-                    FileInfo f = new FileInfo(n);
+
+            // 現状、他に影響が出るかはわからないが、
+            // staticの値を変更するので、念の為に処理終了の後でアドレスを復元できるようにする。
+            string originalCurrentDirectory = Environment.CurrentDirectory;
+
+            Environment.CurrentDirectory = FileInfo.Directory.FullName;
+            // 上記で CurrentDirectory を変更すると、下で相対パスから FileInfo を生成できるようになる。
+            // FileInfo のインスタンスが新規生成される際、コンストラクタの引数に相対パス(..\)が入力された場合、
+            // 基準となるパスは Environment.CurrentDirectory となる模様。
+
+            foreach(string line in fileNames) {
+                if(line.Trim().Length > 0) {
+
+                    if(line.Trim()[0] == '#') {
+                        // 先頭が '#' の行はコメント行のためスキップ
+                        continue;
+                    }
+
+                    FileInfo f = new FileInfo(line);
                     if (f.Exists) {
-                        fileList.Add(new FileInfo(n));
+                        fileList.Add(new FileInfo(line));
                     }
                 }
             }
+
+            Environment.CurrentDirectory = originalCurrentDirectory;
+            // 後に影響が出ると嫌なのでもとに戻しておく。
 
             return fileList;
         }
