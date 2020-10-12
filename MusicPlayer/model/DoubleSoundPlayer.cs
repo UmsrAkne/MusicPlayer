@@ -237,6 +237,22 @@ namespace MusicPlayer.model {
             }
         }
 
+        public double Position {
+            get {
+                var p1 = players[(int)PlayerIndex.First];
+                var p2 = players[(int)PlayerIndex.Second];
+
+                if(!p1.Playing && !p2.Playing) {
+                    return 0;
+                }
+
+                TimeSpan p1Position = new TimeSpan(0, 0, (int)p1.Position);
+                TimeSpan p2Position = new TimeSpan(0, 0, (int)p2.Position);
+
+                return Math.Max(p1Position.TotalSeconds, p2Position.TotalSeconds);
+            }
+        }
+
         public List<IndexedFileInfo> Files {
             get; set;
         }
