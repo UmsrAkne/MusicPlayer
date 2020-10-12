@@ -47,6 +47,8 @@ namespace MusicPlayer.model {
 
         private void timerEventHandler() {
             RaisePropertyChanged(nameof(PlayTime));
+            RaisePropertyChanged(nameof(Position));
+            RaisePropertyChanged(nameof(Duration));
             SoundPlayer player = eitherBeforePlayEnd;
             if (player != null) {
 
@@ -236,21 +238,9 @@ namespace MusicPlayer.model {
             }
         }
 
-        public double Position {
-            get {
-                var p1 = players[(int)PlayerIndex.First];
-                var p2 = players[(int)PlayerIndex.Second];
+        public double Position { get => CurrentPlayer.Position; }
 
-                if(!p1.Playing && !p2.Playing) {
-                    return 0;
-                }
-
-                TimeSpan p1Position = new TimeSpan(0, 0, (int)p1.Position);
-                TimeSpan p2Position = new TimeSpan(0, 0, (int)p2.Position);
-
-                return Math.Max(p1Position.TotalSeconds, p2Position.TotalSeconds);
-            }
-        }
+        public double Duration { get => CurrentPlayer.Duration; }
 
         public List<IndexedFileInfo> Files {
             get; set;
