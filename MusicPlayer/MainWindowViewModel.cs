@@ -82,8 +82,8 @@ namespace MusicPlayer {
                         }
                     }
 
-                    doubleSoundPlayer.Files = mediaFiles;
                     MediaFiles = mf;
+                    doubleSoundPlayer.Files = MediaFiles;
                 }
             ));
         }
