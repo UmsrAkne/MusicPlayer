@@ -13,7 +13,6 @@ using System.Windows.Controls;
 namespace MusicPlayer.model {
     public class DoubleSoundPlayer : BindableBase {
         private List<SoundPlayer> players;
-        private PlayerIndex currentPlayerIndex = PlayerIndex.First;
         private Timer timer = new Timer(450);
         private bool mediaSwitching = false;
         private int switchingDuration = 0;
@@ -48,6 +47,8 @@ namespace MusicPlayer.model {
 
         private void timerEventHandler() {
             RaisePropertyChanged(nameof(PlayTime));
+            RaisePropertyChanged(nameof(Position));
+            RaisePropertyChanged(nameof(Duration));
             SoundPlayer player = eitherBeforePlayEnd;
             if (player != null) {
 
@@ -237,6 +238,10 @@ namespace MusicPlayer.model {
             }
         }
 
+        public double Position { get => CurrentPlayer.Position; }
+
+        public double Duration { get => CurrentPlayer.Duration; }
+
         public List<IndexedFileInfo> Files {
             get; set;
         }
@@ -283,9 +288,15 @@ namespace MusicPlayer.model {
             else return players[(int)PlayerIndex.Second];
         }
 
+        /// <summary>
+        /// このクラスが保持するプレイヤーの内、Position(現在の再生位置）の値が大きい方のプレイヤーを返却します。
+        /// </summary>
         private SoundPlayer CurrentPlayer {
             get {
-                return players[(int)currentPlayerIndex];
+                var p1 = players[(int)PlayerIndex.First];
+                var p2 = players[(int)PlayerIndex.Second];
+
+                return (p1.Position >= p2.Position) ? p1 : p2;
             }
         }
 

@@ -41,17 +41,17 @@ namespace MusicPlayer.model.Tests {
             };
 
 
-            var files = new List<FileInfo>();
-            files.Add(new FileInfo("testFile1"));
-            files.Add(new FileInfo("testFile2"));
-            files.Add(new FileInfo("testFile3"));
-            files.Add(new FileInfo("testFile4"));
-            files.Add(new FileInfo("testFile5"));
-            files.Add(new FileInfo("testFile6"));
-            files.Add(new FileInfo("testFile7"));
+            var files = new List<IndexedFileInfo>();
+            files.Add(new IndexedFileInfo(new FileInfo("testFile1")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile2")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile3")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile4")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile5")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile6")));
+            files.Add(new IndexedFileInfo(new FileInfo("testFile7")));
 
-            foreach(FileInfo fi in files) {
-                fi.Create();
+            foreach(IndexedFileInfo fi in files) {
+                fi.FileInfo.Create();
             }
 
             dsp.Files = files;

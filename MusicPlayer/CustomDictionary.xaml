@@ -276,8 +276,10 @@
                         </i:Interaction.Triggers>
                         
                     <Border x:Name="Border"
-                Padding="2"
+                Padding="1"
                 SnapsToDevicePixels="true"
+                BorderThickness="0.5"
+                BorderBrush="LightGray"
                 Background="Transparent">
                         <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>

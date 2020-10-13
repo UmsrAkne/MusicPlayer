@@ -79,6 +79,11 @@
 
             </StackPanel>
 
+            <Slider Value="{Binding DoubleSoundPlayer.Position, Mode=OneWay}"
+                    Minimum="0"
+                    Maximum="{Binding DoubleSoundPlayer.Duration,Mode=OneWay}"
+                    />
+
             <TextBlock x:Name="playTimeTextBox"
                        Text="{Binding DoubleSoundPlayer.PlayTime, UpdateSourceTrigger=PropertyChanged}"
                        FontSize="14"
