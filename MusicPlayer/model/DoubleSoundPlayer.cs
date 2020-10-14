@@ -148,8 +148,8 @@ namespace MusicPlayer.model {
             RaisePropertyChanged(nameof(PlayingFileName));
         }
 
-        public void play() {
-            PlayingIndex = 0;
+        public void play(int index = 0) {
+            PlayingIndex = index;
             SelectedIndex = PlayingIndex;
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
