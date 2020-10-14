@@ -148,14 +148,40 @@ namespace MusicPlayer.model {
             RaisePropertyChanged(nameof(PlayingFileName));
         }
 
-        public void play() {
-            PlayingIndex = 0;
+        public void play(int index = 0) {
+            PlayingIndex = index;
             SelectedIndex = PlayingIndex;
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
             CurrentPlayer.newPlay();
         }
+
+        public DelegateCommand ToNextCommand {
+            #region
+            get => toNextCommand ?? (toNextCommand = new DelegateCommand(
+                () => {
+                    if(PlayingIndex < Files.Count - 1) {
+                        play(PlayingIndex + 1);
+                    }
+                }
+            ));
+        }
+        private DelegateCommand toNextCommand;
+        #endregion
+
+        public DelegateCommand ToBackCommand {
+            #region
+            get => toBackCommand ?? (toBackCommand = new DelegateCommand(
+                () => {
+                    if(PlayingIndex > 0 && Files.Count != 0) {
+                        play(PlayingIndex - 1);
+                    }
+                }
+            ));
+        }
+        private DelegateCommand toBackCommand;
+        #endregion
 
         public void updateSelectedFileName() {
             RaisePropertyChanged(nameof(PlayingFileName));
