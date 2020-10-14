@@ -26,6 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -194,10 +195,9 @@
 
         <StatusBar Name="musicStatusBar"
                    VerticalAlignment="Bottom"
-                   Grid.Row="1"
+                   Grid.Row="2"
                    Grid.Column="0"
                    Grid.ColumnSpan="2" 
-                   Margin="2"
                    >
 
             <StackPanel Orientation="Horizontal">
@@ -218,7 +218,7 @@
                 Height="auto"
                 VerticalAlignment="Bottom"
                 Margin="0,0,5,5"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="1"
                 DockPanel.Dock="Right"
                 />
