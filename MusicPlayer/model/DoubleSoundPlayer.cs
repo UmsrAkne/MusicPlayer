@@ -157,6 +157,32 @@ namespace MusicPlayer.model {
             CurrentPlayer.newPlay();
         }
 
+        public DelegateCommand ToNextCommand {
+            #region
+            get => toNextCommand ?? (toNextCommand = new DelegateCommand(
+                () => {
+                    if(PlayingIndex < Files.Count - 1) {
+                        play(PlayingIndex + 1);
+                    }
+                }
+            ));
+        }
+        private DelegateCommand toNextCommand;
+        #endregion
+
+        public DelegateCommand ToBackCommand {
+            #region
+            get => toBackCommand ?? (toBackCommand = new DelegateCommand(
+                () => {
+                    if(PlayingIndex > 0 && Files.Count != 0) {
+                        play(PlayingIndex - 1);
+                    }
+                }
+            ));
+        }
+        private DelegateCommand toBackCommand;
+        #endregion
+
         public void updateSelectedFileName() {
             RaisePropertyChanged(nameof(PlayingFileName));
         }

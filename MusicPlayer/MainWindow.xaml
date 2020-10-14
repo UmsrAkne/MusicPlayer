@@ -58,6 +58,18 @@
                         Margin="2"
                         />
 
+                <Button Content="back"
+                        Command="{Binding DoubleSoundPlayer.ToBackCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
+
+                <Button Content="next"
+                        Command="{Binding DoubleSoundPlayer.ToNextCommand}"
+                        Padding="3"
+                        Margin="2"
+                        />
+
                 <TextBlock Text="mute"
                            Margin="3"
                            />
