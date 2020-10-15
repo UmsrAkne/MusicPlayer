@@ -61,9 +61,10 @@ namespace MusicPlayer.model {
             var mediaDirectories = new List<MediaDirectory>();
             void addFiles(string[] fileOrDirectoryNames) {
                  foreach(string n in fileOrDirectoryNames) {
-                     var md = new MediaDirectory();
-                     md.FileInfo = new FileInfo(n);
-                     mediaDirectories.Add(md);
+                    var md = new MediaDirectory();
+                    md.FileInfo = new FileInfo(n);
+                    md.getChild();
+                    mediaDirectories.Add(md);
                  }
             }
 

@@ -120,6 +120,10 @@
                 <Style TargetType="TreeViewItem">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
+                    <Setter Property="Padding" Value="4,0,0,0" />
+                    <Setter Property="Margin" Value="1,0,0,1" />
                 </Style>
             </TreeView.ItemContainerStyle>
             
