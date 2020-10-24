@@ -103,6 +103,15 @@
                        Margin="5,0,0,0"
                        />
 
+            <StackPanel Orientation="Horizontal"
+                        Margin="2,4" 
+                        >
+                <CheckBox IsChecked="{Binding DoubleSoundPlayer.CrossFade}"/>
+                <TextBlock Text="クロスフェード"
+                           Margin="4,0"
+                           />
+            </StackPanel>
+
             <TextBox x:Name="baseDirectoryPathTextBox" 
                      Text="{Binding TreeViewModel.BaseDirectoryPath, Mode=TwoWay}"
                      FontSize="14"

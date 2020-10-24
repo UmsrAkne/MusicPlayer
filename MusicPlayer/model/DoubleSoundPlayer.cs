@@ -380,5 +380,18 @@ namespace MusicPlayer.model {
                 players[(int)PlayerIndex.Second].BackCut = value;
             }
         }
+
+        public bool CrossFade {
+            #region
+            get => crossFade;
+            set {
+                players[(int)PlayerIndex.First].BeforeEndPointPassageNotification = value;
+                players[(int)PlayerIndex.Second].BeforeEndPointPassageNotification = value;
+                SetProperty(ref crossFade, value);
+            }
+        }
+
+        private bool crossFade = true;
+        #endregion
     }
 }

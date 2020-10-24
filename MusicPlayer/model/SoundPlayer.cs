@@ -68,7 +68,11 @@ namespace MusicPlayer.model {
         /// </summary>
         public void play() {
             newPlay();
-            player.Position = FrontCut;
+
+            if (BeforeEndPointPassageNotification) {
+                // クロスフェードによる音量の変更を伴う場合にのみ FrontCut を有効にする。
+                player.Position = FrontCut;
+            }
         }
 
         public void pause() {
@@ -132,7 +136,11 @@ namespace MusicPlayer.model {
         /// </summary>
         public bool PassedBeforeEndPoint {
             get {
-                if (Duration == 0 || SecondsOfBeforeEndNotice * 2 > Duration || !Playing) {
+                if (Duration == 0 
+                    || SecondsOfBeforeEndNotice * 2 > Duration 
+                    || !Playing
+                    || !BeforeEndPointPassageNotification
+                    ) {
                     return false;
                 }
                 return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
@@ -158,6 +166,14 @@ namespace MusicPlayer.model {
         /// 曲の終端部分を指定秒数カットします。
         /// </summary>
         public int BackCut {
+            get; set;
+        }
+
+        /// <summary>
+        /// trueに設定すると、PassedBeforeEndPoint が常に false を返すようになり、
+        /// 結果的に クロスフェード機能を無効にします。
+        /// </summary>
+        public bool BeforeEndPointPassageNotification {
             get; set;
         }
 
