@@ -170,12 +170,12 @@ namespace MusicPlayer.model {
         }
 
         /// <summary>
-        /// trueに設定すると、PassedBeforeEndPoint が常に false を返すようになり、
+        /// falseに設定すると、PassedBeforeEndPoint が常に false を返すようになり、
         /// 結果的に クロスフェード機能を無効にします。
         /// </summary>
         public bool BeforeEndPointPassageNotification {
             get; set;
-        }
+        } = true;
 
         /// <summary>
         /// SoundFileInfo に対して、空の FileInfo を直接セットします。
