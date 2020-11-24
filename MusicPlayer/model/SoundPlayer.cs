@@ -61,6 +61,14 @@ namespace MusicPlayer.model {
              */
             Properties.Settings.Default.lastPlayingFileName = SoundFileInfo.FullName;
             Properties.Settings.Default.Save();
+
+            var logFileName = "playlog.txt";
+            var text = (File.Exists(logFileName)) ? File.ReadAllText(logFileName) : "";
+
+            using (StreamWriter sw = new StreamWriter(logFileName, false)) {
+                sw.WriteLine($"{DateTime.Now.ToString("yyy/MM/dd HH:mm:ss")},{SoundFileInfo.FullName}");
+                sw.Write(text);
+            }
         }
 
         /// <summary>
