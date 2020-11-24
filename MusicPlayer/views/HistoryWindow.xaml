@@ -9,6 +9,20 @@
         mc:Ignorable="d"
         Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0" />
+
+        <Button Content="戻る"
+                Command="{Binding CloseDialogCommand}"
+                Grid.Row="1"
+                Width="auto"
+                HorizontalAlignment="Right"
+                Margin="10,2"
+                />
+
     </Grid>
 </UserControl>

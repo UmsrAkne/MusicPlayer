@@ -232,6 +232,7 @@
                     >
             
             <Button Content="ログを表示"
+                    Command="{Binding ShowLogWindowCommand}"
                     HorizontalAlignment="Right"
                     Margin="0,5,5,5"
                     Height="auto"

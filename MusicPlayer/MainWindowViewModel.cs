@@ -1,5 +1,6 @@
 ﻿using MusicPlayer.model;
 using MusicPlayer.viewModels;
+using MusicPlayer.views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -123,6 +124,18 @@ namespace MusicPlayer {
                 }
             ));
         }
+
+        public DelegateCommand ShowLogWindowCommand {
+            #region
+            get => showLogWindowCommand ?? (showLogWindowCommand = new DelegateCommand(() => {
+                var param = new DialogParameters();
+                dialogService.ShowDialog(nameof(HistoryWindow), param, (IDialogResult result) => { }
+                );
+            }));
+        }
+        private DelegateCommand showLogWindowCommand;
+        #endregion
+
 
         public MainWindowViewModel(IDialogService _dialogService) {
             dialogService = _dialogService;
