@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Prism.Unity;
+using MusicPlayer.views;
+using MusicPlayer.viewModels;
 
 namespace MusicPlayer {
     /// <summary>
@@ -21,6 +23,7 @@ namespace MusicPlayer {
         protected override void RegisterTypes(IContainerRegistry containerRegistry) {
             // ビューとビューモデルを登録
             containerRegistry.RegisterDialog<SettingWindow, SettingWindowViewModel>();
+            containerRegistry.RegisterDialog<HistoryWindow, HistoryWindowViewModel>();
         }
     }
 }
