@@ -14,7 +14,22 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="0" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                      Grid.Row="0" 
+                      Grid.Column="0"
+                      >
+            <TextBlock Text="{Binding Log}"
+                       Background="White"
+                       Margin="2"
+                       Padding="3"
+                       FontSize="13"
+                       />
+
+        </ScrollViewer>
 
         <Button Content="戻る"
                 Command="{Binding CloseDialogCommand}"
