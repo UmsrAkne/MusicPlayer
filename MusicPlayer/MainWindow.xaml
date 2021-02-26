@@ -28,12 +28,22 @@
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <StackPanel>
+            <StackPanel.Resources>
+
+                <Style TargetType="Button">
+                    <Setter Property="Padding" Value="3"/>
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+
+            </StackPanel.Resources>
+
             <TextBlock Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}"
                        Margin="2"
                        />
@@ -41,34 +51,25 @@
             <StackPanel Orientation="Horizontal"
                         Grid.Row="0"
                         >
+
                 <Button Content="play"
                         Command="{Binding PlayCommand}"
-                        Padding="3"
-                        Margin="2"
                         />
 
                 <Button Content="stop"
                         Command="{Binding DoubleSoundPlayer.StopCommand}"
-                        Padding="3"
-                        Margin="2"
                         />
 
                 <Button Content="pause/resume"
                         Command="{Binding DoubleSoundPlayer.PauseOrResumeCommand}"
-                        Padding="3"
-                        Margin="2"
                         />
 
                 <Button Content="back"
                         Command="{Binding DoubleSoundPlayer.ToBackCommand}"
-                        Padding="3"
-                        Margin="2"
                         />
 
                 <Button Content="next"
                         Command="{Binding DoubleSoundPlayer.ToNextCommand}"
-                        Padding="3"
-                        Margin="2"
                         />
 
                 <TextBlock Text="mute"
