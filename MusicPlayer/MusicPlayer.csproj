@@ -99,7 +99,7 @@
     <Compile Include="SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingWindowViewModel.cs" />
+    <Compile Include="viewModels\SettingWindowViewModel.cs" />
     <Compile Include="viewModels\HistoryWindowViewModel.cs" />
     <Compile Include="viewModels\TreeViewModel.cs" />
     <Compile Include="views\HistoryWindow.xaml.cs">
