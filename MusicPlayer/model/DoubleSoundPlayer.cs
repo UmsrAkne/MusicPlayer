@@ -1,17 +1,14 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Controls;
+﻿namespace MusicPlayer.model
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Timers;
+    using System.Windows.Controls;
+    using Prism.Commands;
+    using Prism.Mvvm;
 
-namespace MusicPlayer.model {
-    public class DoubleSoundPlayer : BindableBase {
+    public class DoubleSoundPlayer : BindableBase
+    {
         private List<SoundPlayer> players;
         private Timer timer = new Timer(450);
         private bool mediaSwitching = false;
@@ -21,13 +18,15 @@ namespace MusicPlayer.model {
         private bool pausing = false;
         private bool autoStoped = false;
 
-        enum PlayerIndex : int {
+        enum PlayerIndex : int
+        {
             First = 0,
             Second = 1
 
         }
 
-        public DoubleSoundPlayer(SoundPlayer playerA, SoundPlayer playerB) {
+        public DoubleSoundPlayer(SoundPlayer playerA, SoundPlayer playerB)
+        {
             players = new List<SoundPlayer>(2); // 今の所、要素数２より大きくする必要はない
             SoundPlayer soundPlayerA = playerA;
             SoundPlayer soundPlayerB = playerB;
@@ -38,32 +37,38 @@ namespace MusicPlayer.model {
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
 
-            timer.Elapsed += (source, e) => {
+            timer.Elapsed += (source, e) =>
+            {
                 timerEventHandler();
             };
 
             timer.Start();
         }
 
-        private void timerEventHandler() {
+        private void timerEventHandler()
+        {
             RaisePropertyChanged(nameof(PlayTime));
             RaisePropertyChanged(nameof(Position));
             RaisePropertyChanged(nameof(Duration));
             SoundPlayer player = eitherBeforePlayEnd;
-            if (player != null) {
+            if (player != null)
+            {
 
                 // ボリュームの操作等の曲の切り替え中の動作をここに記述する
                 SoundPlayer otherPlayer = getOtherPlayer(player);
 
-                if (autoStoped) {
+                if (autoStoped)
+                {
                     // 何度もファイルの読み込みを行わないようにするため、一度自動停止したらここでリターンする。
                     // このフラグが立つタイミングは、ファイル再生の途中となるので、
                     // ファイル再生終了に対するイベントハンドラ内でフラグを初期化する
                     return;
                 }
 
-                if (!otherPlayer.Playing) {
-                    if (Files.Count < PlayingIndex + 1) {
+                if (!otherPlayer.Playing)
+                {
+                    if (Files.Count < PlayingIndex + 1)
+                    {
                         return;
                     }
 
@@ -80,10 +85,12 @@ namespace MusicPlayer.model {
                 int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
                 int volumeDownAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
 
-                if (otherPlayer.Volume + volumeUpAmount < Volume) {
+                if (otherPlayer.Volume + volumeUpAmount < Volume)
+                {
                     otherPlayer.Volume += volumeUpAmount;
                 }
-                else {
+                else
+                {
                     otherPlayer.Volume = Volume;
                 }
 
@@ -92,14 +99,17 @@ namespace MusicPlayer.model {
             }
         }
 
-        private void stopMedia(object sender) {
+        private void stopMedia(object sender)
+        {
             SoundPlayer p = sender as SoundPlayer;
-            if (p.Duration <= p.SecondsOfBeforeEndNotice * 2) {
+            if (p.Duration <= p.SecondsOfBeforeEndNotice * 2)
+            {
                 p.stop();
                 PlayingIndex--;
                 autoStoped = true;
             }
-            else {
+            else
+            {
                 // 再生継続の場合は曲名の更新通知を飛ばす
                 mediaSwitching = true;
                 RaisePropertyChanged(nameof(PlayingFileName));
@@ -111,7 +121,8 @@ namespace MusicPlayer.model {
         /// <summary>
         /// テスト時に PrivateObject 経由でタイマーを止めるために使用
         /// </summary>
-        private void stopTimer() {
+        private void stopTimer()
+        {
             timer.Stop();
         }
 
@@ -119,9 +130,12 @@ namespace MusicPlayer.model {
         /// ２つのプレイヤーのうち、どちらか片方だけが終了直前のとき、そのプレイヤーを返します。
         /// 両方のプレイヤーが終了直前、または終了直前ではない場合、null を返します。
         /// </summary>
-        private SoundPlayer eitherBeforePlayEnd {
-            get {
-                if (players[0].PassedBeforeEndPoint == players[1].PassedBeforeEndPoint) {
+        private SoundPlayer eitherBeforePlayEnd
+        {
+            get
+            {
+                if (players[0].PassedBeforeEndPoint == players[1].PassedBeforeEndPoint)
+                {
                     return null;
                 }
 
@@ -129,14 +143,17 @@ namespace MusicPlayer.model {
             }
         }
 
-        private void nextPlay(object sender) {
+        private void nextPlay(object sender)
+        {
             autoStoped = false;
             SoundPlayer p = sender as SoundPlayer;
             var anotherPlayer = getOtherPlayer(p);
 
             // 逆側のプレイヤーが再生している状態の場合は、このハンドラ内で play() を呼び出すことは無い
-            if (!anotherPlayer.Playing) {
-                if (Files.Count > PlayingIndex + 1) {
+            if (!anotherPlayer.Playing)
+            {
+                if (Files.Count > PlayingIndex + 1)
+                {
                     PlayingIndex++;
                     SelectedIndex = PlayingIndex;
                     p.SoundFileInfo = Files[PlayingIndex].FileInfo;
@@ -148,7 +165,8 @@ namespace MusicPlayer.model {
             RaisePropertyChanged(nameof(PlayingFileName));
         }
 
-        public void play(int index = 0) {
+        public void play(int index = 0)
+        {
             PlayingIndex = index;
             SelectedIndex = PlayingIndex;
             SelectedItem = Files[PlayingIndex];
@@ -157,11 +175,14 @@ namespace MusicPlayer.model {
             CurrentPlayer.newPlay();
         }
 
-        public DelegateCommand ToNextCommand {
+        public DelegateCommand ToNextCommand
+        {
             #region
             get => toNextCommand ?? (toNextCommand = new DelegateCommand(
-                () => {
-                    if(PlayingIndex < Files.Count - 1) {
+                () =>
+                {
+                    if (PlayingIndex < Files.Count - 1)
+                    {
                         play(PlayingIndex + 1);
                     }
                 }
@@ -170,11 +191,14 @@ namespace MusicPlayer.model {
         private DelegateCommand toNextCommand;
         #endregion
 
-        public DelegateCommand ToBackCommand {
+        public DelegateCommand ToBackCommand
+        {
             #region
             get => toBackCommand ?? (toBackCommand = new DelegateCommand(
-                () => {
-                    if(PlayingIndex > 0 && Files.Count != 0) {
+                () =>
+                {
+                    if (PlayingIndex > 0 && Files.Count != 0)
+                    {
                         play(PlayingIndex - 1);
                     }
                 }
@@ -183,14 +207,17 @@ namespace MusicPlayer.model {
         private DelegateCommand toBackCommand;
         #endregion
 
-        public void updateSelectedFileName() {
+        public void updateSelectedFileName()
+        {
             RaisePropertyChanged(nameof(PlayingFileName));
         }
 
         private DelegateCommand<object> playFromIndexCommand;
-        public DelegateCommand<object> PlayFromIndexCommand {
+        public DelegateCommand<object> PlayFromIndexCommand
+        {
             get => playFromIndexCommand ?? (playFromIndexCommand = new DelegateCommand<object>(
-                (fi) => {
+                (fi) =>
+                {
                     IndexedFileInfo f = (IndexedFileInfo)((ListViewItem)fi).Content;
                     SelectedItem = f;
                     CurrentPlayer.SoundFileInfo = f.FileInfo;
@@ -201,7 +228,8 @@ namespace MusicPlayer.model {
             ));
         }
 
-        public void stop() {
+        public void stop()
+        {
             PlayingIndex = int.MaxValue;
             CurrentPlayer.stop();
             getOtherPlayer(CurrentPlayer).stop();
@@ -216,23 +244,28 @@ namespace MusicPlayer.model {
         }
 
         private DelegateCommand stopCommand;
-        public DelegateCommand StopCommand {
+        public DelegateCommand StopCommand
+        {
             get => stopCommand ?? (stopCommand = new DelegateCommand(
                 () => stop()
             ));
         }
 
-        public DelegateCommand PauseOrResumeCommand{
+        public DelegateCommand PauseOrResumeCommand
+        {
             #region
             get => pauseOrResumeCommand ?? (pauseOrResumeCommand = new DelegateCommand(
-                () => {
-                    if (!pausing) {
+                () =>
+                {
+                    if (!pausing)
+                    {
                         pausing = true;
                         timer.Stop();
                         players[(int)PlayerIndex.First].pause();
                         players[(int)PlayerIndex.Second].pause();
                     }
-                    else {
+                    else
+                    {
                         pausing = false;
                         timer.Start();
                         players[(int)PlayerIndex.First].resume();
@@ -244,18 +277,22 @@ namespace MusicPlayer.model {
         private DelegateCommand pauseOrResumeCommand;
         #endregion
 
-        public String PlayTime {
-            get {
+        public String PlayTime
+        {
+            get
+            {
                 var p1 = players[(int)PlayerIndex.First];
                 var p2 = players[(int)PlayerIndex.Second];
 
                 TimeSpan currentPosition;
                 TimeSpan currentDuration;
-                if(p1.Playing == p2.Playing) {
+                if (p1.Playing == p2.Playing)
+                {
                     currentPosition = new TimeSpan(0, 0, (int)Math.Max(p1.Position, p2.Position));
                     currentDuration = (p1.Position >= p2.Position) ? new TimeSpan(0, 0, (int)p1.Duration) : new TimeSpan(0, 0, (int)p2.Duration);
                 }
-                else {
+                else
+                {
                     currentPosition = (p1.Playing) ? new TimeSpan(0, 0, (int)p1.Position) : new TimeSpan(0, 0, (int)p2.Position);
                     currentDuration = (p1.Playing) ? new TimeSpan(0, 0, (int)p1.Duration) : new TimeSpan(0, 0, (int)p2.Duration);
                 }
@@ -268,34 +305,42 @@ namespace MusicPlayer.model {
 
         public double Duration { get => CurrentPlayer.Duration; }
 
-        public List<IndexedFileInfo> Files {
+        public List<IndexedFileInfo> Files
+        {
             get; set;
         }
 
-        public int PlayingIndex {
+        public int PlayingIndex
+        {
             get; set;
         } = 0;
 
         private int selectedIndex = 0;
-        public int SelectedIndex {
+        public int SelectedIndex
+        {
             get => selectedIndex;
             set => SetProperty(ref selectedIndex, value);
         }
 
         private IndexedFileInfo selectedItem;
-        public IndexedFileInfo SelectedItem {
+        public IndexedFileInfo SelectedItem
+        {
             get => selectedItem;
-            set {
+            set
+            {
                 selectedItem = value;
                 RaisePropertyChanged();
             }
         }
 
-        public String PlayingFileName {
-            get {
+        public String PlayingFileName
+        {
+            get
+            {
                 if (Files == null || Files.Count <= PlayingIndex) return "";
-                else if (mediaSwitching && Files.Count > PlayingIndex) {
-                    return Files[PlayingIndex -1].Name + " > " + Files[PlayingIndex].Name;
+                else if (mediaSwitching && Files.Count > PlayingIndex)
+                {
+                    return Files[PlayingIndex - 1].Name + " > " + Files[PlayingIndex].Name;
                 }
                 return Files[PlayingIndex].Name;
             }
@@ -305,8 +350,10 @@ namespace MusicPlayer.model {
         /// playersに入っているplayerのうち、引数に指定された方ではない側のプレイヤーを取得します。
         /// </summary>
         /// <param name="soundPlayer"></param>
-        private SoundPlayer getOtherPlayer(SoundPlayer soundPlayer) {
-           if(soundPlayer != players[(int)PlayerIndex.First] && soundPlayer != players[(int)PlayerIndex.Second]) {
+        private SoundPlayer getOtherPlayer(SoundPlayer soundPlayer)
+        {
+            if (soundPlayer != players[(int)PlayerIndex.First] && soundPlayer != players[(int)PlayerIndex.Second])
+            {
                 throw new ArgumentException("入力された SoundPlayer は、playersに格納されている SoundPlayer ではありません");
             }
 
@@ -317,8 +364,10 @@ namespace MusicPlayer.model {
         /// <summary>
         /// このクラスが保持するプレイヤーの内、Position(現在の再生位置）の値が大きい方のプレイヤーを返却します。
         /// </summary>
-        private SoundPlayer CurrentPlayer {
-            get {
+        private SoundPlayer CurrentPlayer
+        {
+            get
+            {
                 var p1 = players[(int)PlayerIndex.First];
                 var p2 = players[(int)PlayerIndex.Second];
 
@@ -329,26 +378,33 @@ namespace MusicPlayer.model {
         /// <summary>
         /// ２つのメディアファイルのフェードイン・アウト切り替えに要する時間を秒で指定します。
         /// </summary>
-        public int SwitchingDuration {
-            get {
+        public int SwitchingDuration
+        {
+            get
+            {
                 return switchingDuration;
             }
-            set {
+            set
+            {
                 switchingDuration = value;
                 players[(int)PlayerIndex.First].SecondsOfBeforeEndNotice = value;
                 players[(int)PlayerIndex.Second].SecondsOfBeforeEndNotice = value;
             }
         }
 
-        public Boolean Playing {
-            get {
+        public Boolean Playing
+        {
+            get
+            {
                 return players[(int)PlayerIndex.First].Playing || players[(int)PlayerIndex.Second].Playing;
             }
         }
 
-        public int Volume {
+        public int Volume
+        {
             get { return volume; }
-            set {
+            set
+            {
                 volume = value;
 
                 if (value >= 100) volume = 100;
@@ -365,26 +421,32 @@ namespace MusicPlayer.model {
 
         public ICurrentDirectorySource CurrentDirectorySource { private get; set; }
 
-        public int FrontCut {
+        public int FrontCut
+        {
             get => players[(int)PlayerIndex.First].FrontCut;    // get は別に [0] でも [1] でも可。setは両方同時に行うので。
-            set {
+            set
+            {
                 players[(int)PlayerIndex.First].FrontCut = value;
                 players[(int)PlayerIndex.Second].FrontCut = value;
             }
         }
 
-        public int BackCut {
-            get => players[(int)PlayerIndex.First].BackCut; 
-            set {
+        public int BackCut
+        {
+            get => players[(int)PlayerIndex.First].BackCut;
+            set
+            {
                 players[(int)PlayerIndex.First].BackCut = value;
                 players[(int)PlayerIndex.Second].BackCut = value;
             }
         }
 
-        public bool CrossFade {
+        public bool CrossFade
+        {
             #region
             get => crossFade;
-            set {
+            set
+            {
                 players[(int)PlayerIndex.First].BeforeEndPointPassageNotification = value;
                 players[(int)PlayerIndex.Second].BeforeEndPointPassageNotification = value;
                 SetProperty(ref crossFade, value);
