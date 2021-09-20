@@ -8,13 +8,11 @@
     xmlns:m="clr-namespace:MusicPlayer.model"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:vms="clr-namespace:MusicPlayer.viewModels"
     Title="{Binding DoubleSoundPlayer.PlayingFileName}"
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="{Binding WindowHeight, Mode=TwoWay}"
-    d:DataContext="{d:DesignInstance local:MainWindowViewModel,
-                                     IsDesignTimeCreatable=True}"
-    prism:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d">
+    prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Window.Resources>
         <ResourceDictionary>

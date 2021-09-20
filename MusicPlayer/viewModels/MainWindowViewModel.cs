@@ -1,5 +1,4 @@
 ﻿using MusicPlayer.model;
-using MusicPlayer.viewModels;
 using MusicPlayer.views;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -12,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicPlayer
+namespace MusicPlayer.viewModels
 {
     class MainWindowViewModel : BindableBase
     {
