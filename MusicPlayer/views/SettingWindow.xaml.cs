@@ -12,12 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MusicPlayer {
+namespace MusicPlayer.views
+{
     /// <summary>
     /// SettingWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class SettingWindow : UserControl {
-        public SettingWindow() {
+    public partial class SettingWindow : UserControl
+    {
+        public SettingWindow()
+        {
             InitializeComponent();
         }
     }
