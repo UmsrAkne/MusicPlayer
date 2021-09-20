@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using System.IO;
+
     public interface ICurrentDirectorySource
     {
         DirectoryInfo CurrentDirectoryInfo { get; }

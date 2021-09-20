@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using System;
+
     public interface IPlayer
     {
-
         event EventHandler mediaEnded;
         event EventHandler mediaStarted;
 
@@ -18,7 +13,7 @@ namespace MusicPlayer.Models
         void resume();
         bool Playing { get; }
         bool Loading { get; }
-        String URL { get; set; }
+        string URL { get; set; }
         int Volume { get; set; }
         double Position { get; set; }
         double Duration { get; }

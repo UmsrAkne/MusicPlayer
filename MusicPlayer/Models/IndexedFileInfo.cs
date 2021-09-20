@@ -1,41 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using System;
+    using System.IO;
+
     public class IndexedFileInfo
     {
-        public int Index { get; set; }
         private FileInfo fileInfo;
 
-        public IndexedFileInfo(FileInfo f)
-        {
-            fileInfo = f;
-        }
+        public IndexedFileInfo(FileInfo f) => fileInfo = f;
 
-        public FileInfo FileInfo
-        {
-            get => fileInfo;
-        }
+        public int Index { get; set; }
 
-        public String Name
-        {
-            get => fileInfo.Name;
-        }
+        public FileInfo FileInfo => fileInfo;
 
-        public String FullName
-        {
-            get => fileInfo.FullName;
-        }
+        public string Name => fileInfo.Name;
 
-        public string SizeOfMB
-        {
-            get => Math.Round((double)FileInfo.Length / 1024 / 1024, 2).ToString() + " MB";
-        }
+        public string FullName => fileInfo.FullName;
 
+        public string SizeOfMB => Math.Round((double)FileInfo.Length / 1024 / 1024, 2).ToString() + " MB";
     }
 }
