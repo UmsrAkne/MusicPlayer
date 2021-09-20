@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicPlayer.model {
-    public interface IPlayer {
+namespace MusicPlayer.Models
+{
+    public interface IPlayer
+    {
 
         event EventHandler mediaEnded;
         event EventHandler mediaStarted;
@@ -19,6 +21,6 @@ namespace MusicPlayer.model {
         String URL { get; set; }
         int Volume { get; set; }
         double Position { get; set; }
-        double Duration { get;}
+        double Duration { get; }
     }
 }

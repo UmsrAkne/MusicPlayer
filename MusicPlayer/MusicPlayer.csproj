@@ -91,11 +91,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="model\ICurrentDirectorySource.cs" />
-    <Compile Include="model\IndexedFileInfo.cs" />
-    <Compile Include="model\IPlayer.cs" />
-    <Compile Include="model\PlayerSetting.cs" />
-    <Compile Include="model\WMPWrapper.cs" />
+    <Compile Include="Models\ICurrentDirectorySource.cs" />
+    <Compile Include="Models\IndexedFileInfo.cs" />
+    <Compile Include="Models\IPlayer.cs" />
+    <Compile Include="Models\PlayerSetting.cs" />
+    <Compile Include="Models\WMPWrapper.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
@@ -132,9 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="viewModels\MainWindowViewModel.cs" />
-    <Compile Include="model\DoubleSoundPlayer.cs" />
-    <Compile Include="model\MediaDirectory.cs" />
-    <Compile Include="model\SoundPlayer.cs" />
+    <Compile Include="Models\DoubleSoundPlayer.cs" />
+    <Compile Include="Models\MediaDirectory.cs" />
+    <Compile Include="Models\SoundPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -157,6 +157,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Settings.StyleCop" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,12 +1,14 @@
-﻿using MusicPlayer.model;
+﻿using MusicPlayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicPlayerTests3.model {
-    class DummyWMP : IPlayer {
+namespace MusicPlayerTests3.model
+{
+    class DummyWMP : IPlayer
+    {
 
         private bool playing = false;
         public bool Playing => playing;
@@ -15,9 +17,11 @@ namespace MusicPlayerTests3.model {
         public bool Loading => loading;
 
         private string url;
-        public string URL {
+        public string URL
+        {
             get => url;
-            set {
+            set
+            {
                 url = value;
 
                 // 実際のWMPの挙動として、
@@ -38,37 +42,45 @@ namespace MusicPlayerTests3.model {
         public event EventHandler mediaEnded;
         public event EventHandler mediaStarted;
 
-        public void pause() {
+        public void pause()
+        {
             throw new NotImplementedException();
         }
 
-        public void play() {
+        public void play()
+        {
             playing = true;
             loading = true;
         }
 
-        public void stop() {
+        public void stop()
+        {
             playing = false;
         }
 
-        public void resume() {
+        public void resume()
+        {
             throw new NotImplementedException();
         }
 
-        public void forward() {
-            if (loading) {
+        public void forward()
+        {
+            if (loading)
+            {
                 loading = false;
                 duration = NextMediaDuration;
                 mediaStarted(this, new EventArgs());
             }
 
-            if (!playing) {
+            if (!playing)
+            {
                 return;
             }
 
             Position += 0.2;
 
-            if(Duration < Position) {
+            if (Duration < Position)
+            {
                 Position = Duration;
                 playing = false;
                 mediaEnded(this, new EventArgs());

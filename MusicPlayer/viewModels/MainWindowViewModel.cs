@@ -1,4 +1,4 @@
-﻿using MusicPlayer.model;
+﻿using MusicPlayer.Models;
 using MusicPlayer.views;
 using Prism.Commands;
 using Prism.Mvvm;

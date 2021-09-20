@@ -8,50 +8,64 @@ using System.Threading.Tasks;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace MusicPlayer.model {
-    class MediaDirectory : BindableBase{
+namespace MusicPlayer.Models
+{
+    class MediaDirectory : BindableBase
+    {
 
-        public bool IsM3U {
-            get => FileInfo.Extension == ".m3u" || FileInfo.Extension ==".m3u16";
+        public bool IsM3U
+        {
+            get => FileInfo.Extension == ".m3u" || FileInfo.Extension == ".m3u16";
         }
 
-        public String Name {
-            get {
-                if (FileInfo == null) {
+        public String Name
+        {
+            get
+            {
+                if (FileInfo == null)
+                {
                     return "";
                 }
 
                 var rootDirectory = new DriveInfo(FileInfo.FullName);
-                if (rootDirectory.RootDirectory.FullName == FileInfo.FullName) {
+                if (rootDirectory.RootDirectory.FullName == FileInfo.FullName)
+                {
                     return rootDirectory.Name;
                 }
-                else {
+                else
+                {
                     return FileInfo.Name;
                 }
             }
         }
 
         private List<MediaDirectory> childDirectory;
-        public List<MediaDirectory> ChildDirectory {
-            get {
+        public List<MediaDirectory> ChildDirectory
+        {
+            get
+            {
                 return childDirectory;
             }
-            set {
+            set
+            {
                 SetProperty(ref childDirectory, value);
-                    childDirectory = value; 
+                childDirectory = value;
             }
         }
         public FileInfo FileInfo { get; set; }
 
-        public MediaDirectory() {
+        public MediaDirectory()
+        {
             GetChildsCommand = new DelegateCommand(
                 () => { getChild(); },
                 () => { return true; }
             );
         }
 
-        private void getChild() {
-            if (!Directory.Exists(FileInfo.FullName)) {
+        private void getChild()
+        {
+            if (!Directory.Exists(FileInfo.FullName))
+            {
                 return;
             }
 
@@ -59,13 +73,15 @@ namespace MusicPlayer.model {
             string[] m3uFileNames = Directory.GetFiles(FileInfo.FullName, "*.m3u");
 
             var mediaDirectories = new List<MediaDirectory>();
-            void addFiles(string[] fileOrDirectoryNames) {
-                 foreach(string n in fileOrDirectoryNames) {
+            void addFiles(string[] fileOrDirectoryNames)
+            {
+                foreach (string n in fileOrDirectoryNames)
+                {
                     var md = new MediaDirectory();
                     md.FileInfo = new FileInfo(n);
                     md.getChild();
                     mediaDirectories.Add(md);
-                 }
+                }
             }
 
             addFiles(childFileNames);
@@ -80,7 +96,8 @@ namespace MusicPlayer.model {
         /// m3uファイルに記載されたファイルのリストを生成して取得します。
         /// </summary>
         /// <returns></returns>
-        public List<FileInfo> makeFileListFromM3U() {
+        public List<FileInfo> makeFileListFromM3U()
+        {
             var fileList = new List<FileInfo>();
             string[] fileNames = File.ReadAllLines(FileInfo.FullName);
 
@@ -93,16 +110,20 @@ namespace MusicPlayer.model {
             // FileInfo のインスタンスが新規生成される際、コンストラクタの引数に相対パス(..\)が入力された場合、
             // 基準となるパスは Environment.CurrentDirectory となる模様。
 
-            foreach(string line in fileNames) {
-                if(line.Trim().Length > 0) {
+            foreach (string line in fileNames)
+            {
+                if (line.Trim().Length > 0)
+                {
 
-                    if(line.Trim()[0] == '#') {
+                    if (line.Trim()[0] == '#')
+                    {
                         // 先頭が '#' の行はコメント行のためスキップ
                         continue;
                     }
 
                     FileInfo f = new FileInfo(line);
-                    if (f.Exists) {
+                    if (f.Exists)
+                    {
                         fileList.Add(new FileInfo(line));
                     }
                 }
@@ -117,13 +138,15 @@ namespace MusicPlayer.model {
         public DelegateCommand GetChildsCommand { get; private set; }
 
         private bool isExpanded = false;
-        public bool IsExpanded {
+        public bool IsExpanded
+        {
             get => isExpanded;
             set => SetProperty(ref isExpanded, value);
         }
 
         private bool isSelected = false;
-        public bool IsSelected {
+        public bool IsSelected
+        {
             get => isSelected;
             set => SetProperty(ref isSelected, value);
         }

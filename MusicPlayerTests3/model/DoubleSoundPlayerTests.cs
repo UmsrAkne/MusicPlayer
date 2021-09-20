@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicPlayer.model;
+using MusicPlayer.Models;
 using MusicPlayerTests3.model;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicPlayer.model.Tests {
+namespace MusicPlayer.Models.Tests
+{
     [TestClass()]
-    public class DoubleSoundPlayerTests {
+    public class DoubleSoundPlayerTests
+    {
         [TestMethod()]
-        public void DoubleSoundPlayerTest() {
+        public void DoubleSoundPlayerTest()
+        {
 
             var wmpA = new DummyWMP();
             var wmpB = new DummyWMP();
@@ -22,17 +25,20 @@ namespace MusicPlayer.model.Tests {
             var sp1 = new SoundPlayer(wmpA);
             var sp2 = new SoundPlayer(wmpB);
 
-            DoubleSoundPlayer dsp = new DoubleSoundPlayer( sp1,sp2 );
+            DoubleSoundPlayer dsp = new DoubleSoundPlayer(sp1, sp2);
             dsp.SwitchingDuration = 10;
             PrivateObject po = new PrivateObject(dsp);
             po.Invoke("stopTimer");
 
-            Action<int> f = (int count) => {
-                for(var i = 0; i < count; i++) {
+            Action<int> f = (int count) =>
+            {
+                for (var i = 0; i < count; i++)
+                {
                     wmpA.forward();
                     wmpB.forward();
 
-                    if(i % 2 == 0) {
+                    if (i % 2 == 0)
+                    {
                         // doubleSoundPlayer.timer の間隔が 450ms なので大体ループ２回に１回の頻度。
                         po.Invoke("timerEventHandler");
                     }
@@ -50,7 +56,8 @@ namespace MusicPlayer.model.Tests {
             files.Add(new IndexedFileInfo(new FileInfo("testFile6")));
             files.Add(new IndexedFileInfo(new FileInfo("testFile7")));
 
-            foreach(IndexedFileInfo fi in files) {
+            foreach (IndexedFileInfo fi in files)
+            {
                 fi.FileInfo.Create();
             }
 
@@ -59,11 +66,11 @@ namespace MusicPlayer.model.Tests {
 
             Assert.IsTrue(sp1.Playing);
             Assert.IsFalse(sp2.Playing);
-            Assert.IsTrue(wmpA.Loading,"wmpAのplay実行直後なのでロード中");
+            Assert.IsTrue(wmpA.Loading, "wmpAのplay実行直後なのでロード中");
 
 
             f(1);
-            Assert.IsFalse(wmpA.Loading,"forwardを一回実行したのでロードは終了している");
+            Assert.IsFalse(wmpA.Loading, "forwardを一回実行したのでロードは終了している");
 
             bool mediaEndedEventDispatched = false;
             sp1.mediaEndedEvent += (sender) => { mediaEndedEventDispatched = true; };
@@ -82,7 +89,7 @@ namespace MusicPlayer.model.Tests {
             f(1);
             wmpA.NextMediaDuration = 25;
             wmpB.NextMediaDuration = 25;
-            
+
             f(50);
             Assert.AreEqual(sp1.SoundFileInfo.Name, "testFile3");
 

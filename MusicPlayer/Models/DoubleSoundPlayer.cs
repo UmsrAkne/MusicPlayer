@@ -1,4 +1,4 @@
-﻿namespace MusicPlayer.model
+﻿namespace MusicPlayer.Models
 {
     using System;
     using System.Collections.Generic;

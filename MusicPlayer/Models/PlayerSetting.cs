@@ -6,44 +6,54 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MusicPlayer.model {
-    public class PlayerSetting : BindableBase {
+namespace MusicPlayer.Models
+{
+    public class PlayerSetting : BindableBase
+    {
 
         private int switchingDuration = 0;
-        public int SwitchingDuration {
+        public int SwitchingDuration
+        {
             get => switchingDuration;
-            set {
+            set
+            {
                 switchingDuration = value;
                 RaisePropertyChanged();
             }
         }
 
         private string defaultBaseDirectoryPath;
-        public string DefaultBaseDirectoryPath {
+        public string DefaultBaseDirectoryPath
+        {
             get => defaultBaseDirectoryPath;
-            set {
+            set
+            {
                 defaultBaseDirectoryPath = value;
                 RaisePropertyChanged();
             }
         }
 
         private int volume;
-        public int Volume {
+        public int Volume
+        {
             get => volume;
-            set {
+            set
+            {
                 volume = value;
                 RaisePropertyChanged();
             }
         }
 
         private int frontCut;
-        public int FrontCut {
+        public int FrontCut
+        {
             get => frontCut;
             set => SetProperty(ref frontCut, value);
         }
 
         private int backCut;
-        public int BackCut {
+        public int BackCut
+        {
             get => backCut;
             set => SetProperty(ref backCut, value);
         }

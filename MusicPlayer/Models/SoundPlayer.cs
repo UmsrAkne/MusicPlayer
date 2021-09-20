@@ -12,23 +12,28 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using WMPLib;
 
-namespace MusicPlayer.model {
+namespace MusicPlayer.Models
+{
 
     public delegate void MediaEndedEventHandler(object sender);
     public delegate void PlayStartedEventHandler(object sender);
 
-    public class SoundPlayer {
+    public class SoundPlayer
+    {
 
-        public SoundPlayer(IPlayer player) {
+        public SoundPlayer(IPlayer player)
+        {
 
             this.player = player;
             this.player.Volume = 100;
 
-            this.player.mediaEnded += (sender,e) => {
+            this.player.mediaEnded += (sender, e) =>
+            {
                 mediaEndedEvent?.Invoke(this);
             };
 
-            this.player.mediaStarted += (sender, e) => {
+            this.player.mediaStarted += (sender, e) =>
+            {
                 Duration = this.player.Duration;
                 playStartedEvent?.Invoke(this);
             };
@@ -36,9 +41,11 @@ namespace MusicPlayer.model {
         }
 
         private FileInfo soundFileInfo;
-        public FileInfo SoundFileInfo {
+        public FileInfo SoundFileInfo
+        {
             get { return soundFileInfo; }
-            set {
+            set
+            {
                 if (!value.Exists) throw new System.ArgumentException("指定されたファイルが存在しません " + value.FullName);
                 soundFileInfo = value;
             }
@@ -51,7 +58,8 @@ namespace MusicPlayer.model {
         /// <summary>
         /// 新規で再生を開始する際に使用します。
         /// </summary>
-        public void newPlay() {
+        public void newPlay()
+        {
             player.URL = soundFileInfo.FullName;
             player.play();
 
@@ -65,7 +73,8 @@ namespace MusicPlayer.model {
             var logFileName = "playlog.txt";
             var text = (File.Exists(logFileName)) ? File.ReadAllText(logFileName) : "";
 
-            using (StreamWriter sw = new StreamWriter(logFileName, false)) {
+            using (StreamWriter sw = new StreamWriter(logFileName, false))
+            {
                 sw.WriteLine($"{DateTime.Now.ToString("yyy/MM/dd HH:mm:ss")},{SoundFileInfo.FullName}");
                 sw.Write(text);
             }
@@ -74,49 +83,63 @@ namespace MusicPlayer.model {
         /// <summary>
         /// FrontCut の値だけ、冒頭をカットして再生を開始します。
         /// </summary>
-        public void play() {
+        public void play()
+        {
             newPlay();
 
-            if (BeforeEndPointPassageNotification) {
+            if (BeforeEndPointPassageNotification)
+            {
                 // クロスフェードによる音量の変更を伴う場合にのみ FrontCut を有効にする。
                 player.Position = FrontCut;
             }
         }
 
-        public void pause() {
+        public void pause()
+        {
             player.pause();
         }
 
-        public void resume() {
+        public void resume()
+        {
             player.resume();
         }
 
-        public void stop() {
+        public void stop()
+        {
             player.stop();
         }
 
-        public int Volume {
-            get {
+        public int Volume
+        {
+            get
+            {
                 return player.Volume;
             }
-            set {
-                if(value > 100) {
+            set
+            {
+                if (value > 100)
+                {
                     player.Volume = 100;
                 }
-                else if(value < 0) {
+                else if (value < 0)
+                {
                     player.Volume = 0;
                 }
-                else {
+                else
+                {
                     player.Volume = value;
                 }
             }
         }
 
-        public double Position {
-            get {
+        public double Position
+        {
+            get
+            {
                 return player.Position;
             }
-            set {
+            set
+            {
                 player.Position = value;
             }
         }
@@ -125,16 +148,19 @@ namespace MusicPlayer.model {
 
         public double Duration { get; private set; } = 0;
 
-        public Boolean Playing {
+        public Boolean Playing
+        {
             get => player.Playing;
-            private set{
+            private set
+            {
             }
         }
 
         /// <summary>
         /// PassedBeforeEndPoint 実行時、メディアが終了直前と判定されるポイントを指定します。
         /// </summary>
-        public int SecondsOfBeforeEndNotice {
+        public int SecondsOfBeforeEndNotice
+        {
             get; set;
         }
 
@@ -142,13 +168,16 @@ namespace MusicPlayer.model {
         /// このメディアが終了直前のポイントを通り過ぎたかどうかを取得します。
         /// 終了直前のポイントとは、"Duration - SecondsOfBeforeEndNotice" の値が示す時点です。
         /// </summary>
-        public bool PassedBeforeEndPoint {
-            get {
-                if (Duration == 0 
-                    || SecondsOfBeforeEndNotice * 2 > Duration 
+        public bool PassedBeforeEndPoint
+        {
+            get
+            {
+                if (Duration == 0
+                    || SecondsOfBeforeEndNotice * 2 > Duration
                     || !Playing
                     || !BeforeEndPointPassageNotification
-                    ) {
+                    )
+                {
                     return false;
                 }
                 return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
@@ -159,21 +188,24 @@ namespace MusicPlayer.model {
         /// このメディアの実際の Duration から BackCut を引いた時点を通過したかどうかを取得します。
         /// このプロパティが true を返す場合、実質的にメディアの再生が終了していることを意味します。
         /// </summary>
-        public bool PssedBackCutPoint {
+        public bool PssedBackCutPoint
+        {
             get => (Position >= Duration - BackCut);
         }
 
         /// <summary>
         /// 曲の先頭部分を指定秒数カットします。
         /// </summary>
-        public int FrontCut {
+        public int FrontCut
+        {
             get; set;
         }
 
         /// <summary>
         /// 曲の終端部分を指定秒数カットします。
         /// </summary>
-        public int BackCut {
+        public int BackCut
+        {
             get; set;
         }
 
@@ -181,14 +213,16 @@ namespace MusicPlayer.model {
         /// falseに設定すると、PassedBeforeEndPoint が常に false を返すようになり、
         /// 結果的に クロスフェード機能を無効にします。
         /// </summary>
-        public bool BeforeEndPointPassageNotification {
+        public bool BeforeEndPointPassageNotification
+        {
             get; set;
         } = true;
 
         /// <summary>
         /// SoundFileInfo に対して、空の FileInfo を直接セットします。
         /// </summary>
-        public void setEmptyFileInfo() {
+        public void setEmptyFileInfo()
+        {
             soundFileInfo = new FileInfo("notExistEmptyFileInfo");
         }
     }

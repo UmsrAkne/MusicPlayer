@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using WMPLib;
 
-namespace MusicPlayer.model {
-    public class WMPWrapper : IPlayer {
+namespace MusicPlayer.Models
+{
+    public class WMPWrapper : IPlayer
+    {
 
         private WindowsMediaPlayer wmp;
 
-        public WMPWrapper() {
+        public WMPWrapper()
+        {
             wmp = new WindowsMediaPlayer();
             wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
         }
@@ -21,25 +24,30 @@ namespace MusicPlayer.model {
         /// URLをセットした時点で true になり、
         /// wmp のステータスが WMPPlayState.wmppsPlaying に変化した時点で false になります。
         /// </summary>
-        public bool Loading {
+        public bool Loading
+        {
             get;
             private set;
-        } 
+        }
 
-        public string URL {
+        public string URL
+        {
             get => wmp.URL;
-            set {
+            set
+            {
                 wmp.URL = value;
                 Loading = true;
             }
         }
 
-        public int Volume {
+        public int Volume
+        {
             get => wmp.settings.volume;
             set => wmp.settings.volume = value;
         }
 
-        public double Position {
+        public double Position
+        {
             get => wmp.controls.currentPosition;
             set => wmp.controls.currentPosition = value;
         }
@@ -49,15 +57,18 @@ namespace MusicPlayer.model {
         public event EventHandler mediaEnded;
         public event EventHandler mediaStarted;
 
-        public void pause() {
+        public void pause()
+        {
             wmp.controls.pause();
         }
 
-        public void resume() {
+        public void resume()
+        {
             wmp.controls.play();
         }
 
-        public void play() {
+        public void play()
+        {
             wmp.PlayStateChange -= wmpPlayStateChangeEventHandler;
             string url = URL; // 一時退避
             wmp.close();
@@ -69,17 +80,21 @@ namespace MusicPlayer.model {
             wmp.controls.play();
         }
 
-        public void stop() {
+        public void stop()
+        {
             wmp.controls.stop();
         }
 
-        private void wmpPlayStateChangeEventHandler(int NewState) {
-            if(NewState == (int)WMPPlayState.wmppsPlaying) {
+        private void wmpPlayStateChangeEventHandler(int NewState)
+        {
+            if (NewState == (int)WMPPlayState.wmppsPlaying)
+            {
                 mediaStarted?.Invoke(this, new EventArgs());
                 Loading = false;
             }
 
-            if(NewState == (int)WMPPlayState.wmppsMediaEnded) {
+            if (NewState == (int)WMPPlayState.wmppsMediaEnded)
+            {
                 mediaEnded?.Invoke(this, new EventArgs());
             }
         }
