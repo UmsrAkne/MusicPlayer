@@ -193,7 +193,7 @@ namespace MusicPlayer.viewModels
                 () =>
                 {
                     doubleSoundPlayer.Files = MediaFiles;
-                    doubleSoundPlayer.play();
+                    doubleSoundPlayer.Play();
                 },
                 () => { return MediaFiles != null && MediaFiles.Count > 0; }
             ).ObservesProperty(() => MediaFiles);

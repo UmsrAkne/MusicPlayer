@@ -62,7 +62,7 @@ namespace MusicPlayer.Models.Tests
             }
 
             dsp.Files = files;
-            dsp.play();
+            dsp.Play();
 
             Assert.IsTrue(sp1.Playing);
             Assert.IsFalse(sp2.Playing);
