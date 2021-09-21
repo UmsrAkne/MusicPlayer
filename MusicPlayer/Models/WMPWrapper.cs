@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WMPLib;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using System;
+    using WMPLib;
+
     public class WMPWrapper : IPlayer
     {
-
         private WindowsMediaPlayer wmp;
 
         public WMPWrapper()
         {
             wmp = new WindowsMediaPlayer();
-            wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
+            wmp.PlayStateChange += WmpPlayStateChangeEventHandler;
         }
+
+        public event EventHandler MediaEnded;
+
+        public event EventHandler MediaStarted;
 
         public bool Playing => wmp.playState == WMPPlayState.wmppsPlaying;
 
@@ -54,9 +53,6 @@ namespace MusicPlayer.Models
 
         public double Duration { get => wmp.currentMedia.duration; }
 
-        public event EventHandler MediaEnded;
-        public event EventHandler MediaStarted;
-
         public void Pause()
         {
             wmp.controls.pause();
@@ -69,12 +65,12 @@ namespace MusicPlayer.Models
 
         public void Play()
         {
-            wmp.PlayStateChange -= wmpPlayStateChangeEventHandler;
+            wmp.PlayStateChange -= WmpPlayStateChangeEventHandler;
             string url = URL; // 一時退避
             wmp.close();
 
             wmp = new WindowsMediaPlayer();
-            wmp.PlayStateChange += wmpPlayStateChangeEventHandler;
+            wmp.PlayStateChange += WmpPlayStateChangeEventHandler;
             URL = url;
             wmp.settings.volume = Volume;
             wmp.controls.play();
@@ -85,15 +81,15 @@ namespace MusicPlayer.Models
             wmp.controls.stop();
         }
 
-        private void wmpPlayStateChangeEventHandler(int NewState)
+        private void WmpPlayStateChangeEventHandler(int newState)
         {
-            if (NewState == (int)WMPPlayState.wmppsPlaying)
+            if (newState == (int)WMPPlayState.wmppsPlaying)
             {
                 MediaStarted?.Invoke(this, new EventArgs());
                 Loading = false;
             }
 
-            if (NewState == (int)WMPPlayState.wmppsMediaEnded)
+            if (newState == (int)WMPPlayState.wmppsMediaEnded)
             {
                 MediaEnded?.Invoke(this, new EventArgs());
             }
