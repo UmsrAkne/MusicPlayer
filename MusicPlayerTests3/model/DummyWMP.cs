@@ -39,26 +39,26 @@ namespace MusicPlayerTests3.model
         private double duration = 0;
         public double Duration => duration;
 
-        public event EventHandler mediaEnded;
-        public event EventHandler mediaStarted;
+        public event EventHandler MediaEnded;
+        public event EventHandler MediaStarted;
 
-        public void pause()
+        public void Pause()
         {
             throw new NotImplementedException();
         }
 
-        public void play()
+        public void Play()
         {
             playing = true;
             loading = true;
         }
 
-        public void stop()
+        public void Stop()
         {
             playing = false;
         }
 
-        public void resume()
+        public void Resume()
         {
             throw new NotImplementedException();
         }
@@ -69,7 +69,7 @@ namespace MusicPlayerTests3.model
             {
                 loading = false;
                 duration = NextMediaDuration;
-                mediaStarted(this, new EventArgs());
+                MediaStarted(this, new EventArgs());
             }
 
             if (!playing)
@@ -83,7 +83,7 @@ namespace MusicPlayerTests3.model
             {
                 Position = Duration;
                 playing = false;
-                mediaEnded(this, new EventArgs());
+                MediaEnded(this, new EventArgs());
             }
         }
     }

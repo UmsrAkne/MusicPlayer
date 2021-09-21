@@ -54,20 +54,20 @@ namespace MusicPlayer.Models
 
         public double Duration { get => wmp.currentMedia.duration; }
 
-        public event EventHandler mediaEnded;
-        public event EventHandler mediaStarted;
+        public event EventHandler MediaEnded;
+        public event EventHandler MediaStarted;
 
-        public void pause()
+        public void Pause()
         {
             wmp.controls.pause();
         }
 
-        public void resume()
+        public void Resume()
         {
             wmp.controls.play();
         }
 
-        public void play()
+        public void Play()
         {
             wmp.PlayStateChange -= wmpPlayStateChangeEventHandler;
             string url = URL; // 一時退避
@@ -80,7 +80,7 @@ namespace MusicPlayer.Models
             wmp.controls.play();
         }
 
-        public void stop()
+        public void Stop()
         {
             wmp.controls.stop();
         }
@@ -89,13 +89,13 @@ namespace MusicPlayer.Models
         {
             if (NewState == (int)WMPPlayState.wmppsPlaying)
             {
-                mediaStarted?.Invoke(this, new EventArgs());
+                MediaStarted?.Invoke(this, new EventArgs());
                 Loading = false;
             }
 
             if (NewState == (int)WMPPlayState.wmppsMediaEnded)
             {
-                mediaEnded?.Invoke(this, new EventArgs());
+                MediaEnded?.Invoke(this, new EventArgs());
             }
         }
     }

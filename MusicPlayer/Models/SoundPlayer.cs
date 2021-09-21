@@ -27,12 +27,12 @@ namespace MusicPlayer.Models
             this.player = player;
             this.player.Volume = 100;
 
-            this.player.mediaEnded += (sender, e) =>
+            this.player.MediaEnded += (sender, e) =>
             {
                 mediaEndedEvent?.Invoke(this);
             };
 
-            this.player.mediaStarted += (sender, e) =>
+            this.player.MediaStarted += (sender, e) =>
             {
                 Duration = this.player.Duration;
                 playStartedEvent?.Invoke(this);
@@ -61,7 +61,7 @@ namespace MusicPlayer.Models
         public void newPlay()
         {
             player.URL = soundFileInfo.FullName;
-            player.play();
+            player.Play();
 
             /** ここで情報を記録するので、再生中のメディアが終了N秒前に入ってこのメソッドが呼び出されると、
              *  最後に再生していたメディアが更新される。
@@ -96,17 +96,17 @@ namespace MusicPlayer.Models
 
         public void pause()
         {
-            player.pause();
+            player.Pause();
         }
 
         public void resume()
         {
-            player.resume();
+            player.Resume();
         }
 
         public void stop()
         {
-            player.stop();
+            player.Stop();
         }
 
         public int Volume
