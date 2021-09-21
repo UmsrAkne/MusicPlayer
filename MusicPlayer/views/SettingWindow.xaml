@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="MusicPlayer.Views.SettingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MusicPlayer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    Width="400"
+    Height="200"
+    d:DataContext="{d:DesignInstance local:SettingWindowViewModel,
+                                     IsDesignTimeCreatable=True}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="4,2,2,2">
+            <TextBlock Margin="1,0,0,1" Text="Switching Duration" />
+            <TextBlock Margin="1,0,0,1" Text="Front Cut" />
+            <TextBlock Margin="1,0,0,1" Text="Back Cut" />
+            <TextBlock Margin="1,0,0,1" Text="Base Directory Path" />
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.ColumnSpan="2">
+
+            <TextBox Text="{Binding Setting.SwitchingDuration}" />
+
+            <TextBox Text="{Binding Setting.FrontCut}" />
+
+            <TextBox Text="{Binding Setting.BackCut}" />
+
+            <TextBox Text="{Binding Setting.DefaultBaseDirectoryPath}" />
+
+        </StackPanel>
+
+
+        <Button
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="50"
+            Height="30"
+            Margin="0,0,5,5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Command="{Binding SettingFinishCommand}"
+            Content="設定終了" />
+    </Grid>
+
+</UserControl>

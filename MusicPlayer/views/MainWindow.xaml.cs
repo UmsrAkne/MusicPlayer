@@ -12,14 +12,15 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Navigation;
     using System.Windows.Shapes;
 
     /// <summary>
-    /// HistoryWindow.xaml の相互作用ロジック
+    /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class HistoryWindow : UserControl
+    public partial class MainWindow : Window
     {
-        public HistoryWindow()
+        public MainWindow()
         {
             InitializeComponent();
         }

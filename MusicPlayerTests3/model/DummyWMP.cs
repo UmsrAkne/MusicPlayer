@@ -1,23 +1,32 @@
-﻿using MusicPlayer.model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MusicPlayerTests3.Models
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using MusicPlayer.Models;
 
-namespace MusicPlayerTests3.model {
-    class DummyWMP : IPlayer {
-
+    public class DummyWMP : IPlayer
+    {
         private bool playing = false;
-        public bool Playing => playing;
-
         private bool loading = false;
+        private double duration = 0;
+        private string url;
+
+        public event EventHandler MediaEnded;
+
+        public event EventHandler MediaStarted;
+
         public bool Loading => loading;
 
-        private string url;
-        public string URL {
+        public bool Playing => playing;
+
+        public string URL
+        {
             get => url;
-            set {
+            set
+            {
                 url = value;
 
                 // 実際のWMPの挙動として、
@@ -29,49 +38,55 @@ namespace MusicPlayerTests3.model {
         }
 
         public int Volume { get; set; } = 100;
+
         public double Position { get; set; }
 
         public double NextMediaDuration { get; set; }
-        private double duration = 0;
+
         public double Duration => duration;
 
-        public event EventHandler mediaEnded;
-        public event EventHandler mediaStarted;
-
-        public void pause() {
+        public void Pause()
+        {
             throw new NotImplementedException();
         }
 
-        public void play() {
+        public void Play()
+        {
             playing = true;
             loading = true;
         }
 
-        public void stop() {
+        public void Stop()
+        {
             playing = false;
         }
 
-        public void resume() {
+        public void Resume()
+        {
             throw new NotImplementedException();
         }
 
-        public void forward() {
-            if (loading) {
+        public void Forward()
+        {
+            if (loading)
+            {
                 loading = false;
                 duration = NextMediaDuration;
-                mediaStarted(this, new EventArgs());
+                MediaStarted(this, new EventArgs());
             }
 
-            if (!playing) {
+            if (!playing)
+            {
                 return;
             }
 
             Position += 0.2;
 
-            if(Duration < Position) {
+            if (Duration < Position)
+            {
                 Position = Duration;
                 playing = false;
-                mediaEnded(this, new EventArgs());
+                MediaEnded(this, new EventArgs());
             }
         }
     }

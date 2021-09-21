@@ -1,19 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicPlayer.model;
-using MusicPlayerTests3.model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MusicPlayer.Models.Tests
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using MusicPlayer.Models;
+    using MusicPlayerTests3.Models;
 
-namespace MusicPlayer.model.Tests {
-    [TestClass()]
-    public class DoubleSoundPlayerTests {
-        [TestMethod()]
-        public void DoubleSoundPlayerTest() {
-
+    [TestClass]
+    public class DoubleSoundPlayerTests
+    {
+        [TestMethod]
+        public void DoubleSoundPlayerTest()
+        {
             var wmpA = new DummyWMP();
             var wmpB = new DummyWMP();
             wmpA.NextMediaDuration = 10;
@@ -22,24 +24,25 @@ namespace MusicPlayer.model.Tests {
             var sp1 = new SoundPlayer(wmpA);
             var sp2 = new SoundPlayer(wmpB);
 
-            DoubleSoundPlayer dsp = new DoubleSoundPlayer( sp1,sp2 );
+            DoubleSoundPlayer dsp = new DoubleSoundPlayer(sp1, sp2);
             dsp.SwitchingDuration = 10;
             PrivateObject po = new PrivateObject(dsp);
             po.Invoke("stopTimer");
 
-            Action<int> f = (int count) => {
-                for(var i = 0; i < count; i++) {
-                    wmpA.forward();
-                    wmpB.forward();
+            Action<int> f = (int count) =>
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    wmpA.Forward();
+                    wmpB.Forward();
 
-                    if(i % 2 == 0) {
+                    if (i % 2 == 0)
+                    {
                         // doubleSoundPlayer.timer の間隔が 450ms なので大体ループ２回に１回の頻度。
                         po.Invoke("timerEventHandler");
                     }
-
                 }
             };
-
 
             var files = new List<IndexedFileInfo>();
             files.Add(new IndexedFileInfo(new FileInfo("testFile1")));
@@ -50,23 +53,23 @@ namespace MusicPlayer.model.Tests {
             files.Add(new IndexedFileInfo(new FileInfo("testFile6")));
             files.Add(new IndexedFileInfo(new FileInfo("testFile7")));
 
-            foreach(IndexedFileInfo fi in files) {
+            foreach (IndexedFileInfo fi in files)
+            {
                 fi.FileInfo.Create();
             }
 
             dsp.Files = files;
-            dsp.play();
+            dsp.Play();
 
             Assert.IsTrue(sp1.Playing);
             Assert.IsFalse(sp2.Playing);
-            Assert.IsTrue(wmpA.Loading,"wmpAのplay実行直後なのでロード中");
-
+            Assert.IsTrue(wmpA.Loading, "wmpAのplay実行直後なのでロード中");
 
             f(1);
-            Assert.IsFalse(wmpA.Loading,"forwardを一回実行したのでロードは終了している");
+            Assert.IsFalse(wmpA.Loading, "forwardを一回実行したのでロードは終了している");
 
             bool mediaEndedEventDispatched = false;
-            sp1.mediaEndedEvent += (sender) => { mediaEndedEventDispatched = true; };
+            sp1.MediaEndedEvent += (sender) => { mediaEndedEventDispatched = true; };
 
             f(50);
             Assert.IsTrue(mediaEndedEventDispatched, "50回以上回したらメディアは終了するので、イベントが送出されているはず");
@@ -82,7 +85,7 @@ namespace MusicPlayer.model.Tests {
             f(1);
             wmpA.NextMediaDuration = 25;
             wmpB.NextMediaDuration = 25;
-            
+
             f(50);
             Assert.AreEqual(sp1.SoundFileInfo.Name, "testFile3");
 

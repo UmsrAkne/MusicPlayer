@@ -1,0 +1,226 @@
+﻿<Window
+    x:Class="MusicPlayer.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:MusicPlayer"
+    xmlns:m="clr-namespace:MusicPlayer.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vms="clr-namespace:MusicPlayer.ViewModels"
+    Title="{Binding DoubleSoundPlayer.PlayingFileName}"
+    Width="{Binding WindowWidth, Mode=TwoWay}"
+    Height="{Binding WindowHeight, Mode=TwoWay}"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CustomDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <StackPanel.Resources>
+
+                <Style TargetType="Button">
+                    <Setter Property="Padding" Value="3" />
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+
+            </StackPanel.Resources>
+
+            <TextBlock Margin="2" Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}" />
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+
+                <Button Command="{Binding PlayCommand}" Content="play" />
+
+                <Button Command="{Binding DoubleSoundPlayer.StopCommand}" Content="stop" />
+
+                <Button Command="{Binding DoubleSoundPlayer.PauseOrResumeCommand}" Content="pause/resume" />
+
+                <Button Command="{Binding DoubleSoundPlayer.ToBackCommand}" Content="back" />
+
+                <Button Command="{Binding DoubleSoundPlayer.ToNextCommand}" Content="next" />
+
+                <TextBlock Margin="3" Text="mute" />
+
+                <Slider
+                    Name="VolumeControlSlider"
+                    Width="250"
+                    Margin="3"
+                    AutoToolTipPlacement="TopLeft"
+                    Maximum="100"
+                    Minimum="0"
+                    SmallChange="2"
+                    Value="{Binding DoubleSoundPlayer.Volume}" />
+
+                <TextBlock Margin="3" Text="max" />
+
+
+            </StackPanel>
+
+            <Slider
+                Maximum="{Binding DoubleSoundPlayer.Duration, Mode=OneWay}"
+                Minimum="0"
+                Value="{Binding DoubleSoundPlayer.Position, Mode=OneWay}" />
+
+            <TextBlock
+                x:Name="playTimeTextBox"
+                Margin="5,0,0,0"
+                FontSize="14"
+                Text="{Binding DoubleSoundPlayer.PlayTime, UpdateSourceTrigger=PropertyChanged}" />
+
+            <StackPanel Margin="2,4" Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding DoubleSoundPlayer.CrossFade}" />
+                <TextBlock Margin="4,0" Text="クロスフェード" />
+            </StackPanel>
+
+            <TextBox
+                x:Name="baseDirectoryPathTextBox"
+                FontSize="14"
+                Text="{Binding TreeViewModel.BaseDirectoryPath, Mode=TwoWay}" />
+
+
+        </StackPanel>
+
+        <TreeView
+            Name="directoryTree"
+            Grid.Row="1"
+            Grid.Column="0"
+            ItemsSource="{Binding TreeViewModel.MediaDirectories}">
+
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                    <Setter Property="BorderBrush" Value="Gray" />
+                    <Setter Property="BorderThickness" Value="1,0,0,0" />
+                    <Setter Property="Padding" Value="4,0,0,0" />
+                    <Setter Property="Margin" Value="1,0,0,1" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}" CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}" />
+                    <i:InvokeCommandAction Command="{Binding TreeViewModel.SelectDirectoryCommand}" CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="m:MediaDirectory" ItemsSource="{Binding ChildDirectory}">
+                    <ContentControl Content="{Binding Name}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding GetChildsCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ContentControl>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                x:Name="randomSortButton"
+                Grid.Row="2"
+                Grid.Column="0"
+                Command="{Binding RandomSortCommand}"
+                Content="ランダムソート" />
+
+            <Button
+                x:Name="nameOrderSortButton"
+                Grid.Row="2"
+                Grid.Column="1"
+                Command="{Binding NameOrderSortCommand}"
+                Content="ファイル名順でソート" />
+
+        </Grid>
+        <ListView
+            Name="musicListView"
+            Grid.Row="1"
+            Grid.Column="1"
+            ItemsSource="{Binding MediaFiles}"
+            SelectedIndex="{Binding DoubleSoundPlayer.SelectedIndex}"
+            SelectedItem="{Binding DoubleSoundPlayer.SelectedItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="Index" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="ファイル名" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SizeOfMB}" Header="ファイルサイズ" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StatusBar
+            Name="musicStatusBar"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom">
+
+            <StackPanel Orientation="Horizontal">
+
+                <Label Content="url &gt;" />
+                <Label Grid.Column="0" Content="{Binding TreeViewModel.SelectedItem.FileInfo.FullName, UpdateSourceTrigger=PropertyChanged}" />
+
+            </StackPanel>
+
+        </StatusBar>
+
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+
+            <Button
+                Height="auto"
+                Margin="0,5,5,5"
+                HorizontalAlignment="Right"
+                Command="{Binding ShowLogWindowCommand}"
+                Content="ログを表示" />
+
+            <Button
+                Height="auto"
+                Margin="0,0,5,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Command="{Binding ShowSettingDialogCommand}"
+                Content="設定"
+                DockPanel.Dock="Right" />
+
+        </StackPanel>
+    </Grid>
+
+
+</Window>

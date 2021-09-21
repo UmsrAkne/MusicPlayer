@@ -1,22 +1,37 @@
-﻿using MusicPlayer.model;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.viewModels
+﻿namespace MusicPlayer.ViewModels
 {
-    class TreeViewModel : BindableBase, ICurrentDirectorySource
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using MusicPlayer.Models;
+    using Prism.Commands;
+    using Prism.Mvvm;
+
+    public class TreeViewModel : BindableBase, ICurrentDirectorySource
     {
         private string baseDirectoryPath = @"C:\";
-        public string BaseDirectoryPath {
+        private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
+        private MediaDirectory selectedItem;
+        private DelegateCommand<MediaDirectory> selectDirectoryCommand;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="baseDirectoryPath">このオブジェクトが始点とするディレクトリを入力します。
+        /// 無効な値が入力された場合は Cドライブのルートを設定します。</param>
+        public TreeViewModel(string baseDirectoryPath)
+        {
+            BaseDirectoryPath = System.IO.Directory.Exists(baseDirectoryPath) ? baseDirectoryPath : @"C\";
+        }
+
+        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(SelectedItem.FileInfo.FullName);
+
+        public string BaseDirectoryPath
+        {
             get => baseDirectoryPath;
-            set {
-                if (!Directory.Exists(value)) {
+            set
+            {
+                if (!Directory.Exists(value))
+                {
                     return;
                 }
 
@@ -31,39 +46,30 @@ namespace MusicPlayer.viewModels
             }
         }
 
-        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(SelectedItem.FileInfo.FullName);
-
-        private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
-        public List<MediaDirectory> MediaDirectories {
+        public List<MediaDirectory> MediaDirectories
+        {
             get => mediaDirectories;
             private set => SetProperty(ref mediaDirectories, value);
         }
 
-        private MediaDirectory selectedItem;
-        public MediaDirectory SelectedItem {
+        public MediaDirectory SelectedItem
+        {
             get => selectedItem;
-            private set {
+            private set
+            {
                 SetProperty(ref selectedItem, value);
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="baseDirectoryPath">このオブジェクトが始点とするディレクトリを入力します。
-        /// 無効な値が入力された場合は Cドライブのルートを設定します。</param>
-        public TreeViewModel (string baseDirectoryPath) {
-            BaseDirectoryPath = (System.IO.Directory.Exists(baseDirectoryPath)) ? baseDirectoryPath : @"C\";
-        }
-
-        private DelegateCommand<MediaDirectory> selectDirectoryCommand;
-        public DelegateCommand<MediaDirectory> SelectDirectoryCommand {
+        public DelegateCommand<MediaDirectory> SelectDirectoryCommand
+        {
             get => selectDirectoryCommand ?? (selectDirectoryCommand = new DelegateCommand<MediaDirectory>(
-                (MediaDirectory mediaDirectory) => {
-                    SelectedItem = mediaDirectory;
-                    Properties.Settings.Default.lastVisitedDirectoryPath = mediaDirectory.FileInfo.FullName;
-                    Properties.Settings.Default.Save();
-                }
-            ));
+            (MediaDirectory mediaDirectory) =>
+            {
+                SelectedItem = mediaDirectory;
+                Properties.Settings.Default.lastVisitedDirectoryPath = mediaDirectory.FileInfo.FullName;
+                Properties.Settings.Default.Save();
+            }));
         }
 
         /// <summary>
@@ -71,8 +77,10 @@ namespace MusicPlayer.viewModels
         /// MediaDirectories にセットします。
         /// </summary>
         /// <param name="path">パスが存在しない、または BaseDirectory と同一の場合は、BaseDirectoryだけを展開して動作を終了します。</param>
-        public void expandItemsTo(string path) {
-            if (!Directory.Exists(path) || path == BaseDirectoryPath) {
+        public void ExpandItemsTo(string path)
+        {
+            if (!Directory.Exists(path) || path == BaseDirectoryPath)
+            {
                 SelectedItem = new MediaDirectory();
                 SelectedItem.FileInfo = new FileInfo(BaseDirectoryPath);
                 SelectedItem.GetChildsCommand.Execute();
@@ -84,10 +92,12 @@ namespace MusicPlayer.viewModels
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
             List<DirectoryInfo> directoryInfoList = new List<DirectoryInfo>();
 
-            while(directoryInfo != null){
+            while (directoryInfo != null)
+            {
                 directoryInfoList.Add(directoryInfo);
                 directoryInfo = directoryInfo.Parent;
-                if(directoryInfo.FullName == new DirectoryInfo(BaseDirectoryPath).Parent.FullName) {
+                if (directoryInfo.FullName == new DirectoryInfo(BaseDirectoryPath).Parent.FullName)
+                {
                     break;
                 }
             }
@@ -96,15 +106,17 @@ namespace MusicPlayer.viewModels
             directoryInfoList.Reverse();
 
             MediaDirectory md = new MediaDirectory();
-            List<MediaDirectory> mdList = new List<MediaDirectory>();
-            mdList.Add(md);
+            List<MediaDirectory> mediaList = new List<MediaDirectory>();
+            mediaList.Add(md);
 
-            for(var i = 0; i < directoryInfoList.Count; i++) {
+            for (var i = 0; i < directoryInfoList.Count; i++)
+            {
                 md.FileInfo = new FileInfo(directoryInfoList[i].FullName);
                 md.GetChildsCommand.Execute();
                 md.IsExpanded = true;
 
-                if(directoryInfoList.Count <= i + 1) {
+                if (directoryInfoList.Count <= i + 1)
+                {
                     break;
                 }
 
@@ -114,8 +126,7 @@ namespace MusicPlayer.viewModels
             md.IsExpanded = true;
             md.IsSelected = true;
             SelectedItem = md;
-            MediaDirectories = mdList;
+            MediaDirectories = mediaList;
         }
-
     }
 }
