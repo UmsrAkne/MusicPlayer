@@ -1,22 +1,27 @@
-﻿using MusicPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayerTests3.model
+﻿namespace MusicPlayerTests3.Models
 {
-    class DummyWMP : IPlayer
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using MusicPlayer.Models;
+
+    public class DummyWMP : IPlayer
     {
-
         private bool playing = false;
-        public bool Playing => playing;
-
         private bool loading = false;
+        private double duration = 0;
+        private string url;
+
+        public event EventHandler MediaEnded;
+
+        public event EventHandler MediaStarted;
+
         public bool Loading => loading;
 
-        private string url;
+        public bool Playing => playing;
+
         public string URL
         {
             get => url;
@@ -33,14 +38,12 @@ namespace MusicPlayerTests3.model
         }
 
         public int Volume { get; set; } = 100;
+
         public double Position { get; set; }
 
         public double NextMediaDuration { get; set; }
-        private double duration = 0;
-        public double Duration => duration;
 
-        public event EventHandler MediaEnded;
-        public event EventHandler MediaStarted;
+        public double Duration => duration;
 
         public void Pause()
         {
@@ -63,7 +66,7 @@ namespace MusicPlayerTests3.model
             throw new NotImplementedException();
         }
 
-        public void forward()
+        public void Forward()
         {
             if (loading)
             {

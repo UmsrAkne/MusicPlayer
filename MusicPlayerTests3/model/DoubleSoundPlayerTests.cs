@@ -1,22 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicPlayer.Models;
-using MusicPlayerTests3.model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.Models.Tests
+﻿namespace MusicPlayer.Models.Tests
 {
-    [TestClass()]
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using MusicPlayer.Models;
+    using MusicPlayerTests3.Models;
+
+    [TestClass]
     public class DoubleSoundPlayerTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DoubleSoundPlayerTest()
         {
-
             var wmpA = new DummyWMP();
             var wmpB = new DummyWMP();
             wmpA.NextMediaDuration = 10;
@@ -34,18 +33,16 @@ namespace MusicPlayer.Models.Tests
             {
                 for (var i = 0; i < count; i++)
                 {
-                    wmpA.forward();
-                    wmpB.forward();
+                    wmpA.Forward();
+                    wmpB.Forward();
 
                     if (i % 2 == 0)
                     {
                         // doubleSoundPlayer.timer の間隔が 450ms なので大体ループ２回に１回の頻度。
                         po.Invoke("timerEventHandler");
                     }
-
                 }
             };
-
 
             var files = new List<IndexedFileInfo>();
             files.Add(new IndexedFileInfo(new FileInfo("testFile1")));
@@ -67,7 +64,6 @@ namespace MusicPlayer.Models.Tests
             Assert.IsTrue(sp1.Playing);
             Assert.IsFalse(sp2.Playing);
             Assert.IsTrue(wmpA.Loading, "wmpAのplay実行直後なのでロード中");
-
 
             f(1);
             Assert.IsFalse(wmpA.Loading, "forwardを一回実行したのでロードは終了している");

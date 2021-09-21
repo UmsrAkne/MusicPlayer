@@ -1,6 +1,5 @@
 ﻿namespace MusicPlayer.Views
 {
-
     using System.Windows.Controls;
 
     /// <summary>
