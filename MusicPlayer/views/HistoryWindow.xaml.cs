@@ -1,4 +1,4 @@
-﻿namespace MusicPlayer.views
+﻿namespace MusicPlayer.Views
 {
     using System;
     using System.Collections.Generic;

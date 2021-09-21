@@ -2,7 +2,7 @@
 {
     using System.Windows;
     using MusicPlayer.ViewModels;
-    using MusicPlayer.views;
+    using MusicPlayer.Views;
     using Prism.Ioc;
 
     /// <summary>

@@ -8,7 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using MusicPlayer.Models;
-    using MusicPlayer.views;
+    using MusicPlayer.Views;
     using Prism.Commands;
     using Prism.Mvvm;
     using Prism.Services.Dialogs;
