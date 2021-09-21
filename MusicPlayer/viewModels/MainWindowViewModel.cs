@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicPlayer.viewModels
+namespace MusicPlayer.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {

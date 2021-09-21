@@ -1,4 +1,4 @@
-﻿namespace MusicPlayer.viewModels
+﻿namespace MusicPlayer.ViewModels
 {
     using System;
     using System.Collections.Generic;

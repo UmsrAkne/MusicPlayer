@@ -8,7 +8,7 @@
     xmlns:m="clr-namespace:MusicPlayer.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:vms="clr-namespace:MusicPlayer.viewModels"
+    xmlns:vms="clr-namespace:MusicPlayer.ViewModels"
     Title="{Binding DoubleSoundPlayer.PlayingFileName}"
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="{Binding WindowHeight, Mode=TwoWay}"

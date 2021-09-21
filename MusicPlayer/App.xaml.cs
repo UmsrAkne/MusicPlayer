@@ -1,7 +1,7 @@
 ﻿namespace MusicPlayer
 {
     using System.Windows;
-    using MusicPlayer.viewModels;
+    using MusicPlayer.ViewModels;
     using MusicPlayer.views;
     using Prism.Ioc;
 
