@@ -33,8 +33,8 @@
             SoundPlayer soundPlayerA = playerA;
             SoundPlayer soundPlayerB = playerB;
 
-            soundPlayerA.mediaEndedEvent += NextPlay;
-            soundPlayerB.mediaEndedEvent += NextPlay;
+            soundPlayerA.MediaEndedEvent += NextPlay;
+            soundPlayerB.MediaEndedEvent += NextPlay;
 
             players.Add(soundPlayerA);
             players.Add(soundPlayerB);
@@ -152,7 +152,7 @@
             SelectedItem = f;
             CurrentPlayer.SoundFileInfo = f.FileInfo;
             PlayingIndex = Files.IndexOf(f);
-            CurrentPlayer.newPlay();
+            CurrentPlayer.NewPlayer();
             RaisePropertyChanged(nameof(PlayingFileName));
         }));
 
@@ -164,15 +164,15 @@
             {
                 pausing = true;
                 timer.Stop();
-                players[(int)PlayerIndex.First].pause();
-                players[(int)PlayerIndex.Second].pause();
+                players[(int)PlayerIndex.First].Pause();
+                players[(int)PlayerIndex.Second].Pause();
             }
             else
             {
                 pausing = false;
                 timer.Start();
-                players[(int)PlayerIndex.First].resume();
-                players[(int)PlayerIndex.Second].resume();
+                players[(int)PlayerIndex.First].Resume();
+                players[(int)PlayerIndex.Second].Resume();
             }
         }));
 
@@ -279,7 +279,7 @@
             SelectedItem = Files[PlayingIndex];
             RaisePropertyChanged(nameof(PlayingFileName));
             CurrentPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
-            CurrentPlayer.newPlay();
+            CurrentPlayer.NewPlayer();
         }
 
         public void UpdateSelectedFileName() => RaisePropertyChanged(nameof(PlayingFileName));
@@ -287,13 +287,13 @@
         public void Stop()
         {
             PlayingIndex = int.MaxValue;
-            CurrentPlayer.stop();
-            GetOtherPlayer(CurrentPlayer).stop();
+            CurrentPlayer.Stop();
+            GetOtherPlayer(CurrentPlayer).Stop();
 
             CurrentPlayer.Volume = this.Volume;
             GetOtherPlayer(CurrentPlayer).Volume = this.Volume;
 
-            CurrentPlayer.setEmptyFileInfo();
+            CurrentPlayer.SetEmptyFileInfo();
             UpdateSelectedFileName();
             mediaSwitching = false;
         }
@@ -329,9 +329,9 @@
                     otherPlayer.SoundFileInfo = Files[PlayingIndex].FileInfo;
 
                     // ここで行う曲の新規再生（切り替え）は BackCut, FrontCut を加味した play() メソッドで行う。
-                    otherPlayer.play();
+                    otherPlayer.Play();
                     otherPlayer.Volume = 0;
-                    otherPlayer.playStartedEvent += StopMedia;
+                    otherPlayer.PlayStartedEvent += StopMedia;
                 }
 
                 int volumeUpAmount = (SwitchingDuration != 0) ? Volume / SwitchingDuration : 0;
@@ -355,7 +355,7 @@
             SoundPlayer p = sender as SoundPlayer;
             if (p.Duration <= p.SecondsOfBeforeEndNotice * 2)
             {
-                p.stop();
+                p.Stop();
                 PlayingIndex--;
                 autoStoped = true;
             }
@@ -366,7 +366,7 @@
                 RaisePropertyChanged(nameof(PlayingFileName));
             }
 
-            p.playStartedEvent -= StopMedia;
+            p.PlayStartedEvent -= StopMedia;
         }
 
         /// <summary>
@@ -391,7 +391,7 @@
                     PlayingIndex++;
                     SelectedIndex = PlayingIndex;
                     p.SoundFileInfo = Files[PlayingIndex].FileInfo;
-                    p.newPlay();
+                    p.NewPlayer();
                 }
             }
 

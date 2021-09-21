@@ -1,17 +1,15 @@
-﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using Prism.Mvvm;
+
     public class PlayerSetting : BindableBase
     {
-
         private int switchingDuration = 0;
+        private string defaultBaseDirectoryPath;
+        private int volume;
+        private int frontCut;
+        private int backCut;
+
         public int SwitchingDuration
         {
             get => switchingDuration;
@@ -22,7 +20,6 @@ namespace MusicPlayer.Models
             }
         }
 
-        private string defaultBaseDirectoryPath;
         public string DefaultBaseDirectoryPath
         {
             get => defaultBaseDirectoryPath;
@@ -33,7 +30,6 @@ namespace MusicPlayer.Models
             }
         }
 
-        private int volume;
         public int Volume
         {
             get => volume;
@@ -44,20 +40,16 @@ namespace MusicPlayer.Models
             }
         }
 
-        private int frontCut;
         public int FrontCut
         {
             get => frontCut;
             set => SetProperty(ref frontCut, value);
         }
 
-        private int backCut;
         public int BackCut
         {
             get => backCut;
             set => SetProperty(ref backCut, value);
         }
-
-
     }
 }

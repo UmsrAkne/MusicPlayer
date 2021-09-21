@@ -73,7 +73,7 @@ namespace MusicPlayer.Models.Tests
             Assert.IsFalse(wmpA.Loading, "forwardを一回実行したのでロードは終了している");
 
             bool mediaEndedEventDispatched = false;
-            sp1.mediaEndedEvent += (sender) => { mediaEndedEventDispatched = true; };
+            sp1.MediaEndedEvent += (sender) => { mediaEndedEventDispatched = true; };
 
             f(50);
             Assert.IsTrue(mediaEndedEventDispatched, "50回以上回したらメディアは終了するので、イベントが送出されているはず");

@@ -1,120 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Remoting.Channels;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Navigation;
-using WMPLib;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
+    using System;
+    using System.IO;
 
     public delegate void MediaEndedEventHandler(object sender);
+
     public delegate void PlayStartedEventHandler(object sender);
 
     public class SoundPlayer
     {
+        private FileInfo soundFileInfo;
+        private IPlayer player;
 
         public SoundPlayer(IPlayer player)
         {
-
             this.player = player;
             this.player.Volume = 100;
 
             this.player.MediaEnded += (sender, e) =>
             {
-                mediaEndedEvent?.Invoke(this);
+                MediaEndedEvent?.Invoke(this);
             };
 
             this.player.MediaStarted += (sender, e) =>
             {
                 Duration = this.player.Duration;
-                playStartedEvent?.Invoke(this);
+                PlayStartedEvent?.Invoke(this);
             };
-
         }
 
-        private FileInfo soundFileInfo;
-        public FileInfo SoundFileInfo
-        {
-            get { return soundFileInfo; }
-            set
-            {
-                if (!value.Exists) throw new System.ArgumentException("指定されたファイルが存在しません " + value.FullName);
-                soundFileInfo = value;
-            }
-        }
+        public event MediaEndedEventHandler MediaEndedEvent;
 
-        private IPlayer player;
-        public event MediaEndedEventHandler mediaEndedEvent;
-        public event PlayStartedEventHandler playStartedEvent;
-
-        /// <summary>
-        /// 新規で再生を開始する際に使用します。
-        /// </summary>
-        public void newPlay()
-        {
-            player.URL = soundFileInfo.FullName;
-            player.Play();
-
-            /** ここで情報を記録するので、再生中のメディアが終了N秒前に入ってこのメソッドが呼び出されると、
-             *  最後に再生していたメディアが更新される。
-             *  最後の方まで再生した曲は、視聴を終えたとみなす。
-             */
-            Properties.Settings.Default.lastPlayingFileName = SoundFileInfo.FullName;
-            Properties.Settings.Default.Save();
-
-            var logFileName = "playlog.txt";
-            var text = (File.Exists(logFileName)) ? File.ReadAllText(logFileName) : "";
-
-            using (StreamWriter sw = new StreamWriter(logFileName, false))
-            {
-                sw.WriteLine($"{DateTime.Now.ToString("yyy/MM/dd HH:mm:ss")},{SoundFileInfo.FullName}");
-                sw.Write(text);
-            }
-        }
-
-        /// <summary>
-        /// FrontCut の値だけ、冒頭をカットして再生を開始します。
-        /// </summary>
-        public void play()
-        {
-            newPlay();
-
-            if (BeforeEndPointPassageNotification)
-            {
-                // クロスフェードによる音量の変更を伴う場合にのみ FrontCut を有効にする。
-                player.Position = FrontCut;
-            }
-        }
-
-        public void pause()
-        {
-            player.Pause();
-        }
-
-        public void resume()
-        {
-            player.Resume();
-        }
-
-        public void stop()
-        {
-            player.Stop();
-        }
+        public event PlayStartedEventHandler PlayStartedEvent;
 
         public int Volume
         {
-            get
-            {
-                return player.Volume;
-            }
+            get => player.Volume;
+
             set
             {
                 if (value > 100)
@@ -134,21 +56,15 @@ namespace MusicPlayer.Models
 
         public double Position
         {
-            get
-            {
-                return player.Position;
-            }
-            set
-            {
-                player.Position = value;
-            }
+            get => player.Position;
+            set => player.Position = value;
         }
 
         public bool Loading => player.Loading;
 
         public double Duration { get; private set; } = 0;
 
-        public Boolean Playing
+        public bool Playing
         {
             get => player.Playing;
             private set
@@ -175,12 +91,12 @@ namespace MusicPlayer.Models
                 if (Duration == 0
                     || SecondsOfBeforeEndNotice * 2 > Duration
                     || !Playing
-                    || !BeforeEndPointPassageNotification
-                    )
+                    || !BeforeEndPointPassageNotification)
                 {
                     return false;
                 }
-                return (Position >= Duration - SecondsOfBeforeEndNotice - BackCut);
+
+                return Position >= Duration - SecondsOfBeforeEndNotice - BackCut;
             }
         }
 
@@ -196,10 +112,7 @@ namespace MusicPlayer.Models
         /// <summary>
         /// 曲の先頭部分を指定秒数カットします。
         /// </summary>
-        public int FrontCut
-        {
-            get; set;
-        }
+        public int FrontCut { get; set; }
 
         /// <summary>
         /// 曲の終端部分を指定秒数カットします。
@@ -213,15 +126,80 @@ namespace MusicPlayer.Models
         /// falseに設定すると、PassedBeforeEndPoint が常に false を返すようになり、
         /// 結果的に クロスフェード機能を無効にします。
         /// </summary>
-        public bool BeforeEndPointPassageNotification
+        public bool BeforeEndPointPassageNotification { get; set; } = true;
+
+        public FileInfo SoundFileInfo
         {
-            get; set;
-        } = true;
+            get => soundFileInfo;
+            set
+            {
+                if (!value.Exists)
+                {
+                    throw new System.ArgumentException("指定されたファイルが存在しません " + value.FullName);
+                }
+
+                soundFileInfo = value;
+            }
+        }
+
+        /// <summary>
+        /// 新規で再生を開始する際に使用します。
+        /// </summary>
+        public void NewPlayer()
+        {
+            player.URL = soundFileInfo.FullName;
+            player.Play();
+
+            /** ここで情報を記録するので、再生中のメディアが終了N秒前に入ってこのメソッドが呼び出されると、
+             *  最後に再生していたメディアが更新される。
+             *  最後の方まで再生した曲は、視聴を終えたとみなす。
+             */
+            Properties.Settings.Default.lastPlayingFileName = SoundFileInfo.FullName;
+            Properties.Settings.Default.Save();
+
+            var logFileName = "playlog.txt";
+            var text = File.Exists(logFileName) ? File.ReadAllText(logFileName) : string.Empty;
+
+            using (StreamWriter sw = new StreamWriter(logFileName, false))
+            {
+                sw.WriteLine($"{DateTime.Now.ToString("yyy/MM/dd HH:mm:ss")},{SoundFileInfo.FullName}");
+                sw.Write(text);
+            }
+        }
+
+        /// <summary>
+        /// FrontCut の値だけ、冒頭をカットして再生を開始します。
+        /// </summary>
+        public void Play()
+        {
+            NewPlayer();
+
+            if (BeforeEndPointPassageNotification)
+            {
+                // クロスフェードによる音量の変更を伴う場合にのみ FrontCut を有効にする。
+                player.Position = FrontCut;
+            }
+        }
+
+        public void Pause()
+        {
+            player.Pause();
+        }
+
+        public void Resume()
+        {
+            player.Resume();
+        }
+
+        public void Stop()
+        {
+            player.Stop();
+        }
 
         /// <summary>
         /// SoundFileInfo に対して、空の FileInfo を直接セットします。
         /// </summary>
-        public void setEmptyFileInfo()
+        public void SetEmptyFileInfo()
         {
             soundFileInfo = new FileInfo("notExistEmptyFileInfo");
         }
