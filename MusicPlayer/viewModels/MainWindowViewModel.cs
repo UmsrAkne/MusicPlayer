@@ -81,7 +81,7 @@ namespace MusicPlayer.viewModels
 
                     if (info.IsM3U)
                     {
-                        var fileList = info.makeFileListFromM3U();
+                        var fileList = info.MakeFileListFromM3U();
                         foreach (FileInfo f in fileList)
                         {
                             mf.Add(new IndexedFileInfo(f));

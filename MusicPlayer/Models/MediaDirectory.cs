@@ -1,30 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Commands;
-using Prism.Mvvm;
-
-namespace MusicPlayer.Models
+﻿namespace MusicPlayer.Models
 {
-    class MediaDirectory : BindableBase
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using Prism.Commands;
+    using Prism.Mvvm;
+
+    public class MediaDirectory : BindableBase
     {
+        private List<MediaDirectory> childDirectory;
+        private bool isExpanded = false;
+        private bool isSelected = false;
+
+        public MediaDirectory()
+        {
+            GetChildsCommand = new DelegateCommand(() => GetChild());
+        }
 
         public bool IsM3U
         {
             get => FileInfo.Extension == ".m3u" || FileInfo.Extension == ".m3u16";
         }
 
-        public String Name
+        public string Name
         {
             get
             {
                 if (FileInfo == null)
                 {
-                    return "";
+                    return string.Empty;
                 }
 
                 var rootDirectory = new DriveInfo(FileInfo.FullName);
@@ -39,30 +43,78 @@ namespace MusicPlayer.Models
             }
         }
 
-        private List<MediaDirectory> childDirectory;
+        public DelegateCommand GetChildsCommand { get; private set; }
+
+        public bool IsSelected
+        {
+            get => isSelected;
+            set => SetProperty(ref isSelected, value);
+        }
+
+        public bool IsExpanded
+        {
+            get => isExpanded;
+            set => SetProperty(ref isExpanded, value);
+        }
+
         public List<MediaDirectory> ChildDirectory
         {
-            get
-            {
-                return childDirectory;
-            }
+            get => childDirectory;
+
             set
             {
                 SetProperty(ref childDirectory, value);
                 childDirectory = value;
             }
         }
+
         public FileInfo FileInfo { get; set; }
 
-        public MediaDirectory()
+        /// <summary>
+        /// m3uファイルに記載されたファイルのリストを生成して取得します。
+        /// </summary>
+        /// <returns></returns>
+        public List<FileInfo> MakeFileListFromM3U()
         {
-            GetChildsCommand = new DelegateCommand(
-                () => { getChild(); },
-                () => { return true; }
-            );
+            var fileList = new List<FileInfo>();
+            string[] fileNames = File.ReadAllLines(FileInfo.FullName);
+
+            // 現状、他に影響が出るかはわからないが、
+            // staticの値を変更するので、念の為に処理終了の後でアドレスを復元できるようにする。
+            string originalCurrentDirectory = Environment.CurrentDirectory;
+
+            Environment.CurrentDirectory = FileInfo.Directory.FullName;
+
+            //// 上記で CurrentDirectory を変更すると、下で相対パスから FileInfo を生成できるようになる。
+            //// FileInfo のインスタンスが新規生成される際、コンストラクタの引数に相対パス(..\)が入力された場合、
+            //// 基準となるパスは Environment.CurrentDirectory となる模様。
+
+            foreach (string line in fileNames)
+            {
+                if (line.Trim().Length > 0)
+                {
+                    if (line.Trim()[0] == '#')
+                    {
+                        // 先頭が '#' の行はコメント行のためスキップ
+                        continue;
+                    }
+
+                    FileInfo f = new FileInfo(line);
+                    if (f.Exists)
+                    {
+                        fileList.Add(new FileInfo(line));
+                    }
+                }
+            }
+
+            Environment.CurrentDirectory = originalCurrentDirectory;
+
+            //// 後に影響が出ると嫌なのでもとに戻しておく。
+
+            return fileList;
         }
 
-        private void getChild()
+        private void GetChild()
         {
             if (!Directory.Exists(FileInfo.FullName))
             {
@@ -79,7 +131,7 @@ namespace MusicPlayer.Models
                 {
                     var md = new MediaDirectory();
                     md.FileInfo = new FileInfo(n);
-                    md.getChild();
+                    md.GetChild();
                     mediaDirectories.Add(md);
                 }
             }
@@ -90,65 +142,6 @@ namespace MusicPlayer.Models
             ChildDirectory = mediaDirectories;
             Properties.Settings.Default.lastVisitedDirectoryPath = FileInfo.FullName;
             Properties.Settings.Default.Save();
-        }
-
-        /// <summary>
-        /// m3uファイルに記載されたファイルのリストを生成して取得します。
-        /// </summary>
-        /// <returns></returns>
-        public List<FileInfo> makeFileListFromM3U()
-        {
-            var fileList = new List<FileInfo>();
-            string[] fileNames = File.ReadAllLines(FileInfo.FullName);
-
-            // 現状、他に影響が出るかはわからないが、
-            // staticの値を変更するので、念の為に処理終了の後でアドレスを復元できるようにする。
-            string originalCurrentDirectory = Environment.CurrentDirectory;
-
-            Environment.CurrentDirectory = FileInfo.Directory.FullName;
-            // 上記で CurrentDirectory を変更すると、下で相対パスから FileInfo を生成できるようになる。
-            // FileInfo のインスタンスが新規生成される際、コンストラクタの引数に相対パス(..\)が入力された場合、
-            // 基準となるパスは Environment.CurrentDirectory となる模様。
-
-            foreach (string line in fileNames)
-            {
-                if (line.Trim().Length > 0)
-                {
-
-                    if (line.Trim()[0] == '#')
-                    {
-                        // 先頭が '#' の行はコメント行のためスキップ
-                        continue;
-                    }
-
-                    FileInfo f = new FileInfo(line);
-                    if (f.Exists)
-                    {
-                        fileList.Add(new FileInfo(line));
-                    }
-                }
-            }
-
-            Environment.CurrentDirectory = originalCurrentDirectory;
-            // 後に影響が出ると嫌なのでもとに戻しておく。
-
-            return fileList;
-        }
-
-        public DelegateCommand GetChildsCommand { get; private set; }
-
-        private bool isExpanded = false;
-        public bool IsExpanded
-        {
-            get => isExpanded;
-            set => SetProperty(ref isExpanded, value);
-        }
-
-        private bool isSelected = false;
-        public bool IsSelected
-        {
-            get => isSelected;
-            set => SetProperty(ref isSelected, value);
         }
     }
 }
