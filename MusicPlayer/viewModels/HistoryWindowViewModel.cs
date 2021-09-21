@@ -16,16 +16,16 @@
             CloseDialogCommand = new DelegateCommand(() => RequestClose?.Invoke(new DialogResult()));
 
             var logFileName = "playlog.txt";
-            Log = (File.Exists(logFileName)) ? File.ReadAllText(logFileName) : "履歴は存在しません";
+            Log = File.Exists(logFileName) ? File.ReadAllText(logFileName) : "履歴は存在しません";
         }
+
+        public event Action<IDialogResult> RequestClose;
 
         public string Title => "log";
 
         public string Log { get; private set; }
 
         public DelegateCommand CloseDialogCommand { get; private set; }
-
-        public event Action<IDialogResult> RequestClose;
 
         public bool CanCloseDialog() => true;
 

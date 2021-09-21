@@ -1,18 +1,30 @@
-﻿using MusicPlayer.Models;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MusicPlayer.ViewModels
+﻿namespace MusicPlayer.ViewModels
 {
-    class TreeViewModel : BindableBase, ICurrentDirectorySource
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using MusicPlayer.Models;
+    using Prism.Commands;
+    using Prism.Mvvm;
+
+    public class TreeViewModel : BindableBase, ICurrentDirectorySource
     {
         private string baseDirectoryPath = @"C:\";
+        private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
+        private MediaDirectory selectedItem;
+        private DelegateCommand<MediaDirectory> selectDirectoryCommand;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="baseDirectoryPath">このオブジェクトが始点とするディレクトリを入力します。
+        /// 無効な値が入力された場合は Cドライブのルートを設定します。</param>
+        public TreeViewModel(string baseDirectoryPath)
+        {
+            BaseDirectoryPath = System.IO.Directory.Exists(baseDirectoryPath) ? baseDirectoryPath : @"C\";
+        }
+
+        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(SelectedItem.FileInfo.FullName);
+
         public string BaseDirectoryPath
         {
             get => baseDirectoryPath;
@@ -34,16 +46,12 @@ namespace MusicPlayer.ViewModels
             }
         }
 
-        public DirectoryInfo CurrentDirectoryInfo => new DirectoryInfo(SelectedItem.FileInfo.FullName);
-
-        private List<MediaDirectory> mediaDirectories = new List<MediaDirectory>();
         public List<MediaDirectory> MediaDirectories
         {
             get => mediaDirectories;
             private set => SetProperty(ref mediaDirectories, value);
         }
 
-        private MediaDirectory selectedItem;
         public MediaDirectory SelectedItem
         {
             get => selectedItem;
@@ -53,26 +61,15 @@ namespace MusicPlayer.ViewModels
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="baseDirectoryPath">このオブジェクトが始点とするディレクトリを入力します。
-        /// 無効な値が入力された場合は Cドライブのルートを設定します。</param>
-        public TreeViewModel(string baseDirectoryPath)
-        {
-            BaseDirectoryPath = (System.IO.Directory.Exists(baseDirectoryPath)) ? baseDirectoryPath : @"C\";
-        }
-
-        private DelegateCommand<MediaDirectory> selectDirectoryCommand;
         public DelegateCommand<MediaDirectory> SelectDirectoryCommand
         {
             get => selectDirectoryCommand ?? (selectDirectoryCommand = new DelegateCommand<MediaDirectory>(
-                (MediaDirectory mediaDirectory) =>
-                {
-                    SelectedItem = mediaDirectory;
-                    Properties.Settings.Default.lastVisitedDirectoryPath = mediaDirectory.FileInfo.FullName;
-                    Properties.Settings.Default.Save();
-                }
-            ));
+            (MediaDirectory mediaDirectory) =>
+            {
+                SelectedItem = mediaDirectory;
+                Properties.Settings.Default.lastVisitedDirectoryPath = mediaDirectory.FileInfo.FullName;
+                Properties.Settings.Default.Save();
+            }));
         }
 
         /// <summary>
@@ -80,7 +77,7 @@ namespace MusicPlayer.ViewModels
         /// MediaDirectories にセットします。
         /// </summary>
         /// <param name="path">パスが存在しない、または BaseDirectory と同一の場合は、BaseDirectoryだけを展開して動作を終了します。</param>
-        public void expandItemsTo(string path)
+        public void ExpandItemsTo(string path)
         {
             if (!Directory.Exists(path) || path == BaseDirectoryPath)
             {
@@ -109,8 +106,8 @@ namespace MusicPlayer.ViewModels
             directoryInfoList.Reverse();
 
             MediaDirectory md = new MediaDirectory();
-            List<MediaDirectory> mdList = new List<MediaDirectory>();
-            mdList.Add(md);
+            List<MediaDirectory> mediaList = new List<MediaDirectory>();
+            mediaList.Add(md);
 
             for (var i = 0; i < directoryInfoList.Count; i++)
             {
@@ -129,8 +126,7 @@ namespace MusicPlayer.ViewModels
             md.IsExpanded = true;
             md.IsSelected = true;
             SelectedItem = md;
-            MediaDirectories = mdList;
+            MediaDirectories = mediaList;
         }
-
     }
 }
