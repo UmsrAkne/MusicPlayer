@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using MusicPlayer.Models;
 
-    public class DummyWMP : IPlayer
+    public class DummyWMP : ISound
     {
         private bool playing = false;
         private bool loading = false;

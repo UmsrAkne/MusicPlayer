@@ -10,9 +10,9 @@
     public class SoundPlayer
     {
         private FileInfo soundFileInfo;
-        private IPlayer player;
+        private ISound player;
 
-        public SoundPlayer(IPlayer player)
+        public SoundPlayer(ISound player)
         {
             this.player = player;
             this.player.Volume = 100;

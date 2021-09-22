@@ -3,7 +3,7 @@
     using System;
     using WMPLib;
 
-    public class WMPWrapper : IPlayer
+    public class WMPWrapper : ISound
     {
         private WindowsMediaPlayer wmp;
 
