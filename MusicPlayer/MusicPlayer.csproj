@@ -93,7 +93,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\ICurrentDirectorySource.cs" />
     <Compile Include="Models\IndexedFileInfo.cs" />
-    <Compile Include="Models\IPlayer.cs" />
+    <Compile Include="Models\ISound.cs" />
     <Compile Include="Models\PlayerSetting.cs" />
     <Compile Include="Models\WMPWrapper.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">

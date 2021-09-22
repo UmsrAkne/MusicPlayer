@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface IPlayer
+    public interface ISound
     {
         event EventHandler MediaEnded;
 
