@@ -53,5 +53,31 @@
             Assert.IsTrue(dummySoundA.Playing, "次の曲を再生している");
             Assert.AreEqual(dummySoundA.URL, new FileInfo("b").FullName);
         }
+
+        [TestMethod]
+        public void PlayCrossFadeTest()
+        {
+            //// 複数曲再生（クロスフェード）
+
+            var dummySoundA = new DummySound() { Duration = 20, SwitchingDuration = 5 };
+            var dummySoundB = new DummySound() { Duration = 20, SwitchingDuration = 5 };
+
+            var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB) { SwitchingDuration = 5 };
+            doublePlayer.PlayList.Add(new FileInfo("a"));
+            doublePlayer.PlayList.Add(new FileInfo("b"));
+
+            doublePlayer.Play();
+
+            Assert.IsTrue(dummySoundA.Playing);
+
+            dummySoundA.Forward(5.0);
+            dummySoundA.Forward(5.0);
+            dummySoundA.Forward(5.0);
+
+            Assert.IsTrue(doublePlayer.Switching, "Sound の切り替え中");
+
+            // Assert.IsTrue(dummySoundA.Playing, "次の曲を再生している");
+            // Assert.AreEqual(dummySoundA.URL, new FileInfo("b").FullName);
+        }
     }
 }

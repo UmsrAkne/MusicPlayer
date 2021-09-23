@@ -17,6 +17,10 @@
 
         public event EventHandler MediaStarted;
 
+        public event EventHandler LoadCompleted;
+
+        public event EventHandler NearTheEnd;
+
         public bool Playing => wmp.playState == WMPPlayState.wmppsPlaying;
 
         /// <summary>

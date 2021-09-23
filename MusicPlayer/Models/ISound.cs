@@ -8,6 +8,10 @@
 
         event EventHandler MediaStarted;
 
+        event EventHandler LoadCompleted;
+
+        event EventHandler NearTheEnd;
+
         bool Playing { get; }
 
         bool Loading { get; }

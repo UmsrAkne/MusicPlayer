@@ -9,21 +9,37 @@
 
     internal class DummySound : ISound
     {
+        private string url;
+
         public event EventHandler MediaEnded;
 
         public event EventHandler MediaStarted;
+
+        public event EventHandler LoadCompleted;
+
+        public event EventHandler NearTheEnd;
 
         public bool Playing { get; private set; }
 
         public bool Loading => throw new NotImplementedException();
 
-        public string URL { get; set; }
+        public string URL
+        {
+            get => url;
+            set
+            {
+                url = value;
+                LoadCompleted?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         public int Volume { get; set; }
 
         public double Position { get; set; }
 
         public double Duration { get; set; }
+
+        public int SwitchingDuration { get; set; }
 
         public void Pause()
         {
@@ -56,6 +72,10 @@
             {
                 Playing = false;
                 MediaEnded?.Invoke(this, EventArgs.Empty);
+            }
+            else if (SwitchingDuration > 0 && Position >= Duration - SwitchingDuration)
+            {
+                NearTheEnd?.Invoke(this, EventArgs.Empty);
             }
         }
     }

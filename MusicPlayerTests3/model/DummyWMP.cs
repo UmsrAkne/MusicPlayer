@@ -18,6 +18,10 @@
 
         public event EventHandler MediaStarted;
 
+        public event EventHandler LoadCompleted;
+
+        public event EventHandler NearTheEnd;
+
         public bool Loading => loading;
 
         public bool Playing => playing;

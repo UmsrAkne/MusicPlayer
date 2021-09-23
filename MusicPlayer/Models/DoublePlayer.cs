@@ -30,7 +30,11 @@
             Sounds[0].MediaEnded += playNext;
             Sounds[1].MediaEnded += playNext;
 
+            Sounds[0].NearTheEnd += LoadSound;
+            Sounds[1].NearTheEnd += LoadSound;
+
             timer.Elapsed += (e, sender) => Fader();
+            timer.Start();
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -40,6 +44,8 @@
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
         public int SwitchingDuration { get; set; }
+
+        public bool Switching { get; private set; }
 
         private List<ISound> Sounds { get; }
 
@@ -76,6 +82,59 @@
         /// </summary>
         public void Fader()
         {
+            if (SwitchingDuration == 0 || !Switching)
+            {
+                return;
+            }
+
+            ISound endingSound = null;
+
+            foreach (ISound sound in Sounds)
+            {
+                if (sound.Position >= sound.Duration - SwitchingDuration)
+                {
+                    endingSound = sound;
+                    break;
+                }
+            }
+
+            if (endingSound != null)
+            {
+                endingSound.Volume -= 1;
+                GetOtherSound(endingSound).Volume += 1;
+
+                if (endingSound.Volume <= 0)
+                {
+                    Switching = false;
+                }
+            }
         }
+
+        private void LoadSound(object sender, EventArgs e)
+        {
+            PlayingIndex++;
+            var nextSound = GetOtherSound((ISound)sender);
+            nextSound.LoadCompleted += LoadCompletedEventHandler;
+            nextSound.URL = PlayList[PlayingIndex].FullName;
+        }
+
+        private void LoadCompletedEventHandler(object sender, EventArgs e)
+        {
+            var sound = (ISound)sender;
+            if (sound.Duration > SwitchingDuration * 2.5)
+            {
+                sound.Volume = 0;
+                sound.Play();
+                Switching = true;
+            }
+            else
+            {
+                PlayingIndex--;
+            }
+
+            sound.LoadCompleted -= LoadCompletedEventHandler;
+        }
+
+        private ISound GetOtherSound(ISound sound) => object.ReferenceEquals(sound, Sounds[0]) ? Sounds[1] : Sounds[0];
     }
 }
