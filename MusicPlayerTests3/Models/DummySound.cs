@@ -54,8 +54,8 @@
             Position += time;
             if (Position >= Duration)
             {
-                MediaEnded?.Invoke(this, EventArgs.Empty);
                 Playing = false;
+                MediaEnded?.Invoke(this, EventArgs.Empty);
             }
         }
     }

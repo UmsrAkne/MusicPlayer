@@ -1,5 +1,6 @@
 ﻿namespace MusicPlayer.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Timers;
@@ -10,11 +11,25 @@
         private int volume = 100;
         private Timer timer = new Timer(200);
         private int playingIndex;
+        private int switchingDuration = 0;
 
         public DoublePlayer(ISound soundA, ISound soundB)
         {
             Sounds = new List<ISound>() { soundA, soundB };
             Sounds.Capacity = 2;
+
+            void playNext(object sender, EventArgs e)
+            {
+                PlayingIndex++;
+                ISound sound = (ISound)sender;
+                sound.Stop();
+                sound.URL = PlayList[PlayingIndex].FullName;
+                sound.Play();
+            }
+
+            Sounds[0].MediaEnded += playNext;
+            Sounds[1].MediaEnded += playNext;
+
             timer.Elapsed += (e, sender) => Fader();
         }
 
@@ -23,6 +38,8 @@
         public List<FileInfo> PlayList { get; } = new List<FileInfo>();
 
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
+
+        public int SwitchingDuration { get; set; }
 
         private List<ISound> Sounds { get; }
 
