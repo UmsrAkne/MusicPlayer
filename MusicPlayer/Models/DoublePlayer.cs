@@ -1,6 +1,7 @@
 ﻿namespace MusicPlayer.Models
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Timers;
     using Prism.Mvvm;
 
@@ -8,6 +9,7 @@
     {
         private int volume = 100;
         private Timer timer = new Timer(200);
+        private int playingIndex;
 
         public DoublePlayer(ISound soundA, ISound soundB)
         {
@@ -18,7 +20,25 @@
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
 
+        public List<FileInfo> PlayList { get; } = new List<FileInfo>();
+
+        public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
+
         private List<ISound> Sounds { get; }
+
+        public void Play()
+        {
+            PlayingIndex = 0;
+            Sounds.ForEach(sound =>
+            {
+                sound.Stop();
+                sound.Volume = Volume;
+            });
+
+            ISound s = Sounds[0];
+            s.URL = PlayList[PlayingIndex].FullName;
+            s.Play();
+        }
 
         public void Play(string url)
         {
