@@ -23,7 +23,6 @@
 
             var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB);
             doublePlayer.PlayList.Add(new FileInfo("a"));
-            doublePlayer.PlayList.Add(new FileInfo("b"));
 
             doublePlayer.Play();
 
@@ -71,13 +70,35 @@
             Assert.IsTrue(dummySoundA.Playing);
 
             dummySoundA.Forward(5.0);
+            doublePlayer.Fader();
+
             dummySoundA.Forward(5.0);
+            doublePlayer.Fader();
+
+            Assert.IsFalse(doublePlayer.Switching, "この段階では切り替えは始まっていない");
+
             dummySoundA.Forward(5.0);
+            doublePlayer.Fader();
 
             Assert.IsTrue(doublePlayer.Switching, "Sound の切り替え中");
 
-            // Assert.IsTrue(dummySoundA.Playing, "次の曲を再生している");
-            // Assert.AreEqual(dummySoundA.URL, new FileInfo("b").FullName);
+            dummySoundA.Forward(0.5);
+            doublePlayer.Fader();
+
+            Assert.IsTrue(dummySoundA.Volume < 100, "BGM を下げている途中のはずなので Volume は 100 以下");
+            Assert.IsTrue(dummySoundB.Volume > 0, "BGM を上げている途中。0以上");
+
+            dummySoundA.Forward(3.5);
+            doublePlayer.Fader();
+
+            Assert.IsTrue(dummySoundA.Volume < 100, "BGM を下げている途中のはずなので Volume は 100 以下");
+            Assert.IsTrue(dummySoundB.Volume > 0, "BGM を上げている途中。0以上");
+
+            dummySoundA.Forward(1.5);
+            doublePlayer.Fader();
+
+            Assert.IsTrue(dummySoundB.Playing, "次の曲を再生している");
+            Assert.IsFalse(dummySoundA.Playing, "再生が終了して停止状態");
         }
     }
 }

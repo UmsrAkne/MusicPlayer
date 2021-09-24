@@ -9,7 +9,7 @@
     public class DoublePlayer : BindableBase
     {
         private int volume = 100;
-        private Timer timer = new Timer(200);
+        private Timer timer = new Timer(250);
         private int playingIndex;
         private int switchingDuration = 0;
 
@@ -20,11 +20,14 @@
 
             void playNext(object sender, EventArgs e)
             {
-                PlayingIndex++;
-                ISound sound = (ISound)sender;
-                sound.Stop();
-                sound.URL = PlayList[PlayingIndex].FullName;
-                sound.Play();
+                if (PlayingIndex + 1 < PlayList.Count && !GetOtherSound((ISound)sender).Playing)
+                {
+                    PlayingIndex++;
+                    ISound sound = (ISound)sender;
+                    sound.Stop();
+                    sound.URL = PlayList[PlayingIndex].FullName;
+                    sound.Play();
+                }
             }
 
             Sounds[0].MediaEnded += playNext;
@@ -100,8 +103,10 @@
 
             if (endingSound != null)
             {
-                endingSound.Volume -= 1;
-                GetOtherSound(endingSound).Volume += 1;
+                int timerExecuteCountPerSec = 4;
+                int amount = Volume / SwitchingDuration / timerExecuteCountPerSec;
+                endingSound.Volume -= amount;
+                GetOtherSound(endingSound).Volume += amount;
 
                 if (endingSound.Volume <= 0)
                 {

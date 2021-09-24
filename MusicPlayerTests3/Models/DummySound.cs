@@ -10,6 +10,7 @@
     internal class DummySound : ISound
     {
         private string url;
+        private bool noticedNearTheEnd;
 
         public event EventHandler MediaEnded;
 
@@ -29,6 +30,7 @@
             set
             {
                 url = value;
+                noticedNearTheEnd = false;
                 LoadCompleted?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -73,9 +75,10 @@
                 Playing = false;
                 MediaEnded?.Invoke(this, EventArgs.Empty);
             }
-            else if (SwitchingDuration > 0 && Position >= Duration - SwitchingDuration)
+            else if (SwitchingDuration > 0 && !noticedNearTheEnd && Position >= Duration - SwitchingDuration)
             {
                 NearTheEnd?.Invoke(this, EventArgs.Empty);
+                noticedNearTheEnd = true;
             }
         }
     }
