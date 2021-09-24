@@ -30,6 +30,7 @@
             set
             {
                 url = value;
+                Position = 0;
                 noticedNearTheEnd = false;
                 LoadCompleted?.Invoke(this, EventArgs.Empty);
             }
@@ -69,7 +70,13 @@
 
         public void Forward(double time)
         {
+            if (!Playing)
+            {
+                return;
+            }
+
             Position += time;
+
             if (Position >= Duration)
             {
                 Playing = false;
