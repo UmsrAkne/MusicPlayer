@@ -117,10 +117,13 @@
 
         private void LoadSound(object sender, EventArgs e)
         {
-            PlayingIndex++;
-            var nextSound = GetOtherSound((ISound)sender);
-            nextSound.LoadCompleted += LoadCompletedEventHandler;
-            nextSound.URL = PlayList[PlayingIndex].FullName;
+            if (PlayingIndex + 1 < PlayList.Count)
+            {
+                PlayingIndex++;
+                var nextSound = GetOtherSound((ISound)sender);
+                nextSound.LoadCompleted += LoadCompletedEventHandler;
+                nextSound.URL = PlayList[PlayingIndex].FullName;
+            }
         }
 
         private void LoadCompletedEventHandler(object sender, EventArgs e)
