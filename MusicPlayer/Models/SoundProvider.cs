@@ -10,6 +10,8 @@
     {
         public List<ISound> Sounds { get; private set; } = new List<ISound>();
 
+        public int Count => Sounds.Count;
+
         public ISound GetSound(int index)
         {
             return Sounds[index];

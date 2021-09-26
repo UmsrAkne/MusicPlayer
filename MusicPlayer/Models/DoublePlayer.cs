@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Timers;
     using Prism.Mvvm;
 
@@ -46,7 +47,7 @@
             SoundProvider = soundProvider;
             Sounds = new List<ISound>();
 
-            playTimeTimer.Elapsed += timerEventHandler;
+            playTimeTimer.Elapsed += TimerEventHandler;
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -63,7 +64,7 @@
 
         private List<ISound> Sounds { get; }
 
-        public void timerEventHandler(object sender, EventArgs e)
+        public void TimerEventHandler(object sender, EventArgs e)
         {
             if (Sounds.Count == 1)
             {
@@ -92,6 +93,28 @@
             Sounds.Add(sound);
             sound.Play();
             playTimeTimer.Start();
+
+            sound.MediaEnded += NextSound;
+        }
+
+        public void NextSound(object sender, EventArgs e)
+        {
+            ISound snd = sender as ISound;
+            Sounds.RemoveAt(Sounds.IndexOf(snd));
+            snd.MediaEnded -= NextSound;
+
+            if (Sounds.Count == 1)
+            {
+                Sounds.Last().Play();
+            }
+
+            if (Sounds.Count > PlayingIndex + 1)
+            {
+                ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
+                Sounds.Add(nextSound);
+                nextSound.Play();
+                nextSound.MediaEnded += NextSound;
+            }
         }
 
         /// <summary>
