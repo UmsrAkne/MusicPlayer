@@ -50,6 +50,8 @@
 
         public bool Switching { get; private set; }
 
+        public ISoundProvider SoundProvider { get; private set; }
+
         private List<ISound> Sounds { get; }
 
         public void Play()
