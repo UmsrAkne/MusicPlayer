@@ -10,6 +10,7 @@
     {
         private int volume = 100;
         private Timer timer = new Timer(250);
+        private Timer playTimeTimer = new Timer(1000);
         private int playingIndex;
         private int switchingDuration = 0;
 
@@ -40,6 +41,14 @@
             timer.Start();
         }
 
+        public DoublePlayer(ISoundProvider soundProvider)
+        {
+            SoundProvider = soundProvider;
+            Sounds = new List<ISound>();
+
+            playTimeTimer.Elapsed += timerEventHandler;
+        }
+
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
 
         public List<FileInfo> PlayList { get; } = new List<FileInfo>();
@@ -54,31 +63,35 @@
 
         private List<ISound> Sounds { get; }
 
+        public void timerEventHandler(object sender, EventArgs e)
+        {
+            if (Sounds.Count == 1)
+            {
+                ISound currentSound = Sounds[0];
+                bool isLongSound = currentSound.Duration >= SwitchingDuration * 2.5;
+                bool soundIsEnding = currentSound.Position >= currentSound.Duration - SwitchingDuration;
+
+                if (isLongSound && soundIsEnding)
+                {
+                    var nextSound = SoundProvider.GetSound(++PlayingIndex);
+                    Sounds.Add(nextSound);
+
+                    if (nextSound.Duration >= SwitchingDuration * 2.5)
+                    {
+                        nextSound.Play();
+                    }
+                }
+            }
+        }
+
         public void Play()
         {
             PlayingIndex = 0;
-            Sounds.ForEach(sound =>
-            {
-                sound.Stop();
-                sound.Volume = Volume;
-            });
-
-            ISound s = Sounds[0];
-            s.URL = PlayList[PlayingIndex].FullName;
-            s.Play();
-        }
-
-        public void Play(string url)
-        {
-            Sounds.ForEach(sound =>
-            {
-                sound.Stop();
-                sound.Volume = Volume;
-            });
-
-            ISound s = Sounds[0];
-            s.URL = url;
-            s.Play();
+            Sounds.Clear();
+            ISound sound = SoundProvider.GetSound(PlayingIndex);
+            Sounds.Add(sound);
+            sound.Play();
+            playTimeTimer.Start();
         }
 
         /// <summary>
