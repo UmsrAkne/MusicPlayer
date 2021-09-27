@@ -1,4 +1,7 @@
-﻿namespace MusicPlayer.Models.Tests
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MusicPlayer.Models;
+
+namespace MusicPlayer.Models.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -161,6 +164,53 @@
 
             Assert.IsFalse(dummySoundA.Playing, "再生終了");
             Assert.IsFalse(dummySoundB.Playing, "再生終了");
+        }
+
+        [TestMethod()]
+        public void DoublePlayerTest()
+        {
+            var soundProvider = new SoundProvider();
+            soundProvider.Sounds.Add(new DummySound() { URL = "a", Duration = 30 });
+            soundProvider.Sounds.Add(new DummySound() { URL = "b", Duration = 30 });
+            soundProvider.Sounds.Add(new DummySound() { URL = "c", Duration = 30 });
+            soundProvider.Sounds.Add(new DummySound() { URL = "d", Duration = 30 });
+
+            var player = new DoublePlayer(soundProvider);
+            player.SwitchingDuration = 10;
+            player.Play();
+
+            void forward(int count)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    soundProvider.Sounds.ForEach(s =>
+                    {
+                        ((DummySound)s).Forward(1.0);
+                    });
+
+                    player.TimerEventHandler();
+                }
+            }
+
+            forward(21);
+
+            Assert.IsTrue(((DummySound)soundProvider.Sounds[0]).Playing);
+            Assert.IsTrue(((DummySound)soundProvider.Sounds[1]).Playing);
+
+            forward(10);
+
+            Assert.IsFalse(((DummySound)soundProvider.Sounds[0]).Playing);
+            Assert.IsTrue(((DummySound)soundProvider.Sounds[1]).Playing);
+            Assert.IsFalse(((DummySound)soundProvider.Sounds[2]).Playing);
+            Assert.IsFalse(((DummySound)soundProvider.Sounds[3]).Playing);
+
+            forward(11);
+
+            Assert.IsFalse(((DummySound)soundProvider.Sounds[0]).Playing);
+            Assert.IsTrue(((DummySound)soundProvider.Sounds[1]).Playing);
+            Assert.IsTrue(((DummySound)soundProvider.Sounds[2]).Playing);
+            Assert.IsFalse(((DummySound)soundProvider.Sounds[3]).Playing);
+
         }
     }
 }

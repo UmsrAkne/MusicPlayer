@@ -47,7 +47,7 @@
             SoundProvider = soundProvider;
             Sounds = new List<ISound>();
 
-            playTimeTimer.Elapsed += TimerEventHandler;
+            playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -64,20 +64,21 @@
 
         private List<ISound> Sounds { get; }
 
-        public void TimerEventHandler(object sender, EventArgs e)
+        public void TimerEventHandler()
         {
             if (Sounds.Count == 1)
             {
                 ISound currentSound = Sounds[0];
-                bool isLongSound = currentSound.Duration >= SwitchingDuration * 2.5;
-                bool soundIsEnding = currentSound.Position >= currentSound.Duration - SwitchingDuration;
+                bool isLongSound = currentSound.Duration >= SwitchingDuration * 1000 * 2.5;
+                bool soundIsEnding = currentSound.Position >= currentSound.Duration - (SwitchingDuration * 1000);
 
                 if (isLongSound && soundIsEnding)
                 {
                     var nextSound = SoundProvider.GetSound(++PlayingIndex);
                     Sounds.Add(nextSound);
+                    nextSound.MediaEnded += NextSound;
 
-                    if (nextSound.Duration >= SwitchingDuration * 2.5)
+                    if (nextSound.Duration >= SwitchingDuration * 1000 * 2.5)
                     {
                         nextSound.Play();
                     }
@@ -103,12 +104,11 @@
             Sounds.RemoveAt(Sounds.IndexOf(snd));
             snd.MediaEnded -= NextSound;
 
-            if (Sounds.Count == 1)
+            if (Sounds.Count == 1 && !Sounds.Last().Playing)
             {
                 Sounds.Last().Play();
             }
-
-            if (Sounds.Count > PlayingIndex + 1)
+            else if (Sounds.Count > PlayingIndex + 1)
             {
                 ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
                 Sounds.Add(nextSound);

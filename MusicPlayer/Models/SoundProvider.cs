@@ -14,7 +14,9 @@
 
         public ISound GetSound(int index)
         {
-            return Sounds[index];
+            ISound s = Sounds[index];
+            s.Load();
+            return s;
         }
     }
 }

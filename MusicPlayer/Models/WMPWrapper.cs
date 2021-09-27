@@ -85,6 +85,11 @@
             wmp.controls.stop();
         }
 
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
+
         private void WmpPlayStateChangeEventHandler(int newState)
         {
             if (newState == (int)WMPPlayState.wmppsPlaying)

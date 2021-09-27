@@ -88,5 +88,10 @@
                 noticedNearTheEnd = true;
             }
         }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

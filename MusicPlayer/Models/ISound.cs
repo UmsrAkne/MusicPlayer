@@ -24,6 +24,8 @@
 
         double Duration { get; }
 
+        void Load();
+
         void Play();
 
         void Stop();

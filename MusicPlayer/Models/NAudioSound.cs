@@ -7,6 +7,7 @@
     {
         private int volume;
         private WaveOut waveOut;
+        private Mp3FileReader reader;
 
         public event EventHandler MediaEnded;
 
@@ -16,7 +17,7 @@
 
         public event EventHandler NearTheEnd;
 
-        public bool Playing => throw new NotImplementedException();
+        public bool Playing { get; private set; }
 
         public bool Loading => throw new NotImplementedException();
 
@@ -24,9 +25,21 @@
 
         public int Volume { get => volume; set => volume = value; }
 
-        public double Position { get => waveOut.GetPosition(); set => throw new NotImplementedException(); }
+        public double Position { get => reader != null ? reader.CurrentTime.TotalMilliseconds : 0; set => throw new NotImplementedException(); }
 
-        public double Duration { get; private set; }
+        public double Duration { get; private set; } = 0;
+
+        public void Load()
+        {
+            if (!string.IsNullOrEmpty(URL))
+            {
+                using (reader = new Mp3FileReader(URL))
+                {
+                    reader = new Mp3FileReader(URL);
+                    Duration = reader.TotalTime.TotalMilliseconds;
+                }
+            }
+        }
 
         public void Pause()
         {
@@ -37,11 +50,25 @@
         {
             if (!string.IsNullOrEmpty(URL))
             {
-                Mp3FileReader reader = new Mp3FileReader(URL);
+                reader = new Mp3FileReader(URL);
+                reader.Position = 0;
+
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOut();
                 waveOut.Init(reader);
                 waveOut.Play();
+                Playing = true;
+
+                waveOut.PlaybackStopped += (sender, e) =>
+                {
+                    Playing = false;
+                    MediaEnded?.Invoke(this, EventArgs.Empty);
+
+                    reader.Dispose();
+                    reader = null;
+                    waveOut.Dispose();
+                    waveOut = null;
+                };
             }
         }
 
