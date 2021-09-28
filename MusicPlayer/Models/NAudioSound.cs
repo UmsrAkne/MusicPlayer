@@ -1,12 +1,13 @@
 ﻿namespace MusicPlayer.Models
 {
     using System;
+    using System.IO;
     using NAudio.Wave;
 
     public class NAudioSound : ISound
     {
         private int volume;
-        private WaveOut waveOut;
+        private WaveOutEvent waveOut;
         private Mp3FileReader reader;
 
         public event EventHandler MediaEnded;
@@ -31,12 +32,12 @@
 
         public void Load()
         {
+            System.Diagnostics.Debug.WriteLine($"execute NAudio.Load() {URL}");
             if (!string.IsNullOrEmpty(URL))
             {
-                using (reader = new Mp3FileReader(URL))
+                using (var r = new Mp3FileReader(URL))
                 {
-                    reader = new Mp3FileReader(URL);
-                    Duration = reader.TotalTime.TotalMilliseconds;
+                    Duration = r.TotalTime.TotalMilliseconds;
                 }
             }
         }
@@ -48,13 +49,14 @@
 
         public void Play()
         {
+            System.Diagnostics.Debug.WriteLine($"execute NAudio.Play() {URL}");
             if (!string.IsNullOrEmpty(URL))
             {
                 reader = new Mp3FileReader(URL);
                 reader.Position = 0;
 
                 Duration = reader.TotalTime.TotalMilliseconds;
-                waveOut = new WaveOut();
+                waveOut = new WaveOutEvent();
                 waveOut.Init(reader);
                 waveOut.Play();
                 Playing = true;
@@ -63,11 +65,8 @@
                 {
                     Playing = false;
                     MediaEnded?.Invoke(this, EventArgs.Empty);
-
                     reader.Dispose();
-                    reader = null;
                     waveOut.Dispose();
-                    waveOut = null;
                 };
             }
         }
