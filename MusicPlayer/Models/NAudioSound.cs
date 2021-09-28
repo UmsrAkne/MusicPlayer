@@ -6,9 +6,9 @@
 
     public class NAudioSound : ISound
     {
-        private int volume;
+        private int volume = 100;
         private WaveOutEvent waveOut;
-        private Mp3FileReader reader;
+        private AudioFileReader reader;
 
         public event EventHandler MediaEnded;
 
@@ -24,7 +24,15 @@
 
         public string URL { get; set; }
 
-        public int Volume { get => volume; set => volume = value; }
+        public int Volume
+        {
+            get => volume;
+            set
+            {
+                volume = Math.Max(Math.Min(value, 100), 0);
+                reader.Volume = (float)((float)volume / 100.0);
+            }
+        }
 
         public double Position { get => reader != null ? reader.CurrentTime.TotalMilliseconds : 0; set => throw new NotImplementedException(); }
 
@@ -52,12 +60,13 @@
             System.Diagnostics.Debug.WriteLine($"execute NAudio.Play() {URL}");
             if (!string.IsNullOrEmpty(URL))
             {
-                reader = new Mp3FileReader(URL);
+                reader = new AudioFileReader(URL);
                 reader.Position = 0;
 
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOutEvent();
                 waveOut.Init(reader);
+                waveOut.Volume = (float)((float)Volume / 100.0);
                 waveOut.Play();
                 Playing = true;
 
