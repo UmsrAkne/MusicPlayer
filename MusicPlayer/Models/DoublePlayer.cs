@@ -81,6 +81,7 @@
                     if (nextSound.Duration >= SwitchingDuration * 1000 * 2.5)
                     {
                         nextSound.Play();
+                        Switching = true;
                     }
                 }
             }
@@ -100,6 +101,7 @@
 
         public void NextSound(object sender, EventArgs e)
         {
+            Switching = false;
             ISound snd = sender as ISound;
             Sounds.RemoveAt(Sounds.IndexOf(snd));
             snd.MediaEnded -= NextSound;
