@@ -33,15 +33,12 @@
             var path = new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
 
-            doubleSoundPlayer = new DoubleSoundPlayer(
-                new SoundPlayer(new WMPWrapper()),
-                new SoundPlayer(new WMPWrapper()));
+            SoundProvider = new SoundProvider();
+            DoublePlayer = new DoublePlayer(SoundProvider);
 
             TreeViewModel = new TreeViewModel(path);
             TreeViewModel.ExpandItemsTo(lastVisitedDirectoryPath);
             MediaFilesSettingCommand.Execute(TreeViewModel.SelectedItem);
-
-            doubleSoundPlayer.CurrentDirectorySource = TreeViewModel;
 
             playerSetting = new PlayerSetting();
             playerSetting.DefaultBaseDirectoryPath = path;
@@ -49,22 +46,20 @@
             playerSetting.BackCut = Properties.Settings.Default.BackCut;
             playerSetting.FrontCut = Properties.Settings.Default.FrontCut;
 
-            DoubleSoundPlayer.SwitchingDuration = playerSetting.SwitchingDuration;
-            DoubleSoundPlayer.Volume = Properties.Settings.Default.Volume;
+            DoublePlayer.SwitchingDuration = playerSetting.SwitchingDuration;
 
             PlayCommand = new DelegateCommand(
                 () =>
                 {
-                    doubleSoundPlayer.Files = MediaFiles;
-                    doubleSoundPlayer.Play();
+                    MediaFiles.ForEach(m => SoundProvider.Sounds.Add(new NAudioSound() { URL = m.FullName }));
+                    DoublePlayer.Play();
                 },
                 () => MediaFiles != null && MediaFiles.Count > 0).ObservesProperty(() => MediaFiles);
         }
 
-        public DoubleSoundPlayer DoubleSoundPlayer
-        {
-            get { return doubleSoundPlayer; }
-        }
+        public DoublePlayer DoublePlayer { get; private set; }
+
+        public SoundProvider SoundProvider { get; private set; }
 
         public TreeViewModel TreeViewModel
         {
@@ -138,7 +133,6 @@
                     }
 
                     MediaFiles = mf;
-                    doubleSoundPlayer.Files = MediaFiles;
                 }));
         }
 
@@ -164,15 +158,11 @@
                     else
                     {
                         PlayerSetting pSettings = result.Parameters.GetValue<PlayerSetting>(nameof(SettingWindowViewModel.Setting));
-                        doubleSoundPlayer.SwitchingDuration = pSettings.SwitchingDuration;
                         Properties.Settings.Default.SwitchinDuration = pSettings.SwitchingDuration;
                         Properties.Settings.Default.DefaultBaseDirectoryPath = pSettings.DefaultBaseDirectoryPath;
                         Properties.Settings.Default.FrontCut = pSettings.FrontCut;
                         Properties.Settings.Default.BackCut = pSettings.BackCut;
                         Properties.Settings.Default.Save();
-
-                        DoubleSoundPlayer.FrontCut = pSettings.FrontCut;
-                        DoubleSoundPlayer.BackCut = pSettings.BackCut;
                     }
                 });
             }));
