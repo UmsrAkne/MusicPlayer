@@ -66,7 +66,7 @@
 
         public void TimerEventHandler()
         {
-            if (Sounds.Count == 1)
+            if (Sounds.Count == 1 && SoundProvider.Count > PlayingIndex + 1)
             {
                 ISound currentSound = Sounds[0];
                 bool isLongSound = currentSound.Duration >= SwitchingDuration * 1000 * 2.5;
@@ -104,7 +104,7 @@
             Sounds.RemoveAt(Sounds.IndexOf(snd));
             snd.MediaEnded -= NextSound;
 
-            if (SoundProvider.Count < PlayingIndex + 1)
+            if (SoundProvider.Count <= PlayingIndex + 1)
             {
                 // 次に再生できる曲がなければ終了
                 return;
