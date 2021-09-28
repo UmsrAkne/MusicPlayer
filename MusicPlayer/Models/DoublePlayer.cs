@@ -108,7 +108,7 @@
             {
                 Sounds.Last().Play();
             }
-            else if (Sounds.Count > PlayingIndex + 1)
+            else if (SoundProvider.Count > PlayingIndex + 1 && !Sounds.Any(s => s.Playing))
             {
                 ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
                 Sounds.Add(nextSound);
