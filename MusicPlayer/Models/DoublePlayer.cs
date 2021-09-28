@@ -48,6 +48,7 @@
             Sounds = new List<ISound>();
 
             playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
+            timer.Elapsed += (e, sender) => Fader();
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -81,6 +82,7 @@
                     if (nextSound.Duration >= SwitchingDuration * 1000 * 2.5)
                     {
                         nextSound.Play();
+                        nextSound.Volume = 0;
                         Switching = true;
                     }
                 }
@@ -136,29 +138,10 @@
                 return;
             }
 
-            ISound endingSound = null;
-
-            foreach (ISound sound in Sounds)
-            {
-                if (sound.Position >= sound.Duration - SwitchingDuration)
-                {
-                    endingSound = sound;
-                    break;
-                }
-            }
-
-            if (endingSound != null)
-            {
-                int timerExecuteCountPerSec = 4;
-                int amount = Volume / SwitchingDuration / timerExecuteCountPerSec;
-                endingSound.Volume -= amount;
-                GetOtherSound(endingSound).Volume += amount;
-
-                if (endingSound.Volume <= 0)
-                {
-                    Switching = false;
-                }
-            }
+            int timerExecuteCountPerSec = 4;
+            int amount = Volume / Math.Max(SwitchingDuration - 2, 1) / timerExecuteCountPerSec;
+            Sounds.First().Volume -= amount;
+            Sounds.Last().Volume += amount;
         }
 
         private void LoadSound(object sender, EventArgs e)
