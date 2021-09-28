@@ -11,6 +11,7 @@
     {
         private string url;
         private bool noticedNearTheEnd;
+        private int volume = 100;
 
         public event EventHandler MediaEnded;
 
@@ -36,7 +37,11 @@
             }
         }
 
-        public int Volume { get; set; }
+        public int Volume
+        {
+            get => volume;
+            set => volume = Math.Max(Math.Min(100, value), 0);
+        }
 
         public double Position { get; set; }
 
