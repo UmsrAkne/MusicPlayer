@@ -48,7 +48,10 @@
             Sounds = new List<ISound>();
 
             playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
+            playTimeTimer.Start();
+
             timer.Elapsed += (e, sender) => Fader();
+            timer.Start();
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
