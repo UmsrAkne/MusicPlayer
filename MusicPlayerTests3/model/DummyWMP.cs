@@ -93,5 +93,10 @@
                 MediaEnded(this, new EventArgs());
             }
         }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
