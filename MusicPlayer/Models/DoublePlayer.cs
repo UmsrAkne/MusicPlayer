@@ -104,16 +104,22 @@
             Sounds.RemoveAt(Sounds.IndexOf(snd));
             snd.MediaEnded -= NextSound;
 
-            if (Sounds.Count == 1 && !Sounds.Last().Playing)
+            if (SoundProvider.Count < PlayingIndex + 1)
             {
-                Sounds.Last().Play();
+                // 次に再生できる曲がなければ終了
+                return;
             }
-            else if (SoundProvider.Count > PlayingIndex + 1 && !Sounds.Any(s => s.Playing))
+
+            if (Sounds.Count == 0)
             {
                 ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
                 Sounds.Add(nextSound);
                 nextSound.Play();
                 nextSound.MediaEnded += NextSound;
+            }
+            else if (!Sounds.Last().Playing)
+            {
+                Sounds.Last().Play();
             }
         }
 
