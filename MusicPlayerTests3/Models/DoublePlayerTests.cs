@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicPlayer.Models;
-
-namespace MusicPlayer.Models.Tests
+﻿namespace MusicPlayer.Models.Tests
 {
     using System;
     using System.Collections.Generic;
