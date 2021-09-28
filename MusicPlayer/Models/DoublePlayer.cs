@@ -15,33 +15,6 @@
         private int playingIndex;
         private int switchingDuration = 0;
 
-        public DoublePlayer(ISound soundA, ISound soundB)
-        {
-            Sounds = new List<ISound>() { soundA, soundB };
-            Sounds.Capacity = 2;
-
-            void playNext(object sender, EventArgs e)
-            {
-                if (PlayingIndex + 1 < PlayList.Count && !GetOtherSound((ISound)sender).Playing)
-                {
-                    PlayingIndex++;
-                    ISound sound = (ISound)sender;
-                    sound.Stop();
-                    sound.URL = PlayList[PlayingIndex].FullName;
-                    sound.Play();
-                }
-            }
-
-            Sounds[0].MediaEnded += playNext;
-            Sounds[1].MediaEnded += playNext;
-
-            Sounds[0].NearTheEnd += LoadSound;
-            Sounds[1].NearTheEnd += LoadSound;
-
-            timer.Elapsed += (e, sender) => Fader();
-            timer.Start();
-        }
-
         public DoublePlayer(ISoundProvider soundProvider)
         {
             SoundProvider = soundProvider;
@@ -55,8 +28,6 @@
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
-
-        public List<FileInfo> PlayList { get; } = new List<FileInfo>();
 
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
@@ -146,35 +117,5 @@
             Sounds.First().Volume -= amount;
             Sounds.Last().Volume += (int)(amount * 1.5);
         }
-
-        private void LoadSound(object sender, EventArgs e)
-        {
-            if (PlayingIndex + 1 < PlayList.Count)
-            {
-                PlayingIndex++;
-                var nextSound = GetOtherSound((ISound)sender);
-                nextSound.LoadCompleted += LoadCompletedEventHandler;
-                nextSound.URL = PlayList[PlayingIndex].FullName;
-            }
-        }
-
-        private void LoadCompletedEventHandler(object sender, EventArgs e)
-        {
-            var sound = (ISound)sender;
-            if (sound.Duration > SwitchingDuration * 2.5)
-            {
-                sound.Volume = 0;
-                sound.Play();
-                Switching = true;
-            }
-            else
-            {
-                PlayingIndex--;
-            }
-
-            sound.LoadCompleted -= LoadCompletedEventHandler;
-        }
-
-        private ISound GetOtherSound(ISound sound) => object.ReferenceEquals(sound, Sounds[0]) ? Sounds[1] : Sounds[0];
     }
 }
