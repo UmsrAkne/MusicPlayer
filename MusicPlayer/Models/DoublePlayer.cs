@@ -57,7 +57,7 @@
 
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
-        public int SwitchingDuration { get; set; }
+        public int SwitchingDuration { get => switchingDuration; set => SetProperty(ref switchingDuration, value); }
 
         public bool Switching { get; private set; }
 
