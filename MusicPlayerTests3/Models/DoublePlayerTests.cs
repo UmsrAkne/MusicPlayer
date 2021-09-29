@@ -16,151 +16,103 @@
         [TestMethod]
         public void PlayTest()
         {
-            //// １曲再生テスト
+            SoundProvider provider = new SoundProvider();
 
-            var dummySoundA = new DummySound() { Duration = 5 };
-            var dummySoundB = new DummySound();
+            provider.Sounds.Add(new DummySound() { URL = "a", Duration = 30000 });
+            provider.Sounds.Add(new DummySound() { URL = "b", Duration = 30000 });
+            provider.Sounds.Add(new DummySound() { URL = "c", Duration = 30000 });
+            provider.Sounds.Add(new DummySound() { URL = "d", Duration = 30000 });
+            provider.Sounds.Add(new DummySound() { URL = "e", Duration = 30000 });
 
-            var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB);
-            doublePlayer.PlayList.Add(new FileInfo("a"));
+            DoublePlayer player = new DoublePlayer(provider);
+            player.SwitchingDuration = 10;
 
-            doublePlayer.Play();
+            player.Play();
 
-            Assert.IsTrue(dummySoundA.Playing);
-
-            dummySoundA.Forward(5.0);
-            Assert.IsFalse(dummySoundA.Playing, "５秒経過で再生終了");
-        }
-
-        [TestMethod]
-        public void PlaySoundsTest()
-        {
-            //// ２曲再生テスト
-
-            var dummySoundA = new DummySound() { Duration = 5 };
-            var dummySoundB = new DummySound();
-
-            var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB);
-            doublePlayer.PlayList.Add(new FileInfo("a"));
-            doublePlayer.PlayList.Add(new FileInfo("b"));
-
-            doublePlayer.Play();
-
-            Assert.IsTrue(dummySoundA.Playing);
-
-            dummySoundA.Forward(5.0);
-            Assert.IsTrue(dummySoundA.Playing, "次の曲を再生している");
-            Assert.AreEqual(dummySoundA.URL, new FileInfo("b").FullName);
-        }
-
-        [TestMethod]
-        public void PlayCrossFadeTest()
-        {
-            //// 複数曲再生（クロスフェード）
-
-            var dummySoundA = new DummySound() { Duration = 20, SwitchingDuration = 5 };
-            var dummySoundB = new DummySound() { Duration = 20, SwitchingDuration = 5 };
-
-            var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB) { SwitchingDuration = 5 };
-            doublePlayer.PlayList.Add(new FileInfo("a"));
-            doublePlayer.PlayList.Add(new FileInfo("b"));
-
-            doublePlayer.Play();
-
-            Assert.IsTrue(dummySoundA.Playing);
-
-            dummySoundA.Forward(5.0);
-            doublePlayer.Fader();
-
-            dummySoundA.Forward(5.0);
-            doublePlayer.Fader();
-
-            Assert.IsFalse(doublePlayer.Switching, "この段階では切り替えは始まっていない");
-
-            dummySoundA.Forward(5.0);
-            doublePlayer.Fader();
-
-            Assert.IsTrue(doublePlayer.Switching, "Sound の切り替え中");
-
-            dummySoundA.Forward(0.5);
-            doublePlayer.Fader();
-
-            Assert.IsTrue(dummySoundA.Volume < 100, "BGM を下げている途中のはずなので Volume は 100 以下");
-            Assert.IsTrue(dummySoundB.Volume > 0, "BGM を上げている途中。0以上");
-
-            dummySoundA.Forward(3.5);
-            doublePlayer.Fader();
-
-            Assert.IsTrue(dummySoundA.Volume < 100, "BGM を下げている途中のはずなので Volume は 100 以下");
-            Assert.IsTrue(dummySoundB.Volume > 0, "BGM を上げている途中。0以上");
-
-            dummySoundA.Forward(1.5);
-            doublePlayer.Fader();
-
-            Assert.IsTrue(dummySoundB.Playing, "次の曲を再生している");
-            Assert.IsFalse(dummySoundA.Playing, "再生が終了して停止状態");
-        }
-
-        [TestMethod]
-        public void PlayCrossFadeTest2()
-        {
-            //// 複数曲再生（クロスフェード）長 -> 長 -> 短
-
-            var dummySoundA = new DummySound() { Duration = 20, SwitchingDuration = 5 };
-            var dummySoundB = new DummySound() { Duration = 20, SwitchingDuration = 5 };
-
-            var doublePlayer = new DoublePlayer(dummySoundA, dummySoundB) { SwitchingDuration = 5 };
-            doublePlayer.PlayList.Add(new FileInfo("a"));
-            doublePlayer.PlayList.Add(new FileInfo("b"));
-            doublePlayer.PlayList.Add(new FileInfo("c"));
-
-            doublePlayer.Play();
-
-            void forward(int cnt)
+            void forward(int count)
             {
-                for (var i = 0; i < cnt; i++)
+                for (var i = 0; i < count; i++)
                 {
-                    dummySoundA.Forward(0.25);
-                    dummySoundB.Forward(0.25);
-                    doublePlayer.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+
+                    player.TimerEventHandler();
                 }
             }
 
-            forward(79);
+            Assert.IsFalse(player.Switching);
+            Assert.AreEqual(player.PlayingIndex, 0);
 
-            Assert.IsTrue(dummySoundA.Playing, "A,B 共に再生中");
-            Assert.IsTrue(dummySoundB.Playing, "A,B 共に再生中");
-
-            forward(1);
-
-            Assert.IsFalse(dummySoundA.Playing, "再生終了");
-            Assert.IsTrue(dummySoundB.Playing, "再生中");
-
-            // 次に読み込まれる dummySoundA の Duration を短い値にセット
-            dummySoundA.Duration = 5;
-
-            //// この後、dummySoundB の再生終了間際になった段階で dummySoundA に FileInfo("c") の url が読み込まれる
-            //// このとき、dummySoundA.Duration == 5 となっており、曲のクロスフェードが不可（短すぎる）なので、
-            //// NearTheEnd イベントによる曲の再生は行われない。
-            //// その後 dummySoundB の再生終了時、MediaEnded イベントが飛んだ際に、 dummySoundB が FileInfo("c") の再生を開始する。
-
-            forward(59);
-
-            Assert.IsFalse(dummySoundA.Playing);
-            Assert.IsTrue(dummySoundB.Playing);
+            forward(20); // 開始から 20sec
+            Assert.IsTrue(player.Switching, "クロスフェード開始");
+            Assert.AreEqual(player.PlayingIndex, 1, "曲の切り替えが開始した時点でインデックスは増える");
 
             forward(1);
+            Assert.IsTrue(provider.Sounds[0].Volume < 100);
+            Assert.IsTrue(provider.Sounds[1].Volume > 0 && provider.Sounds[1].Volume < 20);
 
-            Assert.IsFalse(dummySoundA.Playing, "こっちは再生されない");
-            Assert.AreEqual(dummySoundA.URL, new FileInfo("c").FullName);
+            forward(1);
+            Assert.IsTrue(provider.Sounds[0].Volume < 100);
+            Assert.IsTrue(provider.Sounds[1].Volume > 0 && provider.Sounds[1].Volume < 30);
 
-            Assert.IsTrue(dummySoundB.Playing, "短い曲の場合は終了したほうのオブジェクトから再生される");
-            Assert.AreEqual(dummySoundB.URL, new FileInfo("c").FullName);
+            forward(8); // 30sec
+            Assert.IsFalse(player.Switching, "クロスフェード終了");
+            Assert.AreEqual(player.PlayingIndex, 1, "前に再生した曲が終了する地点。インデックスはそのままの値");
 
-            forward(200);
+            Assert.AreEqual(provider.Sounds[0].Volume, 0);
+            Assert.AreEqual(provider.Sounds[1].Volume, 100);
 
-            Assert.IsFalse(dummySoundA.Playing, "再生終了");
-            Assert.IsFalse(dummySoundB.Playing, "再生終了");
+            forward(10); // 40sec
+            Assert.IsTrue(player.Switching, "クロスフェード開始");
+            Assert.AreEqual(player.PlayingIndex, 2);
+
+            forward(1);
+            Assert.IsTrue(provider.Sounds[1].Volume < 100);
+            Assert.IsTrue(provider.Sounds[2].Volume > 0 && provider.Sounds[2].Volume < 20);
+
+            forward(1);
+            Assert.IsTrue(provider.Sounds[1].Volume < 100);
+            Assert.IsTrue(provider.Sounds[2].Volume > 0 && provider.Sounds[2].Volume < 30);
+
+            forward(8); // 50sec
+            Assert.IsFalse(player.Switching, "クロスフェード終了");
+            Assert.AreEqual(player.PlayingIndex, 2);
+
+            Assert.AreEqual(provider.Sounds[1].Volume, 0);
+            Assert.AreEqual(provider.Sounds[2].Volume, 100);
+
+            forward(10); // 60sec
+            Assert.IsTrue(player.Switching, "クロスフェード開始");
+            Assert.AreEqual(player.PlayingIndex, 3);
+
+            forward(1);
+            Assert.IsTrue(provider.Sounds[2].Volume < 100);
+            Assert.IsTrue(provider.Sounds[3].Volume > 0 && provider.Sounds[3].Volume < 20);
+
+            forward(1);
+            Assert.IsTrue(provider.Sounds[2].Volume < 100);
+            Assert.IsTrue(provider.Sounds[3].Volume > 0 && provider.Sounds[3].Volume < 30);
+
+            forward(8); // 70sec
+            Assert.IsFalse(player.Switching, "クロスフェード終了");
+            Assert.AreEqual(player.PlayingIndex, 3);
+
+            Assert.AreEqual(provider.Sounds[2].Volume, 0);
+            Assert.AreEqual(provider.Sounds[3].Volume, 100);
+
+            forward(10); // 80sec
+            Assert.IsTrue(player.Switching, "クロスフェード開始");
+            Assert.AreEqual(player.PlayingIndex, 4);
+
+            forward(10); // 90sec
+            Assert.IsFalse(player.Switching, "クロスフェード終了");
+            Assert.AreEqual(player.PlayingIndex, 4);
         }
     }
 }

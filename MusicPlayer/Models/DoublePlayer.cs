@@ -1,8 +1,8 @@
 ﻿namespace MusicPlayer.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
+    using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Timers;
     using Prism.Mvvm;
 
@@ -10,31 +10,18 @@
     {
         private int volume = 100;
         private Timer timer = new Timer(250);
+        private Timer playTimeTimer = new Timer(1000);
         private int playingIndex;
         private int switchingDuration = 0;
 
-        public DoublePlayer(ISound soundA, ISound soundB)
+        public DoublePlayer(ISoundProvider soundProvider)
         {
-            Sounds = new List<ISound>() { soundA, soundB };
-            Sounds.Capacity = 2;
+            SoundProvider = soundProvider;
+            Sounds = new ObservableCollection<ISound>();
+            Sounds.CollectionChanged += (e, sender) => RaisePropertyChanged(nameof(Sounds));
 
-            void playNext(object sender, EventArgs e)
-            {
-                if (PlayingIndex + 1 < PlayList.Count && !GetOtherSound((ISound)sender).Playing)
-                {
-                    PlayingIndex++;
-                    ISound sound = (ISound)sender;
-                    sound.Stop();
-                    sound.URL = PlayList[PlayingIndex].FullName;
-                    sound.Play();
-                }
-            }
-
-            Sounds[0].MediaEnded += playNext;
-            Sounds[1].MediaEnded += playNext;
-
-            Sounds[0].NearTheEnd += LoadSound;
-            Sounds[1].NearTheEnd += LoadSound;
+            playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
+            playTimeTimer.Start();
 
             timer.Elapsed += (e, sender) => Fader();
             timer.Start();
@@ -42,41 +29,76 @@
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
 
-        public List<FileInfo> PlayList { get; } = new List<FileInfo>();
-
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
-        public int SwitchingDuration { get; set; }
+        public int SwitchingDuration { get => switchingDuration; set => SetProperty(ref switchingDuration, value); }
 
         public bool Switching { get; private set; }
 
-        private List<ISound> Sounds { get; }
+        public ISoundProvider SoundProvider { get; private set; }
+
+        public ObservableCollection<ISound> Sounds { get; }
+
+        public void TimerEventHandler()
+        {
+            if (Sounds.Count == 1 && SoundProvider.Count > PlayingIndex + 1)
+            {
+                ISound currentSound = Sounds[0];
+                bool isLongSound = currentSound.Duration >= SwitchingDuration * 1000 * 2.5;
+                bool soundIsEnding = currentSound.Position >= currentSound.Duration - (SwitchingDuration * 1000);
+
+                if (isLongSound && soundIsEnding)
+                {
+                    var nextSound = SoundProvider.GetSound(++PlayingIndex);
+                    Sounds.Add(nextSound);
+                    nextSound.MediaEnded += NextSound;
+
+                    if (nextSound.Duration >= SwitchingDuration * 1000 * 2.5)
+                    {
+                        nextSound.Play();
+                        nextSound.Volume = 0;
+                        Switching = true;
+                    }
+                }
+            }
+        }
 
         public void Play()
         {
             PlayingIndex = 0;
-            Sounds.ForEach(sound =>
-            {
-                sound.Stop();
-                sound.Volume = Volume;
-            });
+            Sounds.Clear();
+            ISound sound = SoundProvider.GetSound(PlayingIndex);
+            Sounds.Add(sound);
+            sound.Play();
+            playTimeTimer.Start();
 
-            ISound s = Sounds[0];
-            s.URL = PlayList[PlayingIndex].FullName;
-            s.Play();
+            sound.MediaEnded += NextSound;
         }
 
-        public void Play(string url)
+        public void NextSound(object sender, EventArgs e)
         {
-            Sounds.ForEach(sound =>
-            {
-                sound.Stop();
-                sound.Volume = Volume;
-            });
+            Switching = false;
+            ISound snd = sender as ISound;
+            Sounds.RemoveAt(Sounds.IndexOf(snd));
+            snd.MediaEnded -= NextSound;
 
-            ISound s = Sounds[0];
-            s.URL = url;
-            s.Play();
+            if (SoundProvider.Count <= PlayingIndex + 1)
+            {
+                // 次に再生できる曲がなければ終了
+                return;
+            }
+
+            if (Sounds.Count == 0)
+            {
+                ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
+                Sounds.Add(nextSound);
+                nextSound.Play();
+                nextSound.MediaEnded += NextSound;
+            }
+            else if (!Sounds.Last().Playing)
+            {
+                Sounds.Last().Play();
+            }
         }
 
         /// <summary>
@@ -90,59 +112,10 @@
                 return;
             }
 
-            ISound endingSound = null;
-
-            foreach (ISound sound in Sounds)
-            {
-                if (sound.Position >= sound.Duration - SwitchingDuration)
-                {
-                    endingSound = sound;
-                    break;
-                }
-            }
-
-            if (endingSound != null)
-            {
-                int timerExecuteCountPerSec = 4;
-                int amount = Volume / SwitchingDuration / timerExecuteCountPerSec;
-                endingSound.Volume -= amount;
-                GetOtherSound(endingSound).Volume += amount;
-
-                if (endingSound.Volume <= 0)
-                {
-                    Switching = false;
-                }
-            }
+            int timerExecuteCountPerSec = 4;
+            int amount = Volume / Math.Max(SwitchingDuration - 2, 1) / timerExecuteCountPerSec;
+            Sounds.First().Volume -= amount;
+            Sounds.Last().Volume += (int)(amount * 1.5);
         }
-
-        private void LoadSound(object sender, EventArgs e)
-        {
-            if (PlayingIndex + 1 < PlayList.Count)
-            {
-                PlayingIndex++;
-                var nextSound = GetOtherSound((ISound)sender);
-                nextSound.LoadCompleted += LoadCompletedEventHandler;
-                nextSound.URL = PlayList[PlayingIndex].FullName;
-            }
-        }
-
-        private void LoadCompletedEventHandler(object sender, EventArgs e)
-        {
-            var sound = (ISound)sender;
-            if (sound.Duration > SwitchingDuration * 2.5)
-            {
-                sound.Volume = 0;
-                sound.Play();
-                Switching = true;
-            }
-            else
-            {
-                PlayingIndex--;
-            }
-
-            sound.LoadCompleted -= LoadCompletedEventHandler;
-        }
-
-        private ISound GetOtherSound(ISound sound) => object.ReferenceEquals(sound, Sounds[0]) ? Sounds[1] : Sounds[0];
     }
 }

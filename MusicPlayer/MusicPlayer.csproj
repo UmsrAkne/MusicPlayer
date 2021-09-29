@@ -41,6 +41,9 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
     </Reference>
@@ -95,7 +98,11 @@
     <Compile Include="Models\ICurrentDirectorySource.cs" />
     <Compile Include="Models\IndexedFileInfo.cs" />
     <Compile Include="Models\ISound.cs" />
+    <Compile Include="Models\ISoundProvider.cs" />
+    <Compile Include="Models\NAudioSound.cs" />
     <Compile Include="Models\PlayerSetting.cs" />
+    <Compile Include="Models\SoundNameConverter.cs" />
+    <Compile Include="Models\SoundProvider.cs" />
     <Compile Include="Models\WMPWrapper.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
