@@ -18,13 +18,12 @@
 
             if (sounds.Count <= 1)
             {
-                return string.Join("", sounds.Select(s => Path.GetFileName(s.URL)).ToArray());
+                return string.Join(string.Empty, sounds.Select(s => Path.GetFileName(s.URL)).ToArray());
             }
             else
             {
                 return $"{Path.GetFileName(sounds[0].URL)} >>> {Path.GetFileName(sounds[1].URL)}";
             }
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -40,7 +40,6 @@
 
         public void Load()
         {
-            System.Diagnostics.Debug.WriteLine($"execute NAudio.Load() {URL}");
             if (!string.IsNullOrEmpty(URL))
             {
                 using (var r = new Mp3FileReader(URL))
@@ -57,7 +56,6 @@
 
         public void Play()
         {
-            System.Diagnostics.Debug.WriteLine($"execute NAudio.Play() {URL}");
             if (!string.IsNullOrEmpty(URL))
             {
                 reader = new AudioFileReader(URL);
