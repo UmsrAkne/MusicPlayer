@@ -51,19 +51,17 @@
 
             </StackPanel.Resources>
 
-            <TextBlock Margin="2" Text="{Binding DoubleSoundPlayer.PlayingFileName, UpdateSourceTrigger=PropertyChanged}" />
-
             <StackPanel Grid.Row="0" Orientation="Horizontal">
 
-                <Button Command="{Binding PlayCommand}" Content="play" />
+                <Button Content="play" />
 
-                <Button Command="{Binding DoubleSoundPlayer.StopCommand}" Content="stop" />
+                <Button Content="stop" />
 
-                <Button Command="{Binding DoubleSoundPlayer.PauseOrResumeCommand}" Content="pause/resume" />
+                <Button Content="pause/resume" />
 
-                <Button Command="{Binding DoubleSoundPlayer.ToBackCommand}" Content="back" />
+                <Button Content="back" />
 
-                <Button Command="{Binding DoubleSoundPlayer.ToNextCommand}" Content="next" />
+                <Button Content="next" />
 
                 <TextBlock Margin="3" Text="mute" />
 
@@ -75,7 +73,7 @@
                     Maximum="100"
                     Minimum="0"
                     SmallChange="2"
-                    Value="{Binding DoubleSoundPlayer.Volume}" />
+                    Value="{Binding DoublePlayer.Volume}" />
 
                 <TextBlock Margin="3" Text="max" />
 
@@ -83,18 +81,18 @@
             </StackPanel>
 
             <Slider
-                Maximum="{Binding DoubleSoundPlayer.Duration, Mode=OneWay}"
+                x:Name="DurationSlider"
+                Maximum="0"
                 Minimum="0"
-                Value="{Binding DoubleSoundPlayer.Position, Mode=OneWay}" />
+                Value="0" />
 
             <TextBlock
                 x:Name="playTimeTextBox"
                 Margin="5,0,0,0"
                 FontSize="14"
-                Text="{Binding DoubleSoundPlayer.PlayTime, UpdateSourceTrigger=PropertyChanged}" />
+                Text="playTime" />
 
             <StackPanel Margin="2,4" Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding DoubleSoundPlayer.CrossFade}" />
                 <TextBlock Margin="4,0" Text="クロスフェード" />
             </StackPanel>
 
@@ -175,9 +173,7 @@
             Name="musicListView"
             Grid.Row="1"
             Grid.Column="1"
-            ItemsSource="{Binding MediaFiles}"
-            SelectedIndex="{Binding DoubleSoundPlayer.SelectedIndex}"
-            SelectedItem="{Binding DoubleSoundPlayer.SelectedItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            ItemsSource="{Binding MediaFiles}">
 
             <ListView.View>
                 <GridView>
