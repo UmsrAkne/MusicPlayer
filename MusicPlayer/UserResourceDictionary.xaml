@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="ListViewItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <Label
+                            Padding="0,2"
+                            Background="WhiteSmoke"
+                            BorderBrush="Gray"
+                            BorderThickness="0.5">
+                            <StackPanel Orientation="Horizontal">
+
+                                <TextBlock Width="30" Text="{Binding Index}" />
+
+                                <Border
+                                    Width="1"
+                                    Margin="3,0"
+                                    Background="Gray" />
+
+                                <TextBlock Width="50" Text="playTime" />
+
+                                <Border
+                                    Width="1"
+                                    Margin="3,0"
+                                    Background="Gray" />
+
+                                <TextBlock Text="{Binding FileInfo.Name}" />
+                            </StackPanel>
+
+                        </Label>
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

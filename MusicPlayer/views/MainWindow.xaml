@@ -24,7 +24,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomDictionary.xaml" />
+                <ResourceDictionary Source="/UserResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -173,16 +173,7 @@
             Name="musicListView"
             Grid.Row="1"
             Grid.Column="1"
-            ItemsSource="{Binding MediaFiles}">
-
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Index}" Header="Index" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="ファイル名" />
-                    <GridViewColumn DisplayMemberBinding="{Binding SizeOfMB}" Header="ファイルサイズ" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+            ItemsSource="{Binding MediaFiles}" />
 
         <StatusBar
             Name="musicStatusBar"
