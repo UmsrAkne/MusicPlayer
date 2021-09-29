@@ -37,7 +37,7 @@
 
         public ISoundProvider SoundProvider { get; private set; }
 
-        private ObservableCollection<ISound> Sounds { get; }
+        public ObservableCollection<ISound> Sounds { get; }
 
         public void TimerEventHandler()
         {

@@ -9,10 +9,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vms="clr-namespace:MusicPlayer.ViewModels"
-    Title="{Binding DoubleSoundPlayer.PlayingFileName}"
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="{Binding WindowHeight, Mode=TwoWay}"
     prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <Window.Title>
+        <Binding Path="DoublePlayer.Sounds">
+            <Binding.Converter>
+                <m:SoundNameConverter />
+            </Binding.Converter>
+        </Binding>
+    </Window.Title>
 
     <Window.Resources>
         <ResourceDictionary>
