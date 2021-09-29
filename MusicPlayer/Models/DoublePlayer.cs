@@ -1,8 +1,7 @@
 ﻿namespace MusicPlayer.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Timers;
     using Prism.Mvvm;
@@ -18,7 +17,8 @@
         public DoublePlayer(ISoundProvider soundProvider)
         {
             SoundProvider = soundProvider;
-            Sounds = new List<ISound>();
+            Sounds = new ObservableCollection<ISound>();
+            Sounds.CollectionChanged += (e, sender) => RaisePropertyChanged(nameof(Sounds));
 
             playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
             playTimeTimer.Start();
@@ -37,7 +37,7 @@
 
         public ISoundProvider SoundProvider { get; private set; }
 
-        private List<ISound> Sounds { get; }
+        private ObservableCollection<ISound> Sounds { get; }
 
         public void TimerEventHandler()
         {
