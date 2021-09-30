@@ -3,8 +3,9 @@
     using System;
     using System.IO;
     using NAudio.Wave;
+    using Prism.Mvvm;
 
-    public class NAudioSound : ISound
+    public class NAudioSound : BindableBase, ISound
     {
         private int volume = 100;
         private WaveOutEvent waveOut;
