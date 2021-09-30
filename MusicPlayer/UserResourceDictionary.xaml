@@ -35,7 +35,7 @@
                                     Margin="3,0"
                                     Background="Gray" />
 
-                                <TextBlock Text="{Binding FileInfo.Name}" />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
 
                         </Label>

@@ -173,7 +173,7 @@
             Name="musicListView"
             Grid.Row="1"
             Grid.Column="1"
-            ItemsSource="{Binding MediaFiles}"
+            ItemsSource="{Binding SoundProvider.ViewingSounds}"
             SelectedValue="{Binding SelectedItem}" />
 
         <StatusBar

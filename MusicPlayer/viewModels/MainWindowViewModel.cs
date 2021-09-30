@@ -134,6 +134,11 @@
                     }
 
                     MediaFiles = mf;
+                    mf.ForEach(m => SoundProvider.ViewingSounds.Add(new NAudioSound() { URL = m.FullName }));
+
+                    SoundProvider.ViewingSounds =
+                        Enumerable.Range(0, mf.Count)
+                        .Select(cnt => (ISound)new NAudioSound() { Index = cnt + 1, URL = mf[cnt].FullName }).ToList();
                 }));
         }
 
