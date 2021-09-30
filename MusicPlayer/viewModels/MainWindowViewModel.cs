@@ -24,7 +24,7 @@
         private DelegateCommand showLogWindowCommand;
         private DelegateCommand nameOrderSortCommand;
         private DelegateCommand randomSortCommand;
-        private IndexedFileInfo selectedItem;
+        private ISound selectedItem;
 
         public MainWindowViewModel(IDialogService dialogService)
         {
@@ -174,7 +174,7 @@
             }));
         }
 
-        public IndexedFileInfo SelectedItem
+        public ISound SelectedItem
         {
             get => selectedItem;
             set
@@ -184,7 +184,11 @@
                     selectedItem.IsSelected = false;
                 }
 
-                value.IsSelected = true;
+                if (value != null)
+                {
+                    value.IsSelected = true;
+                }
+
                 SetProperty(ref selectedItem, value);
             }
         }
