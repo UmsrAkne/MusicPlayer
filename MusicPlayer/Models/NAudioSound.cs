@@ -10,6 +10,7 @@
         private int volume = 100;
         private WaveOutEvent waveOut;
         private AudioFileReader reader;
+        private bool isSelected;
 
         public event EventHandler MediaEnded;
 
@@ -24,6 +25,12 @@
         public bool Loading => throw new NotImplementedException();
 
         public string URL { get; set; }
+
+        public string Name => Path.GetFileName(URL);
+
+        public bool IsSelected { get => isSelected; set => SetProperty(ref isSelected, value); }
+
+        public int Index { get; set; }
 
         public int Volume
         {
