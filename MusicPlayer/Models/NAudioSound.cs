@@ -95,7 +95,8 @@
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            waveOut.Stop();
+            Playing = false;
         }
     }
 }

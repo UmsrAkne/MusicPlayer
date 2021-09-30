@@ -52,6 +52,7 @@
             PlayCommand = new DelegateCommand(
                 () =>
                 {
+                    SoundProvider.Sounds.Clear();
                     SoundProvider.ViewingSounds.ForEach(s => SoundProvider.Sounds.Add(s));
                     DoublePlayer.Play();
                 });
