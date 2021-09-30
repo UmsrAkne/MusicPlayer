@@ -15,6 +15,10 @@
                                         <DataTrigger Binding="{Binding IsSelected}" Value="true">
                                             <Setter Property="Background" Value="Lavender" />
                                         </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Playing}" Value="true">
+                                            <Setter Property="Background" Value="Pink" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Label.Style>

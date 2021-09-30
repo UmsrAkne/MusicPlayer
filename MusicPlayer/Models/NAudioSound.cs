@@ -11,6 +11,7 @@
         private WaveOutEvent waveOut;
         private AudioFileReader reader;
         private bool isSelected;
+        private bool playing;
 
         public event EventHandler MediaEnded;
 
@@ -20,7 +21,7 @@
 
         public event EventHandler NearTheEnd;
 
-        public bool Playing { get; private set; }
+        public bool Playing { get => playing; private set => SetProperty(ref playing, value); }
 
         public bool Loading => throw new NotImplementedException();
 
