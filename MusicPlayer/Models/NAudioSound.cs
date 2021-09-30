@@ -12,6 +12,7 @@
         private AudioFileReader reader;
         private bool isSelected;
         private bool playing;
+        private double duration = 0;
 
         public event EventHandler MediaEnded;
 
@@ -45,7 +46,7 @@
 
         public double Position { get => reader != null ? reader.CurrentTime.TotalMilliseconds : 0; set => throw new NotImplementedException(); }
 
-        public double Duration { get; private set; } = 0;
+        public double Duration { get => duration; private set => SetProperty(ref duration, value); }
 
         public void Load()
         {

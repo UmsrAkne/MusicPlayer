@@ -32,7 +32,7 @@
                                     Margin="3,0"
                                     Background="Gray" />
 
-                                <TextBlock Width="50" Text="playTime" />
+                                <TextBlock Width="50" Text="{Binding Duration}" />
 
                                 <Border
                                     Width="1"

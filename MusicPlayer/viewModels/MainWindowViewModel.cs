@@ -120,6 +120,8 @@
                     SoundProvider.ViewingSounds =
                         Enumerable.Range(0, mf.Count)
                         .Select(cnt => (ISound)new NAudioSound() { Index = cnt + 1, URL = mf[cnt].FullName }).ToList();
+
+                    Task _ = LoadSounds(SoundProvider.ViewingSounds);
                 }));
         }
 
@@ -192,5 +194,7 @@
         {
             get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(() => { }));
         }
+
+        private async Task LoadSounds(List<ISound> sounds) => await Task.Run(() => sounds.ForEach(s => s.Load()));
     }
 }
