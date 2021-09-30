@@ -52,10 +52,9 @@
             PlayCommand = new DelegateCommand(
                 () =>
                 {
-                    MediaFiles.ForEach(m => SoundProvider.Sounds.Add(new NAudioSound() { URL = m.FullName }));
+                    SoundProvider.ViewingSounds.ForEach(s => SoundProvider.Sounds.Add(s));
                     DoublePlayer.Play();
-                },
-                () => MediaFiles != null && MediaFiles.Count > 0).ObservesProperty(() => MediaFiles);
+                });
         }
 
         public DoublePlayer DoublePlayer { get; private set; }
@@ -65,20 +64,6 @@
         public TreeViewModel TreeViewModel
         {
             get;
-        }
-
-        public List<IndexedFileInfo> MediaFiles
-        {
-            get => mediaFiles;
-            private set
-            {
-                for (int i = 0; i < value.Count; i++)
-                {
-                    value[i].Index = i + 1; // 表示番号は１始まりとしたいので +1
-                }
-
-                SetProperty(ref mediaFiles, value);
-            }
         }
 
         public int WindowWidth
@@ -109,7 +94,6 @@
                 (object param) =>
                 {
                     MediaDirectory info = (MediaDirectory)param;
-                    MediaFiles = new List<IndexedFileInfo>();
                     List<IndexedFileInfo> mf = new List<IndexedFileInfo>();
 
                     if (info.IsM3U)
@@ -132,8 +116,6 @@
                             mf.Add(new IndexedFileInfo(new FileInfo(n)));
                         }
                     }
-
-                    MediaFiles = mf;
 
                     SoundProvider.ViewingSounds =
                         Enumerable.Range(0, mf.Count)
@@ -203,26 +185,12 @@
 
         public DelegateCommand RandomSortCommand
         {
-            get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(
-            () =>
-            {
-                Random r = new Random();
-                MediaFiles = MediaFiles.OrderBy(m => r.Next(MediaFiles.Count)).ToList();
-            },
-                () => MediaFiles.Count > 0)).ObservesProperty(() => MediaFiles);
+            get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(() => { }));
         }
 
         public DelegateCommand NameOrderSortCommand
         {
-            get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(
-                () =>
-                {
-                    if (MediaFiles != null && MediaFiles.Count > 0)
-                    {
-                        MediaFiles = MediaFiles.OrderBy(m => m.Name).ToList();
-                    }
-                },
-                () => MediaFiles.Count > 0)).ObservesProperty(() => MediaFiles);
+            get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(() => { }));
         }
     }
 }
