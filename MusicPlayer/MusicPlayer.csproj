@@ -95,6 +95,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\DoublePlayer.cs" />
+    <Compile Include="Models\DurationConverter.cs" />
     <Compile Include="Models\ICurrentDirectorySource.cs" />
     <Compile Include="Models\IndexedFileInfo.cs" />
     <Compile Include="Models\ISound.cs" />
