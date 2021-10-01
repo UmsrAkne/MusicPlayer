@@ -68,8 +68,6 @@
   <ItemGroup>
     <Compile Include="Models\DoublePlayerTests.cs" />
     <Compile Include="Models\DummySound.cs" />
-    <Compile Include="model\DoubleSoundPlayerTests.cs" />
-    <Compile Include="model\DummyWMP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

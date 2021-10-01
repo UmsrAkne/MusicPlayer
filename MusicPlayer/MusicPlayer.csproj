@@ -95,6 +95,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\DoublePlayer.cs" />
+    <Compile Include="Models\DurationConverter.cs" />
     <Compile Include="Models\ICurrentDirectorySource.cs" />
     <Compile Include="Models\IndexedFileInfo.cs" />
     <Compile Include="Models\ISound.cs" />
@@ -103,7 +104,6 @@
     <Compile Include="Models\PlayerSetting.cs" />
     <Compile Include="Models\SoundNameConverter.cs" />
     <Compile Include="Models\SoundProvider.cs" />
-    <Compile Include="Models\WMPWrapper.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
@@ -114,6 +114,10 @@
       <DependentUpon>HistoryWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

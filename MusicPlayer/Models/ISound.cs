@@ -16,7 +16,11 @@
 
         bool Loading { get; }
 
+        bool IsSelected { get; set; }
+
         string URL { get; set; }
+
+        string Name { get; }
 
         int Volume { get; set; }
 
