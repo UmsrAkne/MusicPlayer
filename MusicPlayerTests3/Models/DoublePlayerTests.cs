@@ -59,7 +59,7 @@
 
             forward(1);
             Assert.IsTrue(provider.Sounds[0].Volume < 100);
-            Assert.IsTrue(provider.Sounds[1].Volume > 0 && provider.Sounds[1].Volume < 30);
+            Assert.IsTrue(provider.Sounds[1].Volume > 0 && provider.Sounds[1].Volume < 40);
 
             forward(8); // 30sec
             Assert.IsFalse(player.Switching, "クロスフェード終了");
@@ -78,7 +78,7 @@
 
             forward(1);
             Assert.IsTrue(provider.Sounds[1].Volume < 100);
-            Assert.IsTrue(provider.Sounds[2].Volume > 0 && provider.Sounds[2].Volume < 30);
+            Assert.IsTrue(provider.Sounds[2].Volume > 0 && provider.Sounds[2].Volume < 40);
 
             forward(8); // 50sec
             Assert.IsFalse(player.Switching, "クロスフェード終了");
@@ -97,7 +97,7 @@
 
             forward(1);
             Assert.IsTrue(provider.Sounds[2].Volume < 100);
-            Assert.IsTrue(provider.Sounds[3].Volume > 0 && provider.Sounds[3].Volume < 30);
+            Assert.IsTrue(provider.Sounds[3].Volume > 0 && provider.Sounds[3].Volume < 40);
 
             forward(8); // 70sec
             Assert.IsFalse(player.Switching, "クロスフェード終了");
