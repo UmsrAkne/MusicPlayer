@@ -86,11 +86,26 @@
                 Minimum="0"
                 Value="0" />
 
-            <TextBlock
-                x:Name="playTimeTextBox"
-                Margin="5,0,0,0"
-                FontSize="14"
-                Text="playTime" />
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock
+                    x:Name="playTimeTextBox"
+                    Margin="5,0,0,0"
+                    FontSize="14"
+                    Text="{Binding DoublePlayer.PlayTime, Converter={StaticResource DurationConverter}}" />
+
+                <TextBlock
+                    x:Name="separateTextBlock"
+                    Margin="3,0"
+                    FontSize="14"
+                    Text="/" />
+
+                <TextBlock
+                    x:Name="DurationTextBlock"
+                    FontSize="14"
+                    Text="{Binding DoublePlayer.Duration, Converter={StaticResource DurationConverter}}" />
+
+            </StackPanel>
 
             <StackPanel Margin="2,4" Orientation="Horizontal">
                 <TextBlock Margin="4,0" Text="クロスフェード" />

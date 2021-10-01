@@ -13,12 +13,22 @@
         private Timer playTimeTimer = new Timer(1000);
         private int playingIndex;
         private int switchingDuration = 0;
+        private double playTime;
+        private double duration;
 
         public DoublePlayer(ISoundProvider soundProvider)
         {
             SoundProvider = soundProvider;
             Sounds = new ObservableCollection<ISound>();
-            Sounds.CollectionChanged += (e, sender) => RaisePropertyChanged(nameof(Sounds));
+            Sounds.CollectionChanged += (e, sender) =>
+            {
+                RaisePropertyChanged(nameof(Sounds));
+                ObservableCollection<ISound> list = e as ObservableCollection<ISound>;
+                if (list.Count > 0)
+                {
+                    Duration = list.First().Duration;
+                }
+            };
 
             playTimeTimer.Elapsed += (e, sender) => { TimerEventHandler(); };
             playTimeTimer.Start();
@@ -35,12 +45,22 @@
 
         public bool Switching { get; private set; }
 
+        public double PlayTime { get => playTime; set => SetProperty(ref playTime, value); }
+
+        public double Duration { get => duration; set => SetProperty(ref duration, value); }
+
         public ISoundProvider SoundProvider { get; private set; }
 
         public ObservableCollection<ISound> Sounds { get; }
 
         public void TimerEventHandler()
         {
+            if (Sounds.Count > 0)
+            {
+                // 現在の再生位置の更新処理
+                PlayTime = Sounds.First().Position;
+            }
+
             if (Sounds.Count == 1 && SoundProvider.Count > PlayingIndex + 1)
             {
                 ISound currentSound = Sounds[0];
