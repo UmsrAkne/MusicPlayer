@@ -49,6 +49,10 @@
 
         public int SwitchingDuration { get; set; }
 
+        public bool IsSelected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public string Name => throw new NotImplementedException();
+
         public void Pause()
         {
             throw new NotImplementedException();
