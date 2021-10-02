@@ -16,12 +16,6 @@
 
         public event EventHandler MediaEnded;
 
-        public event EventHandler MediaStarted;
-
-        public event EventHandler LoadCompleted;
-
-        public event EventHandler NearTheEnd;
-
         public bool Playing { get => playing; private set => SetProperty(ref playing, value); }
 
         public bool Loading => throw new NotImplementedException();

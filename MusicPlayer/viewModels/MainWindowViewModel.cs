@@ -15,7 +15,6 @@
 
     public class MainWindowViewModel : BindableBase
     {
-        private DoubleSoundPlayer doubleSoundPlayer;
         private List<IndexedFileInfo> mediaFiles = new List<IndexedFileInfo>();
         private DelegateCommand<object> mediaFilesSettingCommand;
         private IDialogService dialogService;
