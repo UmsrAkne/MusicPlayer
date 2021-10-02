@@ -1,8 +1,8 @@
 ﻿namespace MusicPlayer.Models
 {
-    using Prism.Mvvm;
     using System;
     using System.IO;
+    using Prism.Mvvm;
 
     public class IndexedFileInfo : BindableBase
     {
