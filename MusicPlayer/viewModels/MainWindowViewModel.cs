@@ -187,12 +187,22 @@
 
         public DelegateCommand RandomSortCommand
         {
-            get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(() => { }));
+            get => randomSortCommand ?? (randomSortCommand = new DelegateCommand(() =>
+            {
+                List<ISound> randomOrderList = SoundProvider.ViewingSounds.OrderBy(i => Guid.NewGuid()).ToList();
+                Enumerable.Range(0, randomOrderList.Count).ToList().ForEach(i => (randomOrderList[i] as NAudioSound).Index = i + 1);
+                SoundProvider.ViewingSounds = randomOrderList;
+            }));
         }
 
         public DelegateCommand NameOrderSortCommand
         {
-            get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(() => { }));
+            get => nameOrderSortCommand ?? (nameOrderSortCommand = new DelegateCommand(() =>
+            {
+                List<ISound> nameOrderList = SoundProvider.ViewingSounds = SoundProvider.ViewingSounds.OrderBy(s => s.Name).ToList();
+                Enumerable.Range(0, nameOrderList.Count).ToList().ForEach(i => (nameOrderList[i] as NAudioSound).Index = i + 1);
+                SoundProvider.ViewingSounds = nameOrderList;
+            }));
         }
 
         private async Task LoadSounds(List<ISound> sounds) => await Task.Run(() => sounds.ForEach(s => s.Load()));
