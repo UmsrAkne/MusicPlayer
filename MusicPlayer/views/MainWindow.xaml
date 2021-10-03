@@ -80,11 +80,13 @@
 
             </StackPanel>
 
-            <Slider
+            <ProgressBar
                 x:Name="DurationSlider"
+                Height="5"
+                Foreground="LightBlue"
                 Maximum="{Binding DoublePlayer.Duration}"
                 Minimum="0"
-                Value="{Binding DoublePlayer.PlayTime, Mode=OneWay}" />
+                Value="{Binding DoublePlayer.PlayTime}" />
 
             <StackPanel Orientation="Horizontal">
 
