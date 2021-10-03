@@ -31,14 +31,19 @@
 
                             <StackPanel Orientation="Horizontal">
 
-                                <TextBlock Width="30" Text="{Binding Index}" />
+                                <TextBlock
+                                    Width="30"
+                                    Padding="3,0"
+                                    Text="{Binding Index}" />
 
                                 <Border
                                     Width="1"
                                     Margin="3,0"
                                     Background="Gray" />
 
-                                <TextBlock Width="50" Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />
+                                <TextBlock Width="50" Text="{Binding Duration, Converter={StaticResource DurationConverter}}" 
+                                           
+                                           Padding="3,0"/>
 
                                 <Border
                                     Width="1"
