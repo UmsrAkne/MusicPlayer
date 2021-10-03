@@ -12,8 +12,8 @@
                     <StackPanel>
                         <Label
                             Padding="0,2"
-                            BorderBrush="Gray"
-                            BorderThickness="0.5">
+                            BorderBrush="LightGray"
+                            BorderThickness="0.3">
 
                             <Label.Style>
                                 <Style TargetType="Label">
@@ -31,19 +31,25 @@
 
                             <StackPanel Orientation="Horizontal">
 
-                                <TextBlock Width="30" Text="{Binding Index}" />
+                                <TextBlock
+                                    Width="30"
+                                    Padding="3,0"
+                                    Text="{Binding Index}" />
 
                                 <Border
                                     Width="1"
                                     Margin="3,0"
-                                    Background="Gray" />
+                                    Background="LightGray" />
 
-                                <TextBlock Width="50" Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />
+                                <TextBlock
+                                    Width="50"
+                                    Padding="3,0"
+                                    Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />
 
                                 <Border
                                     Width="1"
                                     Margin="3,0"
-                                    Background="Gray" />
+                                    Background="LightGray" />
 
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
