@@ -114,5 +114,54 @@
             Assert.IsFalse(player.Switching, "クロスフェード終了");
             Assert.AreEqual(player.PlayingIndex, 4);
         }
+
+        [TestMethod]
+        public void StopTest()
+        {
+            SoundProvider provider = new SoundProvider();
+
+            provider.Sounds.Add(new DummySound() { URL = "a", Duration = 30000 });
+            provider.Sounds.Add(new DummySound() { URL = "b", Duration = 30000 });
+
+            DoublePlayer player = new DoublePlayer(provider);
+            player.SwitchingDuration = 10;
+
+            player.Play();
+
+            void forward(int count)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+                    provider.Sounds.ForEach(s => ((DummySound)s).Forward(250));
+                    player.Fader();
+
+                    player.TimerEventHandler();
+                }
+            }
+
+            forward(10);
+            Assert.AreEqual(player.Sounds.Count, 1, "再生を開始したのでリストの容量は 1");
+
+            player.Stop();
+            Assert.AreEqual(player.Sounds.Count, 0, "再生を停止したのでリストの容量は 0");
+
+            player.Play();
+            forward(25);
+            Assert.AreEqual(player.Sounds.Count, 2, "再生開始後、25秒後、曲のスイッチが始まっているので容量 2");
+
+            //// 複数回連続で呼び出しても問題がないか確認する。
+
+            player.Stop();
+            player.Stop();
+            player.Stop();
+
+            Assert.AreEqual(player.Sounds.Count, 0, "再生を停止したのでリストの容量は 0");
+        }
     }
 }
