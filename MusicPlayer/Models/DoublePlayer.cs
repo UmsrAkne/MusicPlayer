@@ -100,6 +100,7 @@
 
         public void Stop()
         {
+            Switching = false;
             playTimeTimer.Stop();
             timer.Stop();
 
