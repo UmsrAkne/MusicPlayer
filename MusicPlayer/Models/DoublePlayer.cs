@@ -85,16 +85,8 @@
 
         public void Play()
         {
-            //// 最初から再生するので、既に曲を再生中の場合に備えてリストの初期化を行う。
-
-            PlayingIndex = 0;
-            Sounds.ToList().ForEach(s =>
-            {
-                s.MediaEnded -= NextSound;
-                s.Stop();
-            });
-
-            Sounds.Clear();
+            //// 最初から再生するので、既に曲を再生中の場合も考慮して、一度 Stop() する
+            Stop();
 
             //// 以降が新規再生の処理
 
@@ -104,6 +96,18 @@
             playTimeTimer.Start();
 
             sound.MediaEnded += NextSound;
+        }
+
+        public void Stop()
+        {
+            PlayingIndex = 0;
+            Sounds.ToList().ForEach(s =>
+            {
+                s.MediaEnded -= NextSound;
+                s.Stop();
+            });
+
+            Sounds.Clear();
         }
 
         public void NextSound(object sender, EventArgs e)
