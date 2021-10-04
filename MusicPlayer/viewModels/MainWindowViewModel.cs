@@ -19,6 +19,7 @@
         private DelegateCommand<object> mediaFilesSettingCommand;
         private IDialogService dialogService;
         private PlayerSetting playerSetting;
+        private DelegateCommand stopCommand;
         private DelegateCommand showSettingDialogCommand;
         private DelegateCommand showLogWindowCommand;
         private DelegateCommand nameOrderSortCommand;
@@ -126,6 +127,14 @@
         }
 
         public DelegateCommand PlayCommand { get; private set; }
+
+        public DelegateCommand StopCommand
+        {
+            get => stopCommand ?? (stopCommand = new DelegateCommand(() =>
+            {
+                DoublePlayer.Stop();
+            }));
+        }
 
         public DelegateCommand ShowSettingDialogCommand
         {
