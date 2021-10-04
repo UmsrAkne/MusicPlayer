@@ -34,7 +34,6 @@
             playTimeTimer.Start();
 
             timer.Elapsed += (e, sender) => Fader();
-            timer.Start();
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -93,13 +92,17 @@
             ISound sound = SoundProvider.GetSound(PlayingIndex);
             Sounds.Add(sound);
             sound.Play();
-            playTimeTimer.Start();
-
             sound.MediaEnded += NextSound;
+
+            playTimeTimer.Start();
+            timer.Start();
         }
 
         public void Stop()
         {
+            playTimeTimer.Stop();
+            timer.Stop();
+
             PlayingIndex = 0;
             Sounds.ToList().ForEach(s =>
             {
