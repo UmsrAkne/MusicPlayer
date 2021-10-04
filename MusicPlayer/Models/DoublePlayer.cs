@@ -34,7 +34,6 @@
             playTimeTimer.Start();
 
             timer.Elapsed += (e, sender) => Fader();
-            timer.Start();
         }
 
         public int Volume { get => volume; set => SetProperty(ref volume, value); }
@@ -85,7 +84,25 @@
 
         public void Play()
         {
-            //// 最初から再生するので、既に曲を再生中の場合に備えてリストの初期化を行う。
+            //// 最初から再生するので、既に曲を再生中の場合も考慮して、一度 Stop() する
+            Stop();
+
+            //// 以降が新規再生の処理
+
+            ISound sound = SoundProvider.GetSound(PlayingIndex);
+            Sounds.Add(sound);
+            sound.Play();
+            sound.MediaEnded += NextSound;
+
+            playTimeTimer.Start();
+            timer.Start();
+        }
+
+        public void Stop()
+        {
+            Switching = false;
+            playTimeTimer.Stop();
+            timer.Stop();
 
             PlayingIndex = 0;
             Sounds.ToList().ForEach(s =>
@@ -95,15 +112,6 @@
             });
 
             Sounds.Clear();
-
-            //// 以降が新規再生の処理
-
-            ISound sound = SoundProvider.GetSound(PlayingIndex);
-            Sounds.Add(sound);
-            sound.Play();
-            playTimeTimer.Start();
-
-            sound.MediaEnded += NextSound;
         }
 
         public void NextSound(object sender, EventArgs e)

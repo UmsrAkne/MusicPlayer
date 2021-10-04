@@ -55,7 +55,7 @@
 
                 <Button Command="{Binding PlayCommand}" Content="play" />
 
-                <Button Content="stop" />
+                <Button Command="{Binding StopCommand}" Content="stop" />
 
                 <Button Content="pause/resume" />
 
