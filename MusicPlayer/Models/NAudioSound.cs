@@ -42,6 +42,10 @@
 
         public double Duration { get => duration; private set => SetProperty(ref duration, value); }
 
+        public int FrontCut { get; set; }
+
+        public int BackCut { get; set; }
+
         public void Load()
         {
             if (!string.IsNullOrEmpty(URL))
