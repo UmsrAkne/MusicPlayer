@@ -48,6 +48,8 @@
 
         public double Duration { get => duration; set => SetProperty(ref duration, value); }
 
+        public int FrontCut { get; set; }
+
         public ISoundProvider SoundProvider { get; private set; }
 
         public ObservableCollection<ISound> Sounds { get; }
@@ -74,6 +76,7 @@
 
                     if (nextSound.Duration >= SwitchingDuration * 1000 * 2.5)
                     {
+                        nextSound.FrontCut = FrontCut;
                         nextSound.Play();
                         nextSound.Volume = 0;
                         Switching = true;

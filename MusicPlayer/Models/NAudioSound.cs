@@ -68,6 +68,7 @@
             {
                 reader = new AudioFileReader(URL);
                 reader.Position = 0;
+                reader.CurrentTime = new TimeSpan(0, 0, FrontCut);
 
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOutEvent();
