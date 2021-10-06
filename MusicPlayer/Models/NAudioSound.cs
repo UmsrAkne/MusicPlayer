@@ -42,6 +42,10 @@
 
         public double Duration { get => duration; private set => SetProperty(ref duration, value); }
 
+        public int FrontCut { get; set; }
+
+        public int BackCut { get; set; }
+
         public void Load()
         {
             if (!string.IsNullOrEmpty(URL))
@@ -64,6 +68,7 @@
             {
                 reader = new AudioFileReader(URL);
                 reader.Position = 0;
+                reader.CurrentTime = new TimeSpan(0, 0, FrontCut);
 
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOutEvent();

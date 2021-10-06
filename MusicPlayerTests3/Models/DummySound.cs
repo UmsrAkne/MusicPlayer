@@ -53,6 +53,10 @@
 
         public string Name => throw new NotImplementedException();
 
+        public int FrontCut { get; set; }
+
+        public int BackCut { get; set; }
+
         public void Pause()
         {
             throw new NotImplementedException();

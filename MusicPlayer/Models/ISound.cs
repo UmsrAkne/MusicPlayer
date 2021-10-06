@@ -22,6 +22,10 @@
 
         double Duration { get; }
 
+        int FrontCut { get; set; }
+
+        int BackCut { get; set; }
+
         void Load();
 
         void Play();

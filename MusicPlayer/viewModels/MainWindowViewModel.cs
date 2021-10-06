@@ -47,6 +47,9 @@
             playerSetting.BackCut = Properties.Settings.Default.BackCut;
             playerSetting.FrontCut = Properties.Settings.Default.FrontCut;
 
+            DoublePlayer.FrontCut = playerSetting.FrontCut;
+            DoublePlayer.BackCut = playerSetting.BackCut;
+
             DoublePlayer.SwitchingDuration = playerSetting.SwitchingDuration;
 
             PlayCommand = new DelegateCommand(
@@ -161,6 +164,9 @@
                         Properties.Settings.Default.FrontCut = pSettings.FrontCut;
                         Properties.Settings.Default.BackCut = pSettings.BackCut;
                         Properties.Settings.Default.Save();
+
+                        DoublePlayer.FrontCut = pSettings.FrontCut;
+                        DoublePlayer.BackCut = pSettings.BackCut;
                     }
                 });
             }));
