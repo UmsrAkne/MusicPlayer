@@ -157,9 +157,9 @@
             }
 
             int timerExecuteCountPerSec = 4;
-            int amount = Volume / Math.Max(SwitchingDuration - 2, 1) / timerExecuteCountPerSec;
-            Sounds.First().Volume -= amount;
-            Sounds.Last().Volume += (int)(amount * 1.5);
+            decimal amount = Math.Ceiling((decimal)Volume / Math.Max(SwitchingDuration - 2, 1) / timerExecuteCountPerSec);
+            Sounds.First().Volume -= (int)amount;
+            Sounds.Last().Volume += (int)(amount * 1.5m);
         }
     }
 }
