@@ -5,60 +5,70 @@
 
     <models:DurationConverter x:Key="DurationConverter" />
 
-    <Style TargetType="ListViewItem">
-        <Setter Property="Template">
+    <Style TargetType="ListView">
+        <Setter Property="ItemsControl.AlternationCount" Value="2" />
+
+        <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <ControlTemplate>
-                    <StackPanel>
-                        <Label
-                            Padding="0,2"
-                            BorderBrush="LightGray"
-                            BorderThickness="0.3">
+                <Style TargetType="ListViewItem">
 
-                            <Label.Style>
-                                <Style TargetType="Label">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                                            <Setter Property="Background" Value="Lavender" />
-                                        </DataTrigger>
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="WhiteSmoke" />
+                        </Trigger>
 
-                                        <DataTrigger Binding="{Binding Playing}" Value="true">
-                                            <Setter Property="Background" Value="Pink" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Label.Style>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                            <Setter Property="Background" Value="Lavender" />
+                        </DataTrigger>
 
-                            <StackPanel Orientation="Horizontal">
+                        <DataTrigger Binding="{Binding Playing}" Value="true">
+                            <Setter Property="Background" Value="Pink" />
+                        </DataTrigger>
+                    </Style.Triggers>
 
-                                <TextBlock
-                                    Width="30"
-                                    Padding="3,0"
-                                    Text="{Binding Index}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <Label
+                                        Padding="0,2"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="0.3">
 
-                                <Border
-                                    Width="1"
-                                    Margin="3,0"
-                                    Background="LightGray" />
+                                        <StackPanel Orientation="Horizontal">
 
-                                <TextBlock
-                                    Width="50"
-                                    Padding="3,0"
-                                    Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />
+                                            <TextBlock
+                                                Width="30"
+                                                Padding="3,0"
+                                                Text="{Binding Index}" />
 
-                                <Border
-                                    Width="1"
-                                    Margin="3,0"
-                                    Background="LightGray" />
+                                            <Border
+                                                Width="1"
+                                                Margin="3,0"
+                                                Background="LightGray" />
 
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
+                                            <TextBlock
+                                                Width="50"
+                                                Padding="3,0"
+                                                Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />
 
-                        </Label>
-                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
-                    </StackPanel>
+                                            <Border
+                                                Width="1"
+                                                Margin="3,0"
+                                                Background="LightGray" />
 
-                </ControlTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+
+                                    </Label>
+                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
             </Setter.Value>
         </Setter>
     </Style>
