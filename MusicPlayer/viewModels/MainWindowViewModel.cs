@@ -47,6 +47,7 @@
             playerSetting.BackCut = Properties.Settings.Default.BackCut;
             playerSetting.FrontCut = Properties.Settings.Default.FrontCut;
 
+            DoublePlayer.Volume = Properties.Settings.Default.Volume;
             DoublePlayer.FrontCut = playerSetting.FrontCut;
             DoublePlayer.BackCut = playerSetting.BackCut;
 

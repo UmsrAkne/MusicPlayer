@@ -36,7 +36,17 @@
             timer.Elapsed += (e, sender) => Fader();
         }
 
-        public int Volume { get => volume; set => SetProperty(ref volume, value); }
+        public int Volume
+        {
+            get => volume;
+            set
+            {
+                Sounds.ToList().ForEach(s => s.Volume = value);
+                Properties.Settings.Default.Volume = value;
+                Properties.Settings.Default.Save();
+                SetProperty(ref volume, value);
+            }
+        }
 
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
@@ -97,6 +107,7 @@
             ISound sound = SoundProvider.GetSound(PlayingIndex);
             Sounds.Add(sound);
             sound.Play();
+            sound.Volume = Volume;
             sound.MediaEnded += NextSound;
 
             playTimeTimer.Start();
