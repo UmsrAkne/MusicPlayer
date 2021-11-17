@@ -42,6 +42,8 @@
             set
             {
                 Sounds.ToList().ForEach(s => s.Volume = value);
+                Properties.Settings.Default.Volume = value;
+                Properties.Settings.Default.Save();
                 SetProperty(ref volume, value);
             }
         }
@@ -105,6 +107,7 @@
             ISound sound = SoundProvider.GetSound(PlayingIndex);
             Sounds.Add(sound);
             sound.Play();
+            sound.Volume = Volume;
             sound.MediaEnded += NextSound;
 
             playTimeTimer.Start();
