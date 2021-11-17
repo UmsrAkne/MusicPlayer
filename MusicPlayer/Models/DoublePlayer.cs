@@ -36,7 +36,15 @@
             timer.Elapsed += (e, sender) => Fader();
         }
 
-        public int Volume { get => volume; set => SetProperty(ref volume, value); }
+        public int Volume
+        {
+            get => volume;
+            set
+            {
+                Sounds.ToList().ForEach(s => s.Volume = value);
+                SetProperty(ref volume, value);
+            }
+        }
 
         public int PlayingIndex { get => playingIndex; set => SetProperty(ref playingIndex, value); }
 
