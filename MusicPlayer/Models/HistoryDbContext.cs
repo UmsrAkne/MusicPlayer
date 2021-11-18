@@ -23,7 +23,7 @@
 
         public void write(History history)
         {
-            var f = Histories.FirstOrDefault(h => history.FullName == h.FullName);
+            var f = Histories.Where(h => history.DirectoryName == h.DirectoryName).FirstOrDefault(h => history.FullName == h.FullName);
 
             if (f == null)
             {
