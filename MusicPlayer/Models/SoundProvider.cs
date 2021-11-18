@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using Prism.Mvvm;
 
     public class SoundProvider : BindableBase, ISoundProvider
@@ -47,6 +48,11 @@
             DbContext.write(history);
 
             return s;
+        }
+
+        public List<History> GetListenHistory(string DirectoryName)
+        {
+            return DbContext.Histories.Where(h => h.DirectoryName == DirectoryName).ToList();
         }
     }
 }
