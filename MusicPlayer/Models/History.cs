@@ -25,6 +25,6 @@
 
         [Required]
         [Column("listen_count")]
-        public int ListenCount { get; set; }
+        public int ListenCount { get; set; } = 1;
     }
 }
