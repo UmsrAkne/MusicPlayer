@@ -9,6 +9,12 @@
     {
         private List<ISound> viewingSounds = new List<ISound>();
 
+        public SoundProvider()
+        {
+            DbContext = new HistoryDbContext();
+            DbContext.Database.EnsureCreated();
+        }
+
         public List<ISound> Sounds { get; private set; } = new List<ISound>();
 
         public List<ISound> ViewingSounds
@@ -27,10 +33,18 @@
 
         public int Count => Sounds.Count;
 
+        private HistoryDbContext DbContext { get; }
+
         public ISound GetSound(int index)
         {
             ISound s = Sounds[index];
             s.Load();
+
+            History history = new History();
+            history.FullName = s.URL;
+            history.LastListenDate = DateTime.Now;
+            DbContext.write(history);
+
             return s;
         }
     }
