@@ -16,6 +16,10 @@
         public string FullName { get; set; }
 
         [Required]
+        [Column("directory_name")]
+        public string DirectoryName { get; set; }
+
+        [Required]
         [Column("last_listen_date")]
         public DateTime LastListenDate { get; set; }
 

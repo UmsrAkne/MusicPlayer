@@ -43,6 +43,7 @@
             History history = new History();
             history.FullName = s.URL;
             history.LastListenDate = DateTime.Now;
+            history.DirectoryName = new DirectoryInfo(Path.GetDirectoryName(s.URL)).Name;
             DbContext.write(history);
 
             return s;
