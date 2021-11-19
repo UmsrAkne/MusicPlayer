@@ -122,9 +122,19 @@
                         }
                     }
 
-                    SoundProvider.ViewingSounds =
+                    var histories = SoundProvider.GetListenHistory(info.Name);
+
+                    var snds =
                         Enumerable.Range(0, mf.Count)
                         .Select(cnt => (ISound)new NAudioSound() { Index = cnt + 1, URL = mf[cnt].FullName }).ToList();
+
+                    snds.ForEach(s =>
+                    {
+                        var existingHistory = histories.Where(h => h.FullName == s.URL).FirstOrDefault();
+                        s.ListenCount = existingHistory != null ? existingHistory.ListenCount : 0;
+                    });
+
+                    SoundProvider.ViewingSounds = snds;
 
                     Task _ = LoadSounds(SoundProvider.ViewingSounds);
                 }));

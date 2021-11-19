@@ -26,6 +26,8 @@
 
         int BackCut { get; set; }
 
+        int ListenCount { get; set; }
+
         void Load();
 
         void Play();

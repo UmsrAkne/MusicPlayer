@@ -49,6 +49,16 @@
                                                 Background="LightGray" />
 
                                             <TextBlock
+                                                Width="30"
+                                                Padding="3,0"
+                                                Text="{Binding ListenCount}" />
+
+                                            <Border
+                                                Width="1"
+                                                Margin="3,0"
+                                                Background="LightGray" />
+
+                                            <TextBlock
                                                 Width="50"
                                                 Padding="3,0"
                                                 Text="{Binding Duration, Converter={StaticResource DurationConverter}}" />

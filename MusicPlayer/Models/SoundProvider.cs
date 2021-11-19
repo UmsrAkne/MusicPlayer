@@ -3,11 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using Prism.Mvvm;
 
     public class SoundProvider : BindableBase, ISoundProvider
     {
         private List<ISound> viewingSounds = new List<ISound>();
+
+        public SoundProvider()
+        {
+            DbContext = new HistoryDbContext();
+            DbContext.Database.EnsureCreated();
+        }
 
         public List<ISound> Sounds { get; private set; } = new List<ISound>();
 
@@ -27,11 +34,25 @@
 
         public int Count => Sounds.Count;
 
+        private HistoryDbContext DbContext { get; }
+
         public ISound GetSound(int index)
         {
             ISound s = Sounds[index];
             s.Load();
+
+            History history = new History();
+            history.FullName = s.URL;
+            history.LastListenDate = DateTime.Now;
+            history.DirectoryName = new DirectoryInfo(Path.GetDirectoryName(s.URL)).Name;
+            DbContext.write(history);
+
             return s;
+        }
+
+        public List<History> GetListenHistory(string DirectoryName)
+        {
+            return DbContext.Histories.Where(h => h.DirectoryName == DirectoryName).ToList();
         }
     }
 }
