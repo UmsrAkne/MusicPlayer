@@ -39,12 +39,14 @@
         public ISound GetSound(int index)
         {
             ISound s = Sounds[index];
+            s.ListenCount++;
             s.Load();
 
             History history = new History();
             history.FullName = s.URL;
             history.LastListenDate = DateTime.Now;
             history.DirectoryName = new DirectoryInfo(Path.GetDirectoryName(s.URL)).Name;
+            history.ListenCount = s.ListenCount;
             DbContext.write(history);
 
             return s;
