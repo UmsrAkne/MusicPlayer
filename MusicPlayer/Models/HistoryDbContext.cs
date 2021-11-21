@@ -10,18 +10,7 @@
     {
         public DbSet<History> Histories { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!File.Exists("History.sqlite"))
-            {
-                SQLiteConnection.CreateFile("History.sqlite");
-            }
-
-            var connectionString = new SqliteConnectionStringBuilder { DataSource = @"History.sqlite" }.ToString();
-            optionsBuilder.UseSqlite(new SqliteConnection(connectionString));
-        }
-
-        public void write(History history)
+        public void Write(History history)
         {
             var f = Histories.Where(h => history.DirectoryName == h.DirectoryName).FirstOrDefault(h => history.FullName == h.FullName);
 
@@ -37,6 +26,17 @@
             }
 
             SaveChanges();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!File.Exists("History.sqlite"))
+            {
+                SQLiteConnection.CreateFile("History.sqlite");
+            }
+
+            var connectionString = new SqliteConnectionStringBuilder { DataSource = @"History.sqlite" }.ToString();
+            optionsBuilder.UseSqlite(new SqliteConnection(connectionString));
         }
     }
 }

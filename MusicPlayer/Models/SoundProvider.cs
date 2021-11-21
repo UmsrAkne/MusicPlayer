@@ -47,14 +47,14 @@
             history.LastListenDate = DateTime.Now;
             history.DirectoryName = new DirectoryInfo(Path.GetDirectoryName(s.URL)).Name;
             history.ListenCount = s.ListenCount;
-            DbContext.write(history);
+            DbContext.Write(history);
 
             return s;
         }
 
-        public List<History> GetListenHistory(string DirectoryName)
+        public List<History> GetListenHistory(string directoryName)
         {
-            return DbContext.Histories.Where(h => h.DirectoryName == DirectoryName).ToList();
+            return DbContext.Histories.Where(h => h.DirectoryName == directoryName).ToList();
         }
     }
 }
