@@ -13,6 +13,7 @@
         private bool isSelected;
         private bool playing;
         private double duration = 0;
+        private int listenCount;
 
         public event EventHandler MediaEnded;
 
@@ -46,7 +47,7 @@
 
         public int BackCut { get; set; }
 
-        public int ListenCount { get; set; }
+        public int ListenCount { get => listenCount; set => SetProperty(ref listenCount, value); }
 
         public void Load()
         {
