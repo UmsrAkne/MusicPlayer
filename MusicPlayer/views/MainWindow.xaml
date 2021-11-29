@@ -109,10 +109,6 @@
 
             </StackPanel>
 
-            <StackPanel Margin="2,4" Orientation="Horizontal">
-                <TextBlock Margin="4,0" Text="クロスフェード" />
-            </StackPanel>
-
             <TextBox
                 x:Name="baseDirectoryPathTextBox"
                 FontSize="14"
