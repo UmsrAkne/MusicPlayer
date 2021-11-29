@@ -41,7 +41,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <StackPanel>
+        <StackPanel Grid.ColumnSpan="2">
             <StackPanel.Resources>
 
                 <Style TargetType="Button">
@@ -83,6 +83,7 @@
             <ProgressBar
                 x:Name="DurationSlider"
                 Height="5"
+                Margin="5,3"
                 Foreground="LightBlue"
                 Maximum="{Binding DoublePlayer.Duration}"
                 Minimum="0"
