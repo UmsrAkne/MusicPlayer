@@ -80,13 +80,7 @@
                 waveOut.Play();
                 Playing = true;
 
-                waveOut.PlaybackStopped += (sender, e) =>
-                {
-                    Playing = false;
-                    MediaEnded?.Invoke(this, EventArgs.Empty);
-                    reader.Dispose();
-                    waveOut.Dispose();
-                };
+                waveOut.PlaybackStopped += PlayBackStoppedEventHandler;
             }
         }
 
@@ -97,8 +91,17 @@
 
         public void Stop()
         {
+            waveOut.PlaybackStopped -= PlayBackStoppedEventHandler;
             waveOut.Stop();
             Playing = false;
+        }
+
+        private void PlayBackStoppedEventHandler(object sender, StoppedEventArgs e)
+        {
+            Playing = false;
+            MediaEnded?.Invoke(this, EventArgs.Empty);
+            reader.Dispose();
+            waveOut.Dispose();
         }
     }
 }
