@@ -97,14 +97,14 @@
             }
         }
 
-        public void Play()
+        public void Play(int startIndex = 0)
         {
             //// 最初から再生するので、既に曲を再生中の場合も考慮して、一度 Stop() する
             Stop();
 
             //// 以降が新規再生の処理
 
-            ISound sound = SoundProvider.GetSound(PlayingIndex);
+            ISound sound = SoundProvider.GetSound(startIndex);
             Sounds.Add(sound);
             sound.Play();
             sound.Volume = Volume;
@@ -120,7 +120,6 @@
             playTimeTimer.Stop();
             timer.Stop();
 
-            PlayingIndex = 0;
             Sounds.ToList().ForEach(s =>
             {
                 s.MediaEnded -= NextSound;
@@ -128,6 +127,21 @@
             });
 
             Sounds.Clear();
+        }
+
+        public void Next()
+        {
+            PlayingIndex++;
+            Play(PlayingIndex);
+        }
+
+        public void Back()
+        {
+            if (PlayingIndex - 1 >= 0)
+            {
+                PlayingIndex--;
+                Play(PlayingIndex);
+            }
         }
 
         public void NextSound(object sender, EventArgs e)
