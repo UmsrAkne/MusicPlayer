@@ -25,6 +25,7 @@
         private DelegateCommand nameOrderSortCommand;
         private DelegateCommand randomSortCommand;
         private DelegateCommand playNextCommand;
+        private DelegateCommand playBackCommand;
 
         private ISound selectedItem;
 
@@ -236,6 +237,11 @@
         public DelegateCommand PlayNextCommand
         {
             get => playNextCommand ?? (playNextCommand = new DelegateCommand(() => DoublePlayer.Next()));
+        }
+
+        public DelegateCommand PlayBackCommand
+        {
+            get => playBackCommand ?? (playBackCommand = new DelegateCommand(() => DoublePlayer.Back()));
         }
 
         private async Task LoadSounds(List<ISound> sounds) => await Task.Run(() => sounds.ForEach(s => s.Load()));

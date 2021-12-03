@@ -135,6 +135,15 @@
             Play(PlayingIndex);
         }
 
+        public void Back()
+        {
+            if (PlayingIndex - 1 >= 0)
+            {
+                PlayingIndex--;
+                Play(PlayingIndex);
+            }
+        }
+
         public void NextSound(object sender, EventArgs e)
         {
             Switching = false;

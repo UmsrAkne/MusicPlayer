@@ -59,7 +59,7 @@
 
                 <Button Content="pause/resume" />
 
-                <Button Content="back" />
+                <Button Command="{Binding PlayBackCommand}" Content="back" />
 
                 <Button Command="{Binding PlayNextCommand}" Content="next" />
 
