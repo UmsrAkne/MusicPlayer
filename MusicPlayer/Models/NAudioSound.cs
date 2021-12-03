@@ -76,7 +76,6 @@
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOutEvent();
                 waveOut.Init(reader);
-                waveOut.Volume = (float)((float)Volume / 100.0);
                 waveOut.Play();
                 Playing = true;
 
