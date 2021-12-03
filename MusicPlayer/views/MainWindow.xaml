@@ -61,7 +61,7 @@
 
                 <Button Content="back" />
 
-                <Button Content="next" />
+                <Button Command="{Binding PlayNextCommand}" Content="next" />
 
                 <TextBlock Margin="3" Text="mute" />
 

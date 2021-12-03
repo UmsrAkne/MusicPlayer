@@ -24,6 +24,8 @@
         private DelegateCommand showLogWindowCommand;
         private DelegateCommand nameOrderSortCommand;
         private DelegateCommand randomSortCommand;
+        private DelegateCommand playNextCommand;
+
         private ISound selectedItem;
 
         public MainWindowViewModel(IDialogService dialogService)
@@ -229,6 +231,11 @@
                 Enumerable.Range(0, nameOrderList.Count).ToList().ForEach(i => (nameOrderList[i] as NAudioSound).Index = i + 1);
                 SoundProvider.ViewingSounds = nameOrderList;
             }));
+        }
+
+        public DelegateCommand PlayNextCommand
+        {
+            get => playNextCommand ?? (playNextCommand = new DelegateCommand(() => DoublePlayer.Next()));
         }
 
         private async Task LoadSounds(List<ISound> sounds) => await Task.Run(() => sounds.ForEach(s => s.Load()));

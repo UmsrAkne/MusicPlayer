@@ -104,7 +104,7 @@
 
             //// 以降が新規再生の処理
 
-            ISound sound = SoundProvider.GetSound(PlayingIndex);
+            ISound sound = SoundProvider.GetSound(startIndex);
             Sounds.Add(sound);
             sound.Play();
             sound.Volume = Volume;
@@ -120,7 +120,6 @@
             playTimeTimer.Stop();
             timer.Stop();
 
-            PlayingIndex = 0;
             Sounds.ToList().ForEach(s =>
             {
                 s.MediaEnded -= NextSound;
@@ -128,6 +127,12 @@
             });
 
             Sounds.Clear();
+        }
+
+        public void Next()
+        {
+            PlayingIndex++;
+            Play(PlayingIndex);
         }
 
         public void NextSound(object sender, EventArgs e)
