@@ -44,6 +44,7 @@
                 Sounds.ToList().ForEach(s => s.Volume = volume);
                 Properties.Settings.Default.Volume = value;
                 Properties.Settings.Default.Save();
+                VolumeController.MaxVolume = value;
                 SetProperty(ref volume, value);
             }
         }
@@ -61,6 +62,8 @@
         public int FrontCut { get; set; }
 
         public int BackCut { get; set; }
+
+        public VolumeController VolumeController { get; set; } = new VolumeController();
 
         public ISoundProvider SoundProvider { get; private set; }
 
@@ -84,6 +87,7 @@
                 {
                     var nextSound = SoundProvider.GetSound(++PlayingIndex);
                     Sounds.Add(nextSound);
+                    VolumeController.AddPlayingSound(nextSound);
                     nextSound.MediaEnded += NextSound;
 
                     if (nextSound.Duration >= (SwitchingDuration * 1000 * 2.5) + (BackCut * 1000))
@@ -106,6 +110,7 @@
 
             ISound sound = SoundProvider.GetSound(startIndex);
             Sounds.Add(sound);
+            VolumeController.AddPlayingSound(sound);
             sound.Play();
             sound.Volume = Volume;
             sound.MediaEnded += NextSound;
@@ -161,6 +166,7 @@
             {
                 ISound nextSound = SoundProvider.GetSound(++PlayingIndex);
                 Sounds.Add(nextSound);
+                VolumeController.AddPlayingSound(nextSound);
                 nextSound.Play();
                 nextSound.MediaEnded += NextSound;
             }
@@ -181,10 +187,7 @@
                 return;
             }
 
-            int timerExecuteCountPerSec = 4;
-            decimal amount = Math.Ceiling((decimal)Volume / Math.Max(SwitchingDuration - 2, 1) / timerExecuteCountPerSec);
-            Sounds.First().Volume -= (int)amount;
-            Sounds.Last().Volume += (int)(amount * 1.5m);
+            VolumeController.Fader();
         }
     }
 }

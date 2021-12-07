@@ -24,10 +24,12 @@
 
             float changeAmount = MaxVolume / SwitchingDuration / ExecuteCountPerSec * 1.02f;
 
-            PlayingSounds.Where(sound => sound.Duration > SwitchingDuration * 2.5).ToList().ForEach(sound =>
+            int switchingDurationMilliSec = SwitchingDuration * 1000;
+
+            PlayingSounds.Where(sound => sound.Duration > switchingDurationMilliSec * 2.5).ToList().ForEach(sound =>
             {
                 // 曲の開始部分の音量調節処理
-                if (sound.Position < SwitchingDuration && sound.Volume <= MaxVolume)
+                if (sound.Position < switchingDurationMilliSec && sound.Volume <= MaxVolume)
                 {
                     sound.Volume += changeAmount;
                     if (sound.Volume >= MaxVolume)
@@ -37,7 +39,7 @@
                 }
 
                 // 曲の終了部分の音量調節処理
-                if (sound.Position > sound.Duration - SwitchingDuration && sound.Volume >= 0)
+                if (sound.Position > sound.Duration - switchingDurationMilliSec && sound.Volume >= 0)
                 {
                     sound.Volume -= changeAmount;
                     if (sound.Volume <= 0)

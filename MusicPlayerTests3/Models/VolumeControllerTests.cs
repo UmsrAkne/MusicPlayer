@@ -21,9 +21,11 @@
                 new DummySound(),
             };
 
+            float forwardCount = 250;
+
             dummySounds.ForEach(s =>
             {
-                s.Duration = 40;
+                s.Duration = 40 * 1000;
                 s.Volume = 0;
             });
 
@@ -32,7 +34,7 @@
 
             for (int i = 0; i < 4; i++)
             {
-                dummySounds[0].Forward(0.25);
+                dummySounds[0].Forward(forwardCount);
                 volumeController.Fader();
             }
 
@@ -40,7 +42,7 @@
 
             for (int i = 0; i < 56; i++)
             {
-                dummySounds[0].Forward(0.25);
+                dummySounds[0].Forward(forwardCount);
                 volumeController.Fader();
             }
 
@@ -48,7 +50,7 @@
 
             for (int i = 0; i < 40; i++)
             {
-                dummySounds[0].Forward(0.25);
+                dummySounds[0].Forward(forwardCount);
                 volumeController.Fader();
             }
 
@@ -62,8 +64,8 @@
 
             for (int i = 0; i < 30; i++)
             {
-                dummySounds[0].Forward(0.25);
-                dummySounds[1].Forward(0.25);
+                dummySounds[0].Forward(forwardCount);
+                dummySounds[1].Forward(forwardCount);
                 volumeController.Fader();
             }
 
@@ -74,8 +76,8 @@
 
             for (int i = 0; i < 30; i++)
             {
-                dummySounds[0].Forward(0.25);
-                dummySounds[1].Forward(0.25);
+                dummySounds[0].Forward(forwardCount);
+                dummySounds[1].Forward(forwardCount);
                 volumeController.Fader();
             }
 
