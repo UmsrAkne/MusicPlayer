@@ -11,7 +11,7 @@
     {
         private string url;
         private bool noticedNearTheEnd;
-        private int volume = 100;
+        private float volume = 100;
 
         public event EventHandler MediaEnded;
 
@@ -37,10 +37,10 @@
             }
         }
 
-        public int Volume
+        public float Volume
         {
             get => volume;
-            set => volume = Math.Max(Math.Min(100, value), 0);
+            set => volume = Math.Max(Math.Min(1, value), 0);
         }
 
         public double Position { get; set; }
@@ -56,6 +56,8 @@
         public int FrontCut { get; set; }
 
         public int BackCut { get; set; }
+
+        public int ListenCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Pause()
         {

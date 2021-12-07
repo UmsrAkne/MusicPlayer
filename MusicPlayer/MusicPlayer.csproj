@@ -179,6 +179,7 @@
     <Compile Include="Models\PlayerSetting.cs" />
     <Compile Include="Models\SoundNameConverter.cs" />
     <Compile Include="Models\SoundProvider.cs" />
+    <Compile Include="Models\VolumeController.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
