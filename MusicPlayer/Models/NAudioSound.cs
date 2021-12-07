@@ -7,7 +7,7 @@
 
     public class NAudioSound : BindableBase, ISound
     {
-        private int volume = 100;
+        private float volume = 1;
         private WaveOutEvent waveOut;
         private AudioFileReader reader;
         private bool isSelected;
@@ -29,13 +29,13 @@
 
         public int Index { get; set; }
 
-        public int Volume
+        public float Volume
         {
             get => volume;
             set
             {
-                volume = Math.Max(Math.Min(value, 100), 0);
-                reader.Volume = (float)((float)volume / 100.0);
+                volume = Math.Max(Math.Min(value, 1), 0);
+                reader.Volume = volume;
             }
         }
 

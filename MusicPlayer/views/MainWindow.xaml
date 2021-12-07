@@ -69,10 +69,11 @@
                     Name="VolumeControlSlider"
                     Width="250"
                     Margin="3"
-                    AutoToolTipPlacement="TopLeft"
-                    Maximum="100"
+                    IsSnapToTickEnabled="True"
+                    Maximum="1.0"
                     Minimum="0"
-                    SmallChange="2"
+                    SmallChange="0.01"
+                    TickFrequency="0.01"
                     Value="{Binding DoublePlayer.Volume}" />
 
                 <TextBlock Margin="3" Text="max" />

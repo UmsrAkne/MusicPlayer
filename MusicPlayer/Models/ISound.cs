@@ -16,7 +16,7 @@
 
         string Name { get; }
 
-        int Volume { get; set; }
+        float Volume { get; set; }
 
         double Position { get; set; }
 
