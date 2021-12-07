@@ -8,7 +8,7 @@
 
     public class DoublePlayer : BindableBase
     {
-        private int volume = 100;
+        private float volume = 1.0f;
         private Timer timer = new Timer(250);
         private Timer playTimeTimer = new Timer(1000);
         private int playingIndex;
@@ -36,12 +36,12 @@
             timer.Elapsed += (e, sender) => Fader();
         }
 
-        public int Volume
+        public float Volume
         {
             get => volume;
             set
             {
-                Sounds.ToList().ForEach(s => s.Volume = value);
+                Sounds.ToList().ForEach(s => s.Volume = volume);
                 Properties.Settings.Default.Volume = value;
                 Properties.Settings.Default.Save();
                 SetProperty(ref volume, value);
