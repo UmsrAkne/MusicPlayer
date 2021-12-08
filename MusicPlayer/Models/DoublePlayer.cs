@@ -183,12 +183,10 @@
         /// </summary>
         public void Fader()
         {
-            if (SwitchingDuration == 0 || !Switching)
+            if (SwitchingDuration > 0 && Switching)
             {
-                return;
+                VolumeController.Fader();
             }
-
-            VolumeController.Fader();
         }
     }
 }
