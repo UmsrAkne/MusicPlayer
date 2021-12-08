@@ -108,6 +108,7 @@
 
             //// 以降が新規再生の処理
 
+            PlayingIndex = startIndex;
             ISound sound = SoundProvider.GetSound(startIndex);
             Sounds.Add(sound);
             VolumeController.AddPlayingSound(sound);
