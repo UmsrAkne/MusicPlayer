@@ -22,6 +22,11 @@
         {
             PlayingSounds = PlayingSounds.Where(sound => sound.Playing).ToList();
 
+            if (SwitchingDuration == 0 || ExecuteCountPerSec == 0)
+            {
+                return;
+            }
+
             float changeAmount = MaxVolume / SwitchingDuration / ExecuteCountPerSec * 1.02f;
 
             int switchingDurationMilliSec = SwitchingDuration * 1000;

@@ -108,6 +108,7 @@
 
             //// 以降が新規再生の処理
 
+            PlayingIndex = startIndex;
             ISound sound = SoundProvider.GetSound(startIndex);
             Sounds.Add(sound);
             VolumeController.AddPlayingSound(sound);
@@ -182,12 +183,10 @@
         /// </summary>
         public void Fader()
         {
-            if (SwitchingDuration == 0 || !Switching)
+            if (SwitchingDuration > 0 && Switching)
             {
-                return;
+                VolumeController.Fader();
             }
-
-            VolumeController.Fader();
         }
     }
 }
