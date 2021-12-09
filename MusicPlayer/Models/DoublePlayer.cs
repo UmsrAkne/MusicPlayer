@@ -169,11 +169,13 @@
                 Sounds.Add(nextSound);
                 VolumeController.AddPlayingSound(nextSound);
                 nextSound.Play();
+                nextSound.Volume = Volume;
                 nextSound.MediaEnded += NextSound;
             }
             else if (!Sounds.Last().Playing)
             {
                 Sounds.Last().Play();
+                Sounds.Last().Volume = Volume;
             }
         }
 
