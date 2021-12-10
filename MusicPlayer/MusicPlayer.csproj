@@ -167,6 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Converter\DateTimeConverter.cs" />
     <Compile Include="Models\DoublePlayer.cs" />
     <Compile Include="Models\DurationConverter.cs" />
     <Compile Include="Models\History.cs" />
