@@ -7,7 +7,6 @@
     xmlns:local="clr-namespace:MusicPlayer.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Width="800"
     Height="450"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -23,39 +22,29 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+        <ListView Grid.Row="0" ItemsSource="{Binding Histories}">
 
-        <ScrollViewer
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalScrollBarVisibility="Visible">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="350" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
 
-            <ListView ItemsSource="{Binding Histories}">
+                            <TextBlock Grid.Column="0" Text="{Binding ListenCount}" />
+                            <TextBlock Grid.Column="1" Text="{Binding LastListenDate, Converter={StaticResource DataTimeConverter}}" />
+                            <TextBlock Grid.Column="2" Text="{Binding DirectoryName}" />
+                            <TextBlock Grid.Column="3" Text="{Binding FullName, Converter={StaticResource FileNameConverter}}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="350" />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0" Text="{Binding ListenCount}" />
-                                <TextBlock Grid.Column="1" Text="{Binding LastListenDate, Converter={StaticResource DataTimeConverter}}" />
-                                <TextBlock Grid.Column="2" Text="{Binding DirectoryName}" />
-                                <TextBlock Grid.Column="3" Text="{Binding FullName, Converter={StaticResource FileNameConverter}}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-        </ScrollViewer>
 
         <Button
             Grid.Row="1"
