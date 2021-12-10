@@ -6,24 +6,27 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using MusicPlayer.Models;
     using Prism.Commands;
     using Prism.Services.Dialogs;
 
     public class HistoryWindowViewModel : IDialogAware
     {
+        private HistoryDbContext historyDBContext = new HistoryDbContext();
+
         public HistoryWindowViewModel()
         {
             CloseDialogCommand = new DelegateCommand(() => RequestClose?.Invoke(new DialogResult()));
 
-            var logFileName = "playlog.txt";
-            Log = File.Exists(logFileName) ? File.ReadAllText(logFileName) : "履歴は存在しません";
+            // 履歴の取得は、最後に聴いた曲から新しい順に 200 件を取得する。
+            Histories = historyDBContext.Histories.OrderByDescending(h => h.LastListenDate).Take(200).Select(h => h).ToList();
         }
 
         public event Action<IDialogResult> RequestClose;
 
         public string Title => "log";
 
-        public string Log { get; private set; }
+        public List<History> Histories { get; set; }
 
         public DelegateCommand CloseDialogCommand { get; private set; }
 

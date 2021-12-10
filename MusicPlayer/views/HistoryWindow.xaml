@@ -1,43 +1,58 @@
-﻿<UserControl x:Class="MusicPlayer.Views.HistoryWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MusicPlayer.Views"
-        xmlns:prism="http://prismlibrary.com/"             
-        prism:ViewModelLocator.AutoWireViewModel="True"
-        mc:Ignorable="d"
-        Height="450" Width="800">
+﻿<UserControl
+    x:Class="MusicPlayer.Views.HistoryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:MusicPlayer.Models.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MusicPlayer.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    Height="450"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converter:DateTimeConverter x:Key="DataTimeConverter" />
+        <converter:FileNameConverter x:Key="FileNameConverter" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <ListView Grid.Row="0" ItemsSource="{Binding Histories}">
 
-        <ScrollViewer HorizontalScrollBarVisibility="Visible"
-                      Grid.Row="0" 
-                      Grid.Column="0"
-                      >
-            <TextBlock Text="{Binding Log}"
-                       Background="White"
-                       Margin="2"
-                       Padding="3"
-                       FontSize="13"
-                       />
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="350" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
 
-        </ScrollViewer>
+                            <TextBlock Grid.Column="0" Text="{Binding ListenCount}" />
+                            <TextBlock Grid.Column="1" Text="{Binding LastListenDate, Converter={StaticResource DataTimeConverter}}" />
+                            <TextBlock Grid.Column="2" Text="{Binding DirectoryName}" />
+                            <TextBlock Grid.Column="3" Text="{Binding FullName, Converter={StaticResource FileNameConverter}}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
-        <Button Content="戻る"
-                Command="{Binding CloseDialogCommand}"
-                Grid.Row="1"
-                Width="auto"
-                HorizontalAlignment="Right"
-                Margin="10,2"
-                />
+
+        <Button
+            Grid.Row="1"
+            Width="auto"
+            Margin="10,2"
+            HorizontalAlignment="Right"
+            Command="{Binding CloseDialogCommand}"
+            Content="戻る" />
 
     </Grid>
 </UserControl>
