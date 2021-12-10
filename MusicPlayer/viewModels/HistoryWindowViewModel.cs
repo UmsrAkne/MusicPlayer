@@ -17,7 +17,9 @@
         public HistoryWindowViewModel()
         {
             CloseDialogCommand = new DelegateCommand(() => RequestClose?.Invoke(new DialogResult()));
-            Histories = historyDBContext.Histories.Select(h => h).ToList();
+
+            // 履歴の取得は、最後に聴いた曲から新しい順に 200 件を取得する。
+            Histories = historyDBContext.Histories.OrderByDescending(h => h.LastListenDate).Take(200).Select(h => h).ToList();
         }
 
         public event Action<IDialogResult> RequestClose;
