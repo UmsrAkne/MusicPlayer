@@ -35,7 +35,11 @@
             set
             {
                 volume = Math.Max(Math.Min(value, 1), 0);
-                reader.Volume = volume;
+
+                if (reader != null)
+                {
+                    reader.Volume = volume;
+                }
             }
         }
 
@@ -72,6 +76,7 @@
                 reader = new AudioFileReader(URL);
                 reader.Position = 0;
                 reader.CurrentTime = new TimeSpan(0, 0, FrontCut);
+                reader.Volume = Volume;
 
                 Duration = reader.TotalTime.TotalMilliseconds;
                 waveOut = new WaveOutEvent();
