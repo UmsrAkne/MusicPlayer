@@ -14,6 +14,7 @@
 
     <UserControl.Resources>
         <converter:DateTimeConverter x:Key="DataTimeConverter" />
+        <converter:FileNameConverter x:Key="FileNameConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -47,7 +48,7 @@
                                 <TextBlock Grid.Column="0" Text="{Binding LastListenDate, Converter={StaticResource DataTimeConverter}}" />
                                 <TextBlock Grid.Column="1" Text="{Binding ListenCount}" />
                                 <TextBlock Grid.Column="2" Text="{Binding DirectoryName}" />
-                                <TextBlock Grid.Column="3" Text="{Binding FullName}" />
+                                <TextBlock Grid.Column="3" Text="{Binding FullName, Converter={StaticResource FileNameConverter}}" />
                             </Grid>
                         </Border>
                     </DataTemplate>
