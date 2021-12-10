@@ -25,7 +25,28 @@
             Grid.Column="0"
             HorizontalScrollBarVisibility="Visible">
 
-            <ListView ItemsSource="{Binding Histories}" />
+            <ListView ItemsSource="{Binding Histories}">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding LastListenDate}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ListenCount}" />
+                                <TextBlock Grid.Column="2" Text="{Binding DirectoryName}" />
+                                <TextBlock Grid.Column="3" Text="{Binding FullName}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
         </ScrollViewer>
 
