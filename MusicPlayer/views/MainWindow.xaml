@@ -11,7 +11,9 @@
     xmlns:vms="clr-namespace:MusicPlayer.ViewModels"
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="{Binding WindowHeight, Mode=TwoWay}"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Left="{Binding WindowRect.X, Mode=TwoWay}"
+    Top="{Binding WindowRect.Y, Mode=TwoWay}">
 
     <Window.Title>
         <Binding Path="DoublePlayer.Sounds">

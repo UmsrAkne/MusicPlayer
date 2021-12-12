@@ -5,6 +5,12 @@
     {
         private Rectangle rect = new Rectangle();
 
+        public WindowRect()
+        {
+            X = Properties.Settings.Default.X;
+            Y = Properties.Settings.Default.Y;
+        }
+
         public int X
         {
             get => rect.Location.X;
