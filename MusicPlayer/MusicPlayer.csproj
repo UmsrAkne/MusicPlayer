@@ -182,6 +182,7 @@
     <Compile Include="Models\SoundNameConverter.cs" />
     <Compile Include="Models\SoundProvider.cs" />
     <Compile Include="Models\VolumeController.cs" />
+    <Compile Include="Models\WindowRect.cs" />
     <Compile Include="views\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>

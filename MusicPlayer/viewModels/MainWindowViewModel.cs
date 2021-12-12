@@ -205,6 +205,8 @@
             }
         }
 
+        public WindowRect WindowRect { get; private set; } = new WindowRect();
+
         public DelegateCommand ShowLogWindowCommand
         {
             get => showLogWindowCommand ?? (showLogWindowCommand = new DelegateCommand(() =>
