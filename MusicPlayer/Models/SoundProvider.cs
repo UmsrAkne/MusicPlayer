@@ -10,10 +10,9 @@
     {
         private List<ISound> viewingSounds = new List<ISound>();
 
-        public SoundProvider()
+        public SoundProvider(IDatabase database)
         {
-            DbContext = new HistoryDbContext();
-            DbContext.Database.EnsureCreated();
+            DbContext = database;
         }
 
         public List<ISound> Sounds { get; private set; } = new List<ISound>();
@@ -34,7 +33,7 @@
 
         public int Count => Sounds.Count;
 
-        private HistoryDbContext DbContext { get; }
+        private IDatabase DbContext { get; }
 
         public ISound GetSound(int index)
         {
@@ -70,7 +69,7 @@
 
         public List<History> GetListenHistory(string directoryName)
         {
-            return DbContext.Histories.Where(h => h.DirectoryName == directoryName).ToList();
+            return DbContext.List.Where(h => h.DirectoryName == directoryName).ToList();
         }
     }
 }
