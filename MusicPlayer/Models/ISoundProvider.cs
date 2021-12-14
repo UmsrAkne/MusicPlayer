@@ -5,5 +5,7 @@
         int Count { get; }
 
         ISound GetSound(int index);
+
+        ISound GetSound();
     }
 }

@@ -52,6 +52,22 @@
             return s;
         }
 
+        public ISound GetSound()
+        {
+            ISound s = Sounds[0];
+            s.ListenCount++;
+            s.Load();
+
+            History history = new History();
+            history.FullName = s.URL;
+            history.LastListenDate = DateTime.Now;
+            history.DirectoryName = new DirectoryInfo(Path.GetDirectoryName(s.URL)).Name;
+            history.ListenCount = s.ListenCount;
+            DbContext.Write(history);
+
+            return s;
+        }
+
         public List<History> GetListenHistory(string directoryName)
         {
             return DbContext.Histories.Where(h => h.DirectoryName == directoryName).ToList();
