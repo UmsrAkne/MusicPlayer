@@ -6,7 +6,7 @@
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
 
-    public class HistoryDbContext : DbContext
+    public class HistoryDbContext : DbContext, IDatabase
     {
         public DbSet<History> Histories { get; set; }
 
