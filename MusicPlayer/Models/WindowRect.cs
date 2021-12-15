@@ -1,6 +1,7 @@
 ﻿namespace MusicPlayer.Models
 {
     using System.Drawing;
+
     public class WindowRect
     {
         private Rectangle rect = new Rectangle();

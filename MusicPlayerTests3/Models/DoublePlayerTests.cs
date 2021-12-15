@@ -16,7 +16,7 @@
         [TestMethod]
         public void PlayTest()
         {
-            SoundProvider provider = new SoundProvider();
+            SoundProvider provider = new SoundProvider(new DummyDB());
 
             provider.Sounds.Add(new DummySound() { URL = "a", Duration = 30000 });
             provider.Sounds.Add(new DummySound() { URL = "b", Duration = 30000 });
@@ -118,7 +118,7 @@
         [TestMethod]
         public void StopTest()
         {
-            SoundProvider provider = new SoundProvider();
+            SoundProvider provider = new SoundProvider(new DummyDB());
 
             provider.Sounds.Add(new DummySound() { URL = "a", Duration = 30000 });
             provider.Sounds.Add(new DummySound() { URL = "b", Duration = 30000 });

@@ -33,6 +33,8 @@
 
         public int Count => Sounds.Count;
 
+        public int CursorIndex { get; set; }
+
         private IDatabase DbContext { get; }
 
         public ISound GetSound(int index)
@@ -53,9 +55,16 @@
 
         public ISound GetSound()
         {
-            ISound s = Sounds[0];
+            if (CursorIndex >= Sounds.Count || Sounds.Count == 0)
+            {
+                return null;
+            }
+
+            ISound s = Sounds[CursorIndex];
             s.ListenCount++;
             s.Load();
+
+            CursorIndex++;
 
             History history = new History();
             history.FullName = s.URL;
