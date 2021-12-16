@@ -57,7 +57,7 @@
 
         public int BackCut { get; set; }
 
-        public int ListenCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int ListenCount { get; set; }
 
         public void Pause()
         {

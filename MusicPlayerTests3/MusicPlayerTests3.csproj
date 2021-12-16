@@ -67,7 +67,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\DoublePlayerTests.cs" />
+    <Compile Include="Models\DummyDB.cs" />
     <Compile Include="Models\DummySound.cs" />
+    <Compile Include="Models\SoundProviderTests.cs" />
     <Compile Include="Models\VolumeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

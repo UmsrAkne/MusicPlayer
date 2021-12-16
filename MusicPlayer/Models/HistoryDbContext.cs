@@ -1,14 +1,17 @@
 ﻿namespace MusicPlayer.Models
 {
+    using System.Collections.Generic;
     using System.Data.SQLite;
     using System.IO;
     using System.Linq;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
 
-    public class HistoryDbContext : DbContext
+    public class HistoryDbContext : DbContext, IDatabase
     {
         public DbSet<History> Histories { get; set; }
+
+        public List<History> List => Histories.ToList();
 
         public void Write(History history)
         {

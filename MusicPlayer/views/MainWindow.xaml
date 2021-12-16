@@ -12,6 +12,7 @@
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="{Binding WindowHeight, Mode=TwoWay}"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    Icon="../images/icon.png"
     Left="{Binding WindowRect.X, Mode=TwoWay}"
     Top="{Binding WindowRect.Y, Mode=TwoWay}">
 

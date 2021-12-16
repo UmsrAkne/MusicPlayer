@@ -37,7 +37,10 @@
             var path = new DirectoryInfo(Properties.Settings.Default.DefaultBaseDirectoryPath).Exists ?
                 Properties.Settings.Default.DefaultBaseDirectoryPath : @"C:\";
 
-            SoundProvider = new SoundProvider();
+            var db = new HistoryDbContext();
+            db.Database.EnsureCreated();
+            SoundProvider = new SoundProvider(db);
+
             DoublePlayer = new DoublePlayer(SoundProvider);
 
             TreeViewModel = new TreeViewModel(path);
