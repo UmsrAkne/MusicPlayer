@@ -1,6 +1,7 @@
 ﻿namespace MusicPlayer.Models
 {
     using System.Drawing;
+    using System.Windows.Forms;
 
     public class WindowRect
     {
@@ -10,6 +11,15 @@
         {
             X = Properties.Settings.Default.X;
             Y = Properties.Settings.Default.Y;
+
+            foreach (Screen scr in Screen.AllScreens)
+            {
+                if (!scr.WorkingArea.Contains(X, Y))
+                {
+                    X = 0;
+                    Y = 0;
+                }
+            }
         }
 
         public int X
