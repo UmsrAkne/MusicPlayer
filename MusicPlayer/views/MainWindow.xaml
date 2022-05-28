@@ -27,7 +27,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/UserResourceDictionary.xaml" />
+                <ResourceDictionary Source="UserResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -128,17 +128,6 @@
             Grid.Column="0"
             ItemsSource="{Binding TreeViewModel.MediaDirectories}">
 
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
-                    <Setter Property="BorderBrush" Value="Gray" />
-                    <Setter Property="BorderThickness" Value="1,0,0,0" />
-                    <Setter Property="Padding" Value="4,0,0,0" />
-                    <Setter Property="Margin" Value="1,0,0,1" />
-                </Style>
-            </TreeView.ItemContainerStyle>
-
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedItemChanged">
                     <i:InvokeCommandAction Command="{Binding MediaFilesSettingCommand}" CommandParameter="{Binding ElementName=directoryTree, Path=SelectedItem}" />
@@ -146,17 +135,6 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="m:MediaDirectory" ItemsSource="{Binding ChildDirectory}">
-                    <ContentControl Content="{Binding Name}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding GetChildsCommand}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ContentControl>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
         </TreeView>
 
         <Grid Grid.Row="0" Grid.Column="1">
