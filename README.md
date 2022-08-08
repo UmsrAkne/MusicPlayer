@@ -1,3 +1,5 @@
+後続ソフトの開発をしています。URL はこちらです [Musicer](https://github.com/UmsrAkne/Musicer)
+
 # MusicPlayer
 
 私用のmp3プレイヤーをC#,WPFで作成しているプロジェクトです。
